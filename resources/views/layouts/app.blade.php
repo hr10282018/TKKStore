@@ -25,7 +25,9 @@
 
       @include('shared._messages')
 
-      @yield('content')
+       @yield('content')
+
+      @include('layouts._bgimage')
 
     </div>
 

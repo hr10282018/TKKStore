@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'PagesController@root');
 
+Route::get('signup', 'UsersController@create')->name('signup'); // 注册
 
+Route::post('/users', 'UsersController@store')->name('users.store');  // 处理注册
 
 
