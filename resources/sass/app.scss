@@ -42,8 +42,6 @@ body {
   margin-bottom: 60px;
 }
 
-
-
 .footer {
   position: absolute;
   bottom: 0;
@@ -64,5 +62,45 @@ body {
         color: inherit;
       }
     }
+  }
+}
+
+
+/* 注册框 */
+
+#signup{
+  margin-top: 50px;
+  width: 422px; 
+  transition-duration: 0.5s ;
+
+  position:relative;
+
+  &:hover{
+    margin-top: 40px;
+    -webkit-box-shadow: #ccc 0px 10px 10px;
+    -moz-box-shadow: #ccc 0px 10px 10px;
+    box-shadow: #ccc 0px 10px 10px;
+    transition-duration: 0.5s ;
+  }
+}
+#r_input{
+  width: 223px;
+}
+#captcha{
+  width: 223px;
+}
+.comfirm_pwd{
+  margin-left: 20px;
+}
+.verify{
+  margin-left: 10px;
+}
+/* 验证码 */
+.signup-page {
+  img.captcha {
+    cursor: pointer;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 3px;
   }
 }

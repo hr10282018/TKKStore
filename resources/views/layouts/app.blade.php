@@ -9,7 +9,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>@yield('title', 'onestore') - TKK</title>
+  <title>@yield('title', 'onestore') - TKKStore</title>
 
   <!-- Styles -->
   <link href="{{ mix('css/app.css') }}" rel="stylesheet">
@@ -36,6 +36,8 @@
 
   <!-- Scripts -->
   <script src="{{ mix('js/app.js') }}"></script>
+  <script src="/js/register.js"></script>
+  <script src="/js/test.js"></script>
 </body>
 
 </html>
