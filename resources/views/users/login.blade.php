@@ -11,7 +11,7 @@
         <div class="card-header">登录</div>
 
         <div class="card-body">
-          <form method="POST" action="{{ route('login_show') }}">
+          <form method="POST" action="{{ route('login') }}">
             @csrf
 
             <div class="form-group row">

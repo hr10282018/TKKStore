@@ -7,6 +7,12 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+// Fontawesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+
 
 body {
   font-family: Helvetica, "Microsoft YaHei", Arial, sans-serif;
@@ -31,6 +37,16 @@ body {
   margin-bottom: 40px;
   margin-top: 0px;
 }
+@media (min-width: 1200px) {
+  .container-xl,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: 1440px;
+  }
+}
+
 
 /* 底部样式 */
 html {
@@ -70,7 +86,7 @@ body {
 
 #signup{
   margin-top: 50px;
-  width: 422px; 
+  width: 422px;
   transition-duration: 0.5s ;
 
   position:relative;
@@ -102,5 +118,13 @@ body {
     border: 1px solid #ced4da;
     border-radius: 4px;
     padding: 3px;
+    
   }
 }
+
+/* 个人中心 */
+
+// 选中.list-group-item.active {}
+
+
+

@@ -24,8 +24,8 @@
     <div class="container">
 
       @include('shared._messages')
-
-       @yield('content')
+      @include('shared._errors')
+        @yield('content')
 
       @include('layouts._bgimage')
 
