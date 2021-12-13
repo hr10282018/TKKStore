@@ -48,11 +48,12 @@
     <div class="card">
       <i class="fas fa-caret-left" style="color:aqua"></i>
       <li class="list-group-item "> <strong style="font-size: 16px; color:#a5a5a5">我的信息</strong></li>
-      <a href="#" class="list-group-item list-group-item-action active">
 
+      <a href="{{ route('user_show',$user->id) }}" class="list-group-item list-group-item-action active">
       <i class="fas fa-user mr-2"></i>
         基本资料
       </a>
+
       <a href="#" class="list-group-item list-group-item-action ">
         <i class="fas fa-heart mr-1"></i>
         我的预订
@@ -67,6 +68,7 @@
         我的留言
       </a>
     </div>
+
     <div class="card mt-3">
       <li class="list-group-item "> <strong style="font-size: 16px; color:#a5a5a5">我的店铺</strong></li>
       <a href="#" class="list-group-item list-group-item-action">
@@ -77,7 +79,7 @@
         <i class="fas fa-paper-plane mr-1"></i>
         我的发布
       </a> -->
-      <a href="#" class="list-group-item list-group-item-action">
+      <a href="{{ route('sale_goods',$user->id) }}" class="list-group-item list-group-item-action">
         <i class="fas fa-store"></i>
         我的商品
       </a>

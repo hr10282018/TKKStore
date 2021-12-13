@@ -16,9 +16,11 @@
         "laravel/framework": "^7.29",
         "laravel/tinker": "^2.5",
         "mews/captcha": "~3.0",
-        "overtrue/laravel-lang": "~3.0"
+        "overtrue/laravel-lang": "~3.0",
+        "summerblue/laravel-active": "7.*"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "~3.2",
         "facade/ignition": "^2.0",
         "fakerphp/faker": "^1.9.1",
         "laravel/ui": "^2.0",

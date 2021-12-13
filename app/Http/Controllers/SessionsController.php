@@ -38,7 +38,8 @@ class SessionsController extends Controller
 
       if(Auth::user()->activated) {
         session()->flash('success', '欢迎回来！');
-        return redirect()->route('home',[Auth::user()]);
+        //return redirect()->route('home',[Auth::user()]);
+        return redirect()->route('home');
       }else{
 
         //dd(Auth::user()->activated);
@@ -105,8 +106,6 @@ class SessionsController extends Controller
 
 
 
-  public function goods(){    // 测试
-    return view('goods.test');
-  }
+
 
 }

@@ -118,7 +118,7 @@ body {
     border: 1px solid #ced4da;
     border-radius: 4px;
     padding: 3px;
-    
+
   }
 }
 
@@ -126,5 +126,10 @@ body {
 
 // 选中.list-group-item.active {}
 
+/* 最新发布 */
+.new_hot .active{
+  color: #fff;
+  background-color: #3490dc;
 
+}
 

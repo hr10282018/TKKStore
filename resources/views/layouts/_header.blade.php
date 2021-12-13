@@ -1,3 +1,5 @@
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-static-top">
   <div class="container">
 
@@ -6,10 +8,16 @@
     <a class="navbar-brand " href="{{ url('') }}">
       TKK~Store
     </a>
+    <ul class="navbar-nav mr-auto link_category">
+      <li class="nav-item {{ active_class(if_route('home')) }} {{ search_no_category_active() }}"><a class="nav-link" href="{{ route('home') }}">全部</a></li>
+      <li class="nav-item {{ category_active(1) }}"><a class="nav-link" href="{{ route('category',1) }}">学习</a></li>
+      <li class="nav-item {{ category_active(2) }} "><a class="nav-link" href="{{ route('category',2) }}">生活</a></li>
+      <li class="nav-item {{ category_active(3) }} "><a class="nav-link" href="{{ route('category',3) }}">娱乐</a></li>
+      <li class="nav-item {{ category_active(4) }} "><a class="nav-link" href="{{ route('category',4) }}">其他</a></li>
+    </ul>
     <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon">11111</span>
     </button> -->
-
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
@@ -31,12 +39,12 @@
           </a>
         </li>
 
-        <li class="nav-item dropdown ">
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <img src="{{ Auth::user()->avatar }}" class="img-responsive img-circle" width="40px" height="40px" style="border-radius: 50%;">
             <span class="ml-2"> {{ Auth::user()->name }}</span>
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" style="height: 45px; line-height:40px" href="{{ route('user_show', Auth::user()) }}">
               <i class="fas fa-user mr-2"></i>
               个人中心
@@ -66,3 +74,5 @@
 
   </div>
 </nav>
+
+

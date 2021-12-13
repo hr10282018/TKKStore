@@ -17211,3 +17211,10 @@ body {
 
 /* 个人中心 */
 
+/* 最新发布 */
+
+.new_hot .active {
+  color: #fff;
+  background-color: #3490dc;
+}
+

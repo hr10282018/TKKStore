@@ -1,9 +1,9 @@
 
 <!-- 消息提示 -->
 
-@foreach (['danger', 'warning', 'success', 'info'] as $msg)
+@foreach (['danger', 'warning', 'success', 'info','primary'] as $msg)
   @if(session()->has($msg))
-    <div class="flash-message " style="width:900px;margin:0 auto">
+    <div class="flash-message " style="margin:0 auto">
       <p class="alert alert-{{ $msg }}">
         {{ session()->get($msg) }}
       </p>

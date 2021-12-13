@@ -19,7 +19,7 @@ class AddOtherInfoToUsersTable extends Migration
           $table->string('signature',255)->nullable(); // 个签
           $table->string('sex')->nullable();    //性别
           $table->string('phone',11)->nullable();        //手机号
-          $table->string('university')->default('厦门大学嘉庚学院')->nullable();   // 大学
+          $table->string('university')->default('厦大嘉庚')->nullable();   // 大学
           $table->string('faculty')->nullable();  // 院系
           $table->string('number',8)->nullable(); // 学号
 

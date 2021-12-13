@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use App\Handlers\ImageUploadHandler;    // 上传图片处理器
+use App\Models\Category;
+use App\Models\Good;
 use Mail;
 
 class UsersController extends Controller
@@ -70,6 +72,7 @@ class UsersController extends Controller
       return true;
     }
   }
+  /* end */
 
   /* 邮箱处理 */
 
@@ -100,13 +103,27 @@ class UsersController extends Controller
 
 
 
-  /* 用户主页展示 */
+  /* 用户主页展示-begin */
 
   public function user_show(User $user){
 
     return view('users.detail._home_info',compact('user')); // 默认路由-用户基本信息展示
   }
+  public function sale_goods(User $user,Category $category){    // 我的商品展示
 
+
+    $goods=Good::where('user_id',$user->id)->paginate(3);
+
+    $image=array();
+    //$image=$goods->first()->image;
+    for($i=0; $i<sizeof($goods); $i++){
+      $image[]=explode(',',$goods[$i]->image)[0];
+    }
+    
+    return view('users.detail._sale_goods',compact('user','goods','image'));
+  }
+
+  /* end */
 
 
    /* 用户资料编辑 */
@@ -161,6 +178,17 @@ class UsersController extends Controller
     session()->flash('success', '密码修改成功！');
     return redirect()->route('user_edit_password', $user->id);
   }
+  /* end */
 
+  /* 用户商品处理 */
 
+  public function delete_goods(Request $request){   // 删除商品
+    // dd($request->all()['goods_id']); //商品id
+
+    Good::where('id', $request->all()['goods_id'])->first()->delete();  // 分类id
+
+    session()->flash('success', '成功删除该商品！');
+    return back();
+
+  }
 }

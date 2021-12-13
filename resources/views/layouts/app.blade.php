@@ -38,6 +38,11 @@
   <script src="{{ mix('js/app.js') }}"></script>
   <script src="/js/register.js"></script>
   <script src="/js/test.js"></script>
+  <script src="/js/create_goods.js"></script>
+  <script src="/js/root.js"></script>
+  
+  <!-- <script src="/js/confirm.js"></script> -->
+  <!-- <script src="/js/_header.js"></script> -->
 </body>
 
 </html>

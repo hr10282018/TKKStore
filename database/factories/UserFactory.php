@@ -6,27 +6,32 @@ use App\Models\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
-*/
+// 头像
+$avatars = [
+  'http://onestore.tkk/images/avatars/1.png',
+  'http://onestore.tkk/images/avatars/2.png',
+  'http://onestore.tkk/images/avatars/3.png',
+  'http://onestore.tkk/images/avatars/7.png',
+  'http://onestore.tkk/images/avatars/5.png',
+  'http://onestore.tkk/images/avatars/6.png',
+];
 
-$factory->define(User::class, function (Faker $faker) {
-  $date_time = $faker->date . ' ' . $faker->time;
+$factory->define(User::class, function (Faker $faker) use ($avatars) {
+
+  $updated_at = $faker->dateTimeThisYear();//返回一个前一年内的DateTime对象.指定允许的最后时间和时区
+  $created_at = $faker->dateTimeThisYear($updated_at);
+
   return [
       'name' => $faker->name,
       'email' => $faker->unique()->safeEmail,
       'email_verified_at' => now(),
+      'avatar' => $faker->randomElement($avatars),
+      'signature'=>$faker->sentence(),
+      
       'activated' => true,
-      'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+      'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
       'remember_token' => Str::random(10),
-      'created_at' => $date_time,
-      'updated_at' => $date_time,
+      'created_at' => $created_at,
+      'updated_at' => $updated_at,
   ];
 });
