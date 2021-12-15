@@ -84,21 +84,23 @@ body {
 
 /* 注册框 */
 
-#signup{
-  margin-top: 50px;
-  width: 422px;
+#goods_list{
+  margin-top: 10px;
+  //width: 422px;
   transition-duration: 0.5s ;
-
   position:relative;
-
+  border:1px solid #8dbd98;
   &:hover{
-    margin-top: 40px;
+    margin-top: 5px;
     -webkit-box-shadow: #ccc 0px 10px 10px;
     -moz-box-shadow: #ccc 0px 10px 10px;
     box-shadow: #ccc 0px 10px 10px;
     transition-duration: 0.5s ;
+    border:none;
+
   }
 }
+
 #r_input{
   width: 223px;
 }

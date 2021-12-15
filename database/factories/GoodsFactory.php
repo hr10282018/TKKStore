@@ -48,16 +48,18 @@ $title = [
 
 $factory->define(Good::class, function (Faker $faker) use($images,$title) {
 
-  $updated_at = $faker->dateTimeThisMonth();//返回一个前一年内的DateTime对象.指定允许的最后时间和时区
-  $created_at = $faker->dateTimeThisMonth($updated_at);
+  $updated_at = $faker->dateTimeThisMonth();//返回前一个月内的DateTime对象.
+  $created_at = $faker->dateTimeThisMonth($updated_at); // 创建时间小于修改时间
+
   $index= $faker->numberBetween(0, 15); //生成随机整数，范围是0-100之间
     return [
       "title"=>$title[$index],
-      "description"=>$faker->sentence(),
+      "description"=>$faker->text(255),//返回一段文本，最多200字符
       "image"=>$images[$index],
       "state"=>$faker->randomElement([0, 1, 2, 3]),
       'user_id' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
       'category_id' => $faker->randomElement([1, 2, 3, 4]),
+      "view_count"=> $faker->numberBetween(100, 1000),
       "price"=>$faker->randomFloat(1, 1, 200),  //生成浮点数，两位小数点，范围1-200
       "old_price"=>$faker->randomFloat(1, 10,300 ),
       'created_at' => $created_at,

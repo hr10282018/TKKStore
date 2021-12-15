@@ -22,7 +22,7 @@ class PagesController extends Controller
   {
     session()->forget('primary');
 
-    $goods = Good::where('state', '1')->paginate(2);
+    $goods = Good::where('state', '1')->paginate(12);
 
     // $images = $goods->pluck('image');
     // for ($i = 0; $i < sizeof($images); $i++) {
@@ -38,14 +38,9 @@ class PagesController extends Controller
   {
     $categories = Category::where('id', $category_id)->first();
 
-    $goods = $good->where('category_id', $category_id)->paginate(1);
-
-    // $images = $goods->pluck('image');
-    // for ($i = 0; $i < sizeof($images); $i++) {
-    //   $images[$i] = explode(',', $images[$i])[0];
-    // }
-    // $goods=$goods->paginate(1);
+    $goods = $good->where('category_id', $category_id)->paginate(12);
     session()->flash('primary', $categories->description);
     return view('pages.root', compact('goods', 'categories'));
   }
+  
 }

@@ -12,12 +12,17 @@ class Good extends Model
     'view_count', 'user_id',
   ];
 
-  public function user(){
+  public function user(){   // 命名有要求，不然出现bug
     return $this->belongsTo(User::class);   //一个商品属于一个用户
   }
 
   public function category(){
     return $this->belongsTo(Category::class);   // 一个商品属于一个分类
   }
+
+  public function comments(){
+    return $this->hasMany(Comment::class);     // 一个商品有多个评论
+  }
+
 
 }

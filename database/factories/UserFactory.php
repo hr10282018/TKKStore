@@ -9,11 +9,11 @@ use Illuminate\Support\Str;
 // 头像
 $avatars = [
   'http://onestore.tkk/images/avatars/1.png',
-  'http://onestore.tkk/images/avatars/2.png',
-  'http://onestore.tkk/images/avatars/3.png',
-  'http://onestore.tkk/images/avatars/7.png',
-  'http://onestore.tkk/images/avatars/5.png',
-  'http://onestore.tkk/images/avatars/6.png',
+  'http://onestore.tkk/images/avatars/2.jpg',
+  'http://onestore.tkk/images/avatars/3.jpg',
+  'http://onestore.tkk/images/avatars/7.jpg',
+  'http://onestore.tkk/images/avatars/5.jpg',
+  'http://onestore.tkk/images/avatars/6.jpg',
 ];
 
 $factory->define(User::class, function (Faker $faker) use ($avatars) {
@@ -27,7 +27,7 @@ $factory->define(User::class, function (Faker $faker) use ($avatars) {
       'email_verified_at' => now(),
       'avatar' => $faker->randomElement($avatars),
       'signature'=>$faker->sentence(),
-      
+
       'activated' => true,
       'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
       'remember_token' => Str::random(10),

@@ -1,6 +1,9 @@
 
-$("#btn_new").click(function () {
 
-  $(this).addClass('active');
-  return true;
+$('#order_select').change(function() {
+  $('#search_form').submit();
+})
+
+$('#state_select').change(function() {
+  $('#search_form').submit();
 })

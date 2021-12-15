@@ -21,7 +21,7 @@
           </h1>
         </div>
       </li>
-      @if(count($user->user_goods) > 0)
+      @if(count($user->goods) > 0)
       <p style="display: none;">{{ $i=0 }}</p>
       @foreach ($goods as $good => $value)
 

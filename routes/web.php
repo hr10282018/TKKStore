@@ -2,23 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+
 
 /* 商品路由 */
 Route::get('/goods', 'PagesController@root')->name('home');  // 主页-商品列表
 Route::get('/category/{category_id}', 'PagesController@category_show')->name('category');  // 商品列表分类
 Route::get('/goods_search', 'GoodsController@goods_search')->name('goods_search'); // 处理商品搜索
+Route::get('/goods/{goods_id}/detail', 'GoodsController@goods_detail')->name('goods_detail');  // 商品详情页
 
-
+/* 用户评论 */
+Route::post('/goods/{goods_id}/detail', 'CommentsController@goods_detail_comment')->name('goods_detail_comment');
+Route::delete('/goods/{goods_id}/detail', 'CommentsController@delete_comment')->name('delete_comment'); // 删除评论
 
 /* 注册路由 */
 Route::get('/signup', 'UsersController@create')->name('signup'); // 注册页面

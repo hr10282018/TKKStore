@@ -32,8 +32,14 @@ class User extends Authenticatable
     });
   }
 
-  public function user_goods(){
+  public function goods()
+  {
     return $this->hasMany(Good::class);     // 一个用户有多个商品
+  }
+
+  public function comments()
+  {
+    return $this->hasMany(Comment::class);     // 一个用户有多个评论
   }
 
 

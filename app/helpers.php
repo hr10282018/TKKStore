@@ -19,13 +19,17 @@ function category_active($category_id)    // 有分类的查询+最新发布-返
     return active_class(true);
   }elseif((if_route('goods_search')) && if_query ('category_id', $category_id) ){
     return active_class(true);
+  }elseif((if_route('goods_detail')) && if_query ('from', $category_id)){
+    return active_class(true);
   }
 
 }
 
+
 function search_no_category_active()    // 无分类的查询+最新发布-返回
 {
-  return active_class((if_route('goods_search')) && if_query ('category_id',''));
+
+  return active_class(((if_route('goods_search')) && if_query ('category_id','')) || (if_route('goods_detail')) && if_query ('from', 'all') );
 }
 
 

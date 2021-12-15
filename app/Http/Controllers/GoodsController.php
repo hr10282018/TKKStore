@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Handlers\ImageUploadHandler;
 use App\Models\Category;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\Good;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 
@@ -66,7 +68,7 @@ class GoodsController extends Controller
       $builder->where('category_id', $category_id);
     }
     if($key=$request->input('key', '')){    // 最新发布
-      $builder ->where('created_at', '>=', Carbon::now()->subMonths('2'));
+      $builder ->where('created_at', '>=', Carbon::now()->subWeeks('2'));
     }
 
     if ($search = $request->input('search', '')) {
@@ -92,18 +94,29 @@ class GoodsController extends Controller
 
     }
 
-    // $images = $builder->pluck('image');
-    // //dd($builder->get());
-    // for($i=0; $i<sizeof($images); $i++){
-    //   $images[$i]=explode(',',$images[$i])[0];
-    // }
-    //dd( $images[0]);
-
-    $goods = $builder->paginate(1);
+    $goods = $builder->paginate(12);
     if(isset($categories)){     // 有分类必须再返回分类数据
-      return view('pages.root', compact('goods','categories'));
+      return view('pages.root', compact('goods','categories','search','order','state'));
     }
-    return view('pages.root', compact('goods'));
+    return view('pages.root', compact('goods','search','order','state'));
+  }
+
+  /* 商品详情 */
+  public function goods_detail($goods_id){
+
+
+    $goods_info=Good::where('id',$goods_id)->first();
+    $length=substr_count( $goods_info->image,',');
+
+    $images=explode(',',$goods_info->image);
+    $user=User::where('id',$goods_info->user_id)->first();
+
+    $comments=Comment::where('goods_id',$goods_id)->get();
+
+    //dd($comments);
+
+    return view('goods.detail',compact('comments'),compact('images','length','goods_info','user'));
 
   }
+
 }

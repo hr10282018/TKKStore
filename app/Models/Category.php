@@ -11,8 +11,9 @@ class Category extends Model
     'name', 'description', 'count'
   ];
 
-  public function category_goods(){
+  public function goods(){
     return $this->hasMany(Good::class);     // 一个分类有多个商品
   }
+
 
 }
