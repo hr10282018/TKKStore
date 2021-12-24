@@ -14,6 +14,10 @@ Route::get('/goods/{goods_id}/detail', 'GoodsController@goods_detail')->name('go
 Route::post('/goods/{goods_id}/detail', 'CommentsController@goods_detail_comment')->name('goods_detail_comment');
 Route::delete('/goods/{goods_id}/detail', 'CommentsController@delete_comment')->name('delete_comment'); // 删除评论
 
+/* 预订商品 */
+Route::post('/goods/{goods_id}/detail', 'BookingsController@booking_goods')->name('booking_goods');
+
+
 /* 注册路由 */
 Route::get('/signup', 'UsersController@create')->name('signup'); // 注册页面
 
@@ -35,6 +39,13 @@ Route::get('/users/{user}', 'UsersController@user_show')->name('user_show');  //
 Route::get('/users/{user}/sale_goods', 'UsersController@sale_goods')->name('sale_goods');  // 我的商品
 Route::delete('/users/{user}/delete_goods', 'UsersController@delete_goods')->name('delete_goods');  // 删除商品
 
+Route::get('/users/{user}/booking_notice', 'UsersController@booking_notice')->name('booking_notice');  // 预订通知
+Route::put('/users/{user}/agree_booking/{booking_id}', 'UsersController@agree_booking')->name('agree_booking');  // 接受预订
+Route::post('/users/{user}/refuse_booking/{booking_id}', 'UsersController@refuse_booking')->name('refuse_booking');  // 拒绝预订
+
+Route::get('/users/{user}/user_booking', 'UsersController@user_booking')->name('user_booking');  // 我的预订
+
+
 Route::get('/users/{user}/settings/edit', 'UsersController@edit')->name('user_edit');  // 修改信息
 Route::put('/users/{user}/settings/check_edit', 'UsersController@edit_check')->name('user_edit_check');    // 修改基本信息表单
 
@@ -43,6 +54,7 @@ Route::put('/users/{user}/settings/check_avatar', 'UsersController@avatar_check'
 
 Route::get('/users/{user}/settings/edit_password', 'UsersController@edit_password')->name('user_edit_password');  // 修改密码
 Route::post('/users/{user}/settings/check_password', 'UsersController@password_check')->name('user_edit_password_check');  // 修改密码表单
+
 
 
 /* 邮箱认证 */

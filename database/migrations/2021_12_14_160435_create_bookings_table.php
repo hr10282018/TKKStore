@@ -19,7 +19,7 @@ class CreateBookingsTable extends Migration
             $table->bigInteger('user_id')->unsigned()->index();     // 商品所属用户id
             $table->bigInteger('buyer_id')->unsigned()->index();     // 预订者id
 
-            $table->string('user_state',2);   // 卖家状态-0：拒绝出售，1：同意
+            $table->string('user_state',2)->nullable();   // 卖家状态-0：拒绝出售，1：同意
             $table->string('reason')->nullable();   // 拒绝的原因
 
             $table->timestamps();

@@ -24,5 +24,8 @@ class Good extends Model
     return $this->hasMany(Comment::class);     // 一个商品有多个评论
   }
 
+  public function bookings(){
+    return $this->hasMany(Booking::class);     // 一个商品有多个预订
+  }
 
 }

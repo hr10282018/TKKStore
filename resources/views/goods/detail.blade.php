@@ -49,10 +49,10 @@
       <!-- 商品右侧 -->
       <div class="col-6 ml-3">
         <div class="row">
-          <a href="">
+          <a href="{{ route('user_show', $user->id ) }}">
             <img src="{{ $user->avatar }}" class="img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
           </a>
-          <a href="" class="mt-2 ml-2" style="text-decoration:underline">
+          <a href="{{ route('user_show', $user->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline">
             <label for="" style="font-size:18px">{{ $user->name }}</label>
           </a>
 
@@ -76,10 +76,10 @@
           </label>
         </div>
 
-        <div id="state" class="mt-2" style="color: rgb(99 ,107, 111);">
+        <!-- <div id="state" class="mt-2" style="color: rgb(99 ,107, 111);">
           <i class="far fa-clock" style="font-size: 20px;"></i>
           <span class="ml-2" title="">正在出售</span>
-        </div>
+        </div> -->
 
         <div id="time" class="mt-2" style="color: rgb(99 ,107, 111);">
           <i class="far fa-clock" style="font-size: 20px;"></i>
@@ -96,13 +96,48 @@
           <span class="ml-2" style="font-size: 15px;">评论 {{ $goods_info->reply_count }}</span>
         </div>
 
-        <div class="buttons mt-4">
-          <button class="btn btn-success btn-favor">
-            <i class="fas fa-heart" style=""></i>
-            预订
+        <div class="row mt-4">
+          @if( Auth::user()->id != $goods_info->user_id)
+
+          @if($goods_info->state=='1')
+          <form action="{{ route('booking_goods', $goods_info->id) }}" method="POST" accept-charset="UTF-8" onsubmit="return confirm('预定后一天之内无法取消预订，确定要预订吗？');">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="user_id" value="{{ $goods_info->user_id }}">
+            <button class="btn btn-success btn-favor" type="submit">
+              <i class="fas fa-heart" ></i>
+              预订
+            </button>
+
+          </form>
+          <button class="btn btn-primary btn-add-to-cart ml-3">加入收藏</button>
+
+          @elseif($goods_info->state=='2')
+          <button class="btn btn-danger btn-favor" disabled>
+            <i class="fas fa-heart" style="color:red"></i>
+            已被预订
           </button>
-          <button class="btn btn-primary btn-add-to-cart">...</button>
+          <button class="btn btn-primary btn-add-to-cart ml-3">加入收藏</button>
+          @else($goods_info->state=='3')
+          <button class="btn btn-secondary btn-favor" disabled>
+            <i class="fas fa-heart" style="color:#a5a5a5;"></i>
+
+            已出售
+          </button>
+          @endif
+
+          @else
+          <button class="btn btn-success btn-favor" >
+            <i class="far fa-edit" ></i>
+            
+            编辑
+          </button>
+
+
+
+          @endif
+
         </div>
+
       </div>
     </div>
 

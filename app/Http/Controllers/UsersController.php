@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use App\Handlers\ImageUploadHandler;    // 上传图片处理器
+use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Good;
 use Mail;
@@ -111,7 +112,7 @@ class UsersController extends Controller
   }
   public function sale_goods(User $user,Category $category){    // 我的商品展示
 
-
+    //dd($user);
     $goods=Good::where('user_id',$user->id)->paginate(3);
 
     $image=array();
@@ -119,7 +120,7 @@ class UsersController extends Controller
     for($i=0; $i<sizeof($goods); $i++){
       $image[]=explode(',',$goods[$i]->image)[0];
     }
-    
+
     return view('users.detail._sale_goods',compact('user','goods','image'));
   }
 
@@ -180,15 +181,54 @@ class UsersController extends Controller
   }
   /* end */
 
-  /* 用户商品处理 */
-
-  public function delete_goods(Request $request){   // 删除商品
+  /* 出售商品处理 */
+  public function delete_goods(Request $request){   // 删除出售商品
     // dd($request->all()['goods_id']); //商品id
 
     Good::where('id', $request->all()['goods_id'])->first()->delete();  // 分类id
 
     session()->flash('success', '成功删除该商品！');
     return back();
+  }
+
+
+  /* 预订相关 */
+  public function booking_notice($user){   // 显示预订通知
+
+
+    $bookings=Booking::where('user_id',$user)->where('user_state',null)->paginate(3);
+    $user=User::where('id',$user)->first();
+    //$buyer=User::where('id',$user)->first();
+
+    return view('users.detail._booking_notice',compact('user'),compact('bookings'));
 
   }
+  public function agree_booking($user,$booking_id){    // 处理接受预订
+    //dd($user);
+    //dd($booking_id);
+    Booking::where('id',$booking_id)->update(['user_state'=>'1']);
+
+    return back()->with('success','成功接受预订！');
+  }
+  public function refuse_booking($user,$booking_id){    // 处理拒绝预订
+    //dd($user);
+    //dd($booking_id);
+    Booking::where('id',$booking_id)->update(['user_state'=>'0']);
+
+    return back()->with('success','成功拒绝预订！');
+  }
+
+  public function user_booking($user){   // 显示我的预订
+
+    $bookings=Booking::where('buyer_id',$user);
+    $no_reply_booking=$bookings->where('user_state',null)->paginate(3);
+
+    $yes_reply_booking=Booking::where('buyer_id',$user)->whereNotNull('user_state')->paginate(3);
+
+    $user=User::where('id',$user)->first();
+    //$buyer=User::where('id',$user)->first();
+
+    return view('users.detail._user_notice',compact('user'),compact('no_reply_booking','yes_reply_booking'));
+  }
+
 }

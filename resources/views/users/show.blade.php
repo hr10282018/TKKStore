@@ -23,7 +23,7 @@
 
         <div class="card-body" style="height:76px">
           <h5 class="card-title"><strong>注册于</strong></h5>
-          <p class="card-text">两个月前</p>
+          <p class="card-text" title="{{ $user->created_at }}">{{ $user->created_at->diffForHumans() }}</p>
         </div>
         <li class="list-group-item " style="width: 230px; margin:0 auto;"></li>
 
@@ -54,39 +54,40 @@
         基本资料
       </a>
 
-      <a href="#" class="list-group-item list-group-item-action ">
+      <a href="{{ route('user_booking' , $user->id )  }}" class="list-group-item list-group-item-action ">
         <i class="fas fa-heart mr-1"></i>
         我的预订
       </a>
+      <a href="#" class="list-group-item list-group-item-action">
+        <i class="fab fa-twitch" style="font-size:17px"></i>
+        我的评论
+      </a>
 
       <a href="#" class="list-group-item list-group-item-action">
-        <i class="fab fa-twitch" style="font-size:17px"></i>
-        我的购买
-      </a>
-      <a href="#" class="list-group-item list-group-item-action">
-        <i class="fab fa-twitch" style="font-size:17px"></i>
-        我的留言
+
+      <img src="/images/order3.png" alt=""  style="width: 18px; height:18px; margin-right:1px">
+        购买订单
       </a>
     </div>
 
     <div class="card mt-3">
       <li class="list-group-item "> <strong style="font-size: 16px; color:#a5a5a5">我的店铺</strong></li>
-      <a href="#" class="list-group-item list-group-item-action">
-        <img src="/images/order3.png" alt=""  style="width: 18px; height:18px; margin-right:1px">
-        我的订单
-      </a>
-      <!-- <a href="#" class="list-group-item list-group-item-action active-a">
-        <i class="fas fa-paper-plane mr-1"></i>
-        我的发布
-      </a> -->
+
       <a href="{{ route('sale_goods',$user->id) }}" class="list-group-item list-group-item-action">
         <i class="fas fa-store"></i>
-        我的商品
+        <span>出售商品</span>
+      </a>
+
+      <a href="{{ route('booking_notice',$user->id) }}" class="list-group-item list-group-item-action">
+        <i class="far fa-envelope" style="font-size:17px"></i>
+        <span class="ml-1">预订通知</span>
       </a>
 
       <a href="#" class="list-group-item list-group-item-action">
-        我的xx
+        <img src="/images/order3.png" alt=""  style="width: 18px; height:18px; margin-right:1px">
+        <span>出售订单</span>
       </a>
+
     </div>
 
   </div>

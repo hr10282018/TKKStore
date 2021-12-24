@@ -22,4 +22,6 @@ class CommentPolicy
       // 评论的作者可以删除 + 商品的作者可以删除
       return ($currentUser->id === $comment->user_id) ||  ($comment->goods->user_id === $currentUser->id) ;
     }
+
+   
 }

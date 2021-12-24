@@ -1,3 +1,4 @@
+
 <!-- 我的商品展示 -->
 @extends('users.show')
 @section('user_info')
@@ -17,7 +18,7 @@
           <h1 class="ml-2 mt-2" style="line-height: 24px;color:#636b6f; font-size:20px;font-weight:bold; ">
             {{$user->name}}
             <span style="letter-spacing:2px">发布的商品</span>
-            （0）
+            （{{ count($user->goods) }}）
           </h1>
         </div>
       </li>
@@ -28,7 +29,7 @@
       <li class="list-group-item">
         <div class="row no-gutters">
           <div class="">
-            <a href="#">
+            <a href="{{ route('goods_detail', $value->id) }}">
               <img src="{{ $image[$i] }}" style="width: 100px; height:100px;" alt="...">
               <p style="display: none;">{{$i++}}</p>
             </a>
@@ -36,20 +37,20 @@
           <div class=" ml-4" style="width: 500px;">
 
             <h5 class="card-title">
-              <a href="">{{ $value->title }}</a>
+              <a href="{{ route('goods_detail', $value->id) }}">{{ $value->title }}</a>
             </h5>
             <p class="card-text" style="color: #d73038;" title="售价">￥：{{ $value->price }}元</p>
-            <div class="row ">
+            <div class=" ">
               <p class="card-text"><small title="{{ $value->created_at }}" class="text-muted">发布于 {{ $value->created_at->diffForHumans() }}</small></p>
 
-              <div class="" style="margin-left: 300px;">
-                <a class="btn btn-primary"  style="width: 58px; height:29px;line-height:15px;">编辑</a>
+              <div class="" style="margin-left: 360px;">
+                <a class="btn btn-outline-primary"  style="width: 58px; height:29px;line-height:15px;">编辑</a>
                 <form action="{{ route('delete_goods',$user->id) }}" method="post" onsubmit="return confirm('您确定要删除本条微博吗？');" class="float-right del_goods">
                   {{ csrf_field() }}
                   {{ method_field('DELETE') }}
                   <input type="" name="goods_id" value="{{ $value->id }}" hidden>
                   <!-- <button type="submit" class="btn btn-sm btn-danger delete-btn ml-3 " data-toggle="modal" data-target="#staticBackdrop" style="width: 58px; height:29px;">删除</button> -->
-                  <button type="submit" class="btn btn-sm btn-danger delete-btn ml-3 " style="width: 58px; height:29px;">删除</button>
+                  <button type="submit" class="btn btn-sm btn-outline-danger delete-btn ml-3 " style="width: 58px; height:29px;">删除</button>
                 </form>
 
                 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

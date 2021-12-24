@@ -83,8 +83,8 @@
         暂无该物品 ~_~
       </div>
     </div>
-    @endif
-
+  @endif
+</div>
 </div>
 
 

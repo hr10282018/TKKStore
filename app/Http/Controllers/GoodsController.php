@@ -8,6 +8,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\Good;
 use App\Models\User;
+use App\Policies\GoodPolicy;
 use Auth;
 use Carbon\Carbon;
 
@@ -68,7 +69,7 @@ class GoodsController extends Controller
       $builder->where('category_id', $category_id);
     }
     if($key=$request->input('key', '')){    // 最新发布
-      $builder ->where('created_at', '>=', Carbon::now()->subWeeks('2'));
+      $builder ->where('created_at', '>=', Carbon::now()->subWeeks('4'));
     }
 
     if ($search = $request->input('search', '')) {
@@ -114,6 +115,7 @@ class GoodsController extends Controller
     $comments=Comment::where('goods_id',$goods_id)->get();
 
     //dd($comments);
+    //GoodPolicy::
 
     return view('goods.detail',compact('comments'),compact('images','length','goods_info','user'));
 

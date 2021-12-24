@@ -14,4 +14,6 @@ class UserPolicy
     {
       return $currentUser->id === $user->id;
     }
+
+    
 }

@@ -42,5 +42,11 @@ class User extends Authenticatable
     return $this->hasMany(Comment::class);     // 一个用户有多个评论
   }
 
+  public function bookings()
+  {
+    return $this->hasMany(Booking::class);     // 一个用户有多个预订
+  }
+
+
 
 }
