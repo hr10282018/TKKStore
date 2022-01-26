@@ -6,25 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Good extends Model
 {
-
   protected $fillable = [
-    'title', 'description', 'image','state','old_price','price', 'category_id', 'reply_count',
+    'title', 'description', 'image', 'state', 'old_price', 'price', 'category_id', 'reply_count',
     'view_count', 'user_id',
   ];
 
-  public function user(){   // 命名有要求，不然出现bug
+  public function user()
+  {   // 命名有要求，不然出现bug
     return $this->belongsTo(User::class);   //一个商品属于一个用户
   }
 
-  public function category(){
+  public function category()
+  {
     return $this->belongsTo(Category::class);   // 一个商品属于一个分类
   }
 
-  public function comments(){
+  public function comments()
+  {
     return $this->hasMany(Comment::class);     // 一个商品有多个评论
   }
 
-  public function bookings(){
+  public function bookings()
+  {
     return $this->hasMany(Booking::class);     // 一个商品有多个预订
   }
 

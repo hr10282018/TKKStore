@@ -45,6 +45,7 @@
             <span class="ml-2"> {{ Auth::user()->name }}</span>
           </a>
           <div class="dropdown-menu mt-2" aria-labelledby="navbarDropdown">
+
             <a class="dropdown-item" style="height: 45px; line-height:40px" href="{{ route('user_show', Auth::user()) }}">
               <i class="fas fa-user mr-2"></i>
               个人中心

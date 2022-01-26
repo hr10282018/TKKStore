@@ -56,7 +56,6 @@ Route::get('/users/{user}/settings/edit_password', 'UsersController@edit_passwor
 Route::post('/users/{user}/settings/check_password', 'UsersController@password_check')->name('user_edit_password_check');  // 修改密码表单
 
 
-
 /* 邮箱认证 */
 Route::get('/signup/email/verify', 'SessionsController@show_verify')->name('show_verify'); // 验证界面
 Route::get('/signup/email/verify/{token}', 'SessionsController@signup_verify')->name('signup_verify'); // 登录验证
@@ -67,5 +66,4 @@ Route::get('/create_goods', 'GoodsController@create_goods')->name('create_goods'
 Route::put('/create_goods', 'GoodsController@create_goods_check')->name('create_goods'); // 处理发布商品
 
 
-/* 商品详情 */
-//Route::get('/goods', 'SessionsController@goods')->name('goods'); //
+

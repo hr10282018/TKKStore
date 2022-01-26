@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-
   protected $fillable = [
     'name', 'description', 'count'
   ];
 
-  public function goods(){
+
+  public function goods()
+  {
     return $this->hasMany(Good::class);     // 一个分类有多个商品
   }
-
-
 }

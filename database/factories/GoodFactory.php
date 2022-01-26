@@ -1,11 +1,8 @@
 <?php
 
 
-
-use App\Model;
-use Faker\Generator as Faker;
 use App\Models\Good;
-
+use Faker\Generator as Faker;
 
 // 商品图片
 $images = [
@@ -26,6 +23,7 @@ $images = [
   'http://onestore.tkk/images/goods/16_x.jpg,',
   'http://onestore.tkk/images/goods/17_x.jpg,http://onestore.tkk/images/goods/17_y.jpg,',
 ];
+
 // 商品标题
 $title = [
   '下学期不在学校了 出出出',
@@ -46,23 +44,24 @@ $title = [
   '井河阿莎姬现货国产机娘，小瑕疵，盒子替换件都在100出全校可配送',
 ];
 
-$factory->define(Good::class, function (Faker $faker) use($images,$title) {
+$factory->define(Good::class, function (Faker $faker) use ($images, $title) {
 
-  $updated_at = $faker->dateTimeThisMonth();//返回前一个月内的DateTime对象.
+
+  $updated_at = $faker->dateTimeThisMonth(); //返回前一个月内的DateTime对象.
   $created_at = $faker->dateTimeThisMonth($updated_at); // 创建时间小于修改时间
+  $index = $faker->numberBetween(0, 15); //生成随机整数，范围是0-100之间
 
-  $index= $faker->numberBetween(0, 15); //生成随机整数，范围是0-100之间
-    return [
-      "title"=>$title[$index],
-      "description"=>$faker->text(255),//返回一段文本，最多200字符
-      "image"=>$images[$index],
-      "state"=>$faker->randomElement([0, 1, 2, 3]),
-      'user_id' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-      'category_id' => $faker->randomElement([1, 2, 3, 4]),
-      "view_count"=> $faker->numberBetween(100, 1000),
-      "price"=>$faker->randomFloat(1, 1, 200),  //生成浮点数，两位小数点，范围1-200
-      "old_price"=>$faker->randomFloat(1, 10,300 ),
-      'created_at' => $created_at,
-      'updated_at' => $updated_at,
-    ];
+  return [
+    "title" => $title[$index],
+    "description" => $faker->text(255), //返回一段文本，最多200字符
+    "image" => $images[$index],
+    "state" => $faker->randomElement([0, 1, 2, 3]),
+    'user_id' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+    'category_id' => $faker->randomElement([1, 2, 3, 4]),
+    "view_count" => $faker->numberBetween(100, 1000),
+    "price" => $faker->randomFloat(1, 1, 200),  //生成浮点数，两位小数点，范围1-200
+    "old_price" => $faker->randomFloat(1, 10, 300),
+    'created_at' => $created_at,
+    'updated_at' => $updated_at,
+  ];
 });
