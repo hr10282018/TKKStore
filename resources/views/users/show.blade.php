@@ -28,7 +28,7 @@
         <li class="list-group-item " style="width: 230px; margin:0 auto;"></li>
 
         <div class="card-body" style="height:60px">
-          <a href="{{ route('user_edit',Auth::user()) }}" class="btn btn-default btn-outline-info" style="width:215px; height:35px">
+          <a href="{{ route('user_edit',Auth::user()) }}" class="btn edit_info" style="border:#3490dc 1px solid; width:215px; height:35px">
             <i class="fas fa-user-edit"></i>
             编辑个人资料
           </a>
@@ -43,29 +43,30 @@
 
 
   <!-- 右侧栏链接 -->
+  <i class="fas fa-caret-left " style="font-size:18px;color: #3490dc;left:17.5px; top: {{ user_center_active('arrow') }}px; position:relative;  z-index:5"></i>
   <div class="list-group ml-3" style="width: 200px;">
 
     <div class="card">
-      <i class="fas fa-caret-left" style="color:aqua"></i>
+      <!-- <i class="fas fa-caret-left" style="color:aqua"></i> -->
+
       <li class="list-group-item "> <strong style="font-size: 16px; color:#a5a5a5">我的信息</strong></li>
 
-      <a href="{{ route('user_show',$user->id) }}" class="list-group-item list-group-item-action active">
-      <i class="fas fa-user mr-2"></i>
+      <a href="{{ route('user_show',$user->id) }}" style=" z-index:1" class="list-group-item list-group-item-action {{ user_center_active(0) }}">
+        <i class="fas fa-user mr-2"></i>
         基本资料
       </a>
 
-      <a href="{{ route('user_booking' , $user->id )  }}" class="list-group-item list-group-item-action ">
+      <a href="{{ route('user_booking' , $user->id )  }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(1) }}">
         <i class="fas fa-heart mr-1"></i>
         我的预订
       </a>
-      <a href="#" class="list-group-item list-group-item-action">
-        <i class="fab fa-twitch" style="font-size:17px"></i>
+      <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;" class="list-group-item list-group-item-action ">
+        <i class="fab fa-twitch" style="font-size:16px"></i>
         我的评论
       </a>
 
-      <a href="#" class="list-group-item list-group-item-action">
-
-      <img src="/images/order3.png" alt=""  style="width: 18px; height:18px; margin-right:1px">
+      <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;">
+        <img src="/images/order3.png" alt="" style="width: 18px; height:18px; margin-right:1px">
         购买订单
       </a>
     </div>
@@ -73,18 +74,18 @@
     <div class="card mt-3">
       <li class="list-group-item "> <strong style="font-size: 16px; color:#a5a5a5">我的店铺</strong></li>
 
-      <a href="{{ route('sale_goods',$user->id) }}" class="list-group-item list-group-item-action">
+      <a href="{{ route('sale_goods',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(4) }}">
         <i class="fas fa-store"></i>
-        <span>出售商品</span>
+        <span>发布商品</span>
       </a>
 
-      <a href="{{ route('booking_notice',$user->id) }}" class="list-group-item list-group-item-action">
+      <a href="{{ route('booking_notice',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(5) }}">
         <i class="far fa-envelope" style="font-size:17px"></i>
         <span class="ml-1">预订通知</span>
       </a>
 
-      <a href="#" class="list-group-item list-group-item-action">
-        <img src="/images/order3.png" alt=""  style="width: 18px; height:18px; margin-right:1px">
+      <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;">
+        <img src="/images/order3.png" alt="" style="width: 18px; height:18px; margin-right:1px">
         <span>出售订单</span>
       </a>
 

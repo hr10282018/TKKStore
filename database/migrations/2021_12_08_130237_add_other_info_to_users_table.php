@@ -17,7 +17,7 @@ class AddOtherInfoToUsersTable extends Migration
 
           $table->string('avatar')->nullable();		//头像-存储图片路径
           $table->string('signature',255)->nullable(); // 个签
-          $table->string('sex')->nullable();    //性别
+          $table->string('sex',4)->nullable();    //性别
           $table->string('phone',11)->nullable();        //手机号
           $table->string('university')->default('厦大嘉庚')->nullable();   // 大学
           $table->string('faculty')->nullable();  // 院系

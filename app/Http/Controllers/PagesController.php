@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Good;
 use Carbon\Carbon;
+use Auth;
 
 class PagesController extends Controller
 {
@@ -20,7 +21,7 @@ class PagesController extends Controller
   // 主页
   public function root(Request $request)
   {
-    session()->forget('primary');
+    //session()->forget('primary');
 
     $goods = Good::where('state', '1')->paginate(12);
 
@@ -39,8 +40,12 @@ class PagesController extends Controller
     $categories = Category::where('id', $category_id)->first();
 
     $goods = $good->where('category_id', $category_id)->paginate(12);
-    session()->flash('primary', $categories->description);
+    // if(session()->get('primary')){
+    //   session()->forget('primary');
+    // }else{
+    //   session()->flash('primary', $categories->description);
+    // }
     return view('pages.root', compact('goods', 'categories'));
   }
-  
+
 }

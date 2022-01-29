@@ -17219,3 +17219,18 @@ body {
   background-color: #3490dc;
 }
 
+.edit_info:hover {
+  color: whitesmoke;
+  background-color: #3490dc;
+}
+
+.email_text {
+  background-color: #fff3cd;
+  padding: 17px;
+  border: 1px solid #ffeeba;
+  display: block;
+  margin: 22px;
+  text-align: center;
+  color: #856404;
+}
+

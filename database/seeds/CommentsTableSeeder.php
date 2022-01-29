@@ -8,6 +8,7 @@ class CommentsTableSeeder extends Seeder
 
   public function run()
   {
-    factory(Comment::class)->times(400)->create();
+    factory(Comment::class)->times(500)->create();
   }
+
 }

@@ -14,7 +14,7 @@ class SessionsController extends Controller
   public function __construct()
   {
     $this->middleware('guest', [
-      'only' => ['login','signup_verify']
+      'only' => ['login']
     ]);
 
     $this->middleware('throttle:6,1')->only('signup_verify2');  //再次发送邮件限制访问频率1分钟6次
@@ -28,15 +28,16 @@ class SessionsController extends Controller
   }
   public function login_check(Request $request,User $user){  // 登录信息
     $credentials = $this->validate($request, [
-      'email' => ['required','regex:/.{6,}@qq.com/','max:255'],
+      'email' => ['required','regex:/^[a-zA-Z\d]{8,}@qq.com$/','max:255'],
       'password' => 'required'
     ],[
       'email.regex'=>'请填写您注册的QQ邮箱！'
     ]);
 
     if (Auth::attempt($credentials,$request->has('remember'))) {  // 第二个参数bool(记住我)
-
+        //dd(Auth::user()->name);
       if(Auth::user()->activated) {
+        Auth::user();
         session()->flash('success', '欢迎回来！');
         //return redirect()->route('home',[Auth::user()]);
         return redirect()->route('home');
@@ -46,7 +47,6 @@ class SessionsController extends Controller
         //Auth::logout();
         $user=Auth::user();
         //Auth::logout();
-
         $this->sendEmailConfirmationTo($user);
         session()->flash('success', '你的账号未激活,验证邮件已发送到你的注册邮箱上，请注意查收。');
         return redirect()->route('show_verify');
@@ -57,10 +57,13 @@ class SessionsController extends Controller
       return redirect()->back()->withInput();
     }
   }
-  public function login_out(){    // 退出登录
+  public function login_out(Request $request){    // 退出登录
     Auth::logout();
     session()->flash('success', '您已成功退出！');
-    return redirect('login');
+    if($request->ajax()){
+      return [];
+    }
+    return redirect()->route('login');
   }
 
    /* 邮箱认证 */
@@ -69,8 +72,6 @@ class SessionsController extends Controller
     return view('users.email.verify');
   }
   public function signup_verify2($token){   // 若没有收到，再次发送
-
-
 
     $user = User::where('activation_token', $token)->firstOrFail();
     //dd($token);
@@ -93,17 +94,18 @@ class SessionsController extends Controller
   }
   public function signup_verify($token)    // 验证邮箱
   {
+
     $user = User::where('activation_token', $token)->firstOrFail();
 
     $user->activated = true;
     $user->activation_token = null;
+    $user->email_verified_at = now();
     $user->save();
     //Auth::login($user);
-    session()->flash('success', '恭喜你，激活成功！');
+    session()->flash('success', '恭喜你，账号激活成功！');
     return redirect()->route('home', [$user]);
 
   }
-
 
 
 

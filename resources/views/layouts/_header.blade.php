@@ -1,11 +1,9 @@
-
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-static-top">
   <div class="container">
 
     <!-- 校徽 -->
     <img class="mr-2" src="/images/xujc.jpg" alt="" style="width: 45px; height:45px; border-radius: 50%;">
-    <a class="navbar-brand " href="{{ url('') }}">
+    <a class="navbar-brand " href="{{ route('home') }}">
       TKK~Store
     </a>
     <ul class="navbar-nav mr-auto link_category">
@@ -75,5 +73,3 @@
 
   </div>
 </nav>
-
-

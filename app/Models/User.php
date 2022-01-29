@@ -12,7 +12,8 @@ class User extends Authenticatable
   use Notifiable;
 
   protected $fillable = [
-    'name', 'email', 'password', 'avatar',
+    'name', 'email', 'password', 'avatar','activated', 'activation_token',
+    'sex','signature','phone','university','faculty','number','r_name',
   ];
 
   protected $hidden = [
@@ -22,6 +23,7 @@ class User extends Authenticatable
   protected $casts = [
     'email_verified_at' => 'datetime',
   ];
+
 
   public static function boot() // boot-用户模型类完成初始化之后进行加载
   {

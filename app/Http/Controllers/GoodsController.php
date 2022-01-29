@@ -21,6 +21,8 @@ class GoodsController extends Controller
       //
       'except' => ['goods_search']
     ]);
+
+
   }
 
   /* 发布商品 */
@@ -53,8 +55,6 @@ class GoodsController extends Controller
     return redirect()->route('home')->with('success', '商品发布成功！');
   }
 
-
-  /* 商品详情 */
 
 
   /* 商品查询 */
@@ -105,7 +105,9 @@ class GoodsController extends Controller
   /* 商品详情 */
   public function goods_detail($goods_id){
 
-
+    if(!Auth::user()->activated){
+      return redirect()->route('show_verify');
+    }
     $goods_info=Good::where('id',$goods_id)->first();
     $length=substr_count( $goods_info->image,',');
 
@@ -116,9 +118,7 @@ class GoodsController extends Controller
 
     //dd($comments);
     //GoodPolicy::
-
     return view('goods.detail',compact('comments'),compact('images','length','goods_info','user'));
-
   }
 
 }

@@ -1,4 +1,5 @@
 
+
 // 自定义函数-用来设置注册禁用或可用
 var Bcaptcha=false;
 const disabled = document.getElementsByClassName('is-invalid');

@@ -129,9 +129,30 @@ body {
 // 选中.list-group-item.active {}
 
 /* 最新发布 */
-.new_hot .active{
-  color: #fff;
-  background-color: #3490dc;
-
+.new_hot{
+  .active{
+    color: #fff;
+    background-color: #3490dc;
+  }
 }
+
+// 编辑个人资料按钮
+.edit_info{
+  &:hover{
+  color: whitesmoke;
+  background-color: #3490dc;
+  }
+}
+
+// swal-text(编辑个人信息-确认修改邮箱弹框样式)
+.email_text {
+  background-color: #fff3cd;
+  padding: 17px;
+  border: 1px solid #ffeeba;
+  display: block;
+  margin: 22px;
+  text-align: center;
+  color: #856404;
+}
+
 

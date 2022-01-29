@@ -8,7 +8,7 @@ class GoodsSeeder extends Seeder
 
   public function run()
   {
-    factory(Good::class)->times(100)->create();
+    factory(Good::class)->times(200)->create();
   }
 
 }

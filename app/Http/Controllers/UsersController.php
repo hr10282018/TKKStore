@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use App\Handlers\ImageUploadHandler;    // 上传图片处理器
+use App\Http\Requests\UserInfoRequest;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Good;
 use Mail;
+use Illuminate\Support\Str;
+
 
 class UsersController extends Controller
 {
@@ -23,6 +26,8 @@ class UsersController extends Controller
     $this->middleware('guest', [
       'only' => ['create']
     ]);
+    $this->middleware('throttle:3,1')->only('edit_check'); //限制访问频率1分钟3次
+
   }
 
 
@@ -58,19 +63,21 @@ class UsersController extends Controller
     //return redirect()->route('users.show', [$user]);
   }
   public function name_ajax($name){     // ajax验证用户名
-    $user = User::where('name', $name)->first();
-    if($user){
-      return false;
+    //return $name;
+    $user_name = User::where('name', $name)->first();
+    if($user_name){
+      return  'false';
     }else{
-      return true;
+      return 'true';
     }
   }
-  public function email_ajax($email){ // ajax验证邮箱
+
+  public function email_ajax($email,Request $request){ // ajax验证邮箱
     $user = User::where('email', $email)->first();
     if($user){
-      return false;
+      return 'false';
     }else{
-      return true;
+      return 'true';
     }
   }
   /* end */
@@ -109,6 +116,7 @@ class UsersController extends Controller
   public function user_show(User $user){
 
     return view('users.detail._home_info',compact('user')); // 默认路由-用户基本信息展示
+
   }
   public function sale_goods(User $user,Category $category){    // 我的商品展示
 
@@ -127,12 +135,40 @@ class UsersController extends Controller
   /* end */
 
 
-   /* 用户资料编辑 */
+  /* 用户所有信息编辑 */
 
-  public function edit(User $user){       // 默认路由-用户基本信息编辑
-
+  // 个人信息编辑
+  public function edit(User $user){      // 默认路由-用户基本信息编辑
     $this->authorize('update_user_info', $user);  // 授权判断
     return view('users.edit._edit_info',compact('user'));
+  }
+  // 个人信息编辑-处理表单
+  public function edit_check(User $user,UserInfoRequest $request){
+    //return ($request->All());
+
+    $user->update($request->only([
+      'name',
+      'email',
+      'sex',
+      'signature',
+      'phone',
+      'university',
+      'faculty',
+      'number',
+      'r_name',
+    ]));
+    //return json_encode($request->email_cg);
+    if(json_decode($request->email_cg)=='true'){   // 用户修改了邮箱，则需要重新登录验证邮箱
+      // 还需要把邮箱激活状态改为false
+      $user->activated = false;
+      $user->activation_token = Str::random(10);
+      $user->email_verified_at = null;
+      $user->save();
+
+      session()->flush(); // 退出登录
+      return 'login';
+    }
+    return [];
   }
 
 
@@ -141,7 +177,7 @@ class UsersController extends Controller
     return view('users.edit._edit_avatar',compact('user'));
   }
   public function avatar_check(Request $request,User $user,ImageUploadHandler $uploader){   // 处理用户头像编辑
-     //dd($request->avatar);  // 测试上传头像
+    //dd($request->avatar);  // 测试上传头像
     // $this->validate($request, [
     //   'avatar' => 'mimes:jpeg,bmp,png,gif|dimensions:min_width=208,min_height=208',
     // ],[
@@ -166,7 +202,7 @@ class UsersController extends Controller
     $this->authorize('update_user_info', $user);  // 授权判断
     return view('users.edit._edit_password',compact('user'));
   }
-  public function password_check(Request $request,User $user){       // 用户重设面表单
+  public function password_check(Request $request,User $user){       // 用户重设密码表单
     //dd($request->password);
     $this->authorize('update_user_info', $user);  // 授权判断
     $this->validate($request, [
