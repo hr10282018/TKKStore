@@ -53,7 +53,7 @@
 
       <a href="{{ route('user_show',$user->id) }}" style=" z-index:1" class="list-group-item list-group-item-action {{ user_center_active(0) }}">
         <i class="fas fa-user mr-2"></i>
-        基本资料
+        个人信息
       </a>
 
       <a href="{{ route('user_booking' , $user->id )  }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(1) }}">

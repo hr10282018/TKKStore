@@ -24,7 +24,7 @@
         <div class="row ml-0">
 
           <input type="" class="form-control" id="u_pwd" style="width:405px;" value="{{ $user->email }}" disabled>
-          <div style="line-height:35px;color:#636b6f" class="ml-2">设置密码后将可以使用此邮箱登录。</div>
+          <div style="line-height:35px;color:#636b6f" class="ml-2">您的邮箱</div>
         </div>
       </div>
 

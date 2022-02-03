@@ -10,9 +10,10 @@ use App\Http\Requests\UserInfoRequest;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Good;
+use App\Models\UserVisible;
 use Mail;
 use Illuminate\Support\Str;
-
+use Auth;
 
 class UsersController extends Controller
 {
@@ -26,8 +27,10 @@ class UsersController extends Controller
     $this->middleware('guest', [
       'only' => ['create']
     ]);
-    $this->middleware('throttle:3,1')->only('edit_check'); //限制访问频率1分钟3次
 
+    //限制访问频率1分钟3次
+    $this->middleware('throttle:3,1')->only('edit_check','ajax_visible_data');
+    
   }
 
 
@@ -62,6 +65,7 @@ class UsersController extends Controller
     return redirect('/login');
     //return redirect()->route('users.show', [$user]);
   }
+
   public function name_ajax($name){     // ajax验证用户名
     //return $name;
     $user_name = User::where('name', $name)->first();
@@ -71,7 +75,6 @@ class UsersController extends Controller
       return 'true';
     }
   }
-
   public function email_ajax($email,Request $request){ // ajax验证邮箱
     $user = User::where('email', $email)->first();
     if($user){
@@ -113,9 +116,10 @@ class UsersController extends Controller
 
   /* 用户主页展示-begin */
 
-  public function user_show(User $user){
+  public function user_show(User $user, UserVisible $user_visible){
 
-    return view('users.detail._home_info',compact('user')); // 默认路由-用户基本信息展示
+    $user_visible = UserVisible::where('user_id', $user->id)->first();    // 该用户可见设置
+    return view('users.detail._home_info',compact('user','user_visible')); // 默认路由-用户基本信息展示
 
   }
   public function sale_goods(User $user,Category $category){    // 我的商品展示
@@ -145,7 +149,6 @@ class UsersController extends Controller
   // 个人信息编辑-处理表单
   public function edit_check(User $user,UserInfoRequest $request){
     //return ($request->All());
-
     $user->update($request->only([
       'name',
       'email',
@@ -171,12 +174,13 @@ class UsersController extends Controller
     return [];
   }
 
-
-  public function edit_avatar(User $user){    // 用户头像编辑
+  // 用户头像编辑
+  public function edit_avatar(User $user){
     $this->authorize('update_user_info', $user);  // 授权判断
     return view('users.edit._edit_avatar',compact('user'));
   }
-  public function avatar_check(Request $request,User $user,ImageUploadHandler $uploader){   // 处理用户头像编辑
+  // 用户头像编辑-处理表单
+  public function avatar_check(Request $request,User $user,ImageUploadHandler $uploader){
     //dd($request->avatar);  // 测试上传头像
     // $this->validate($request, [
     //   'avatar' => 'mimes:jpeg,bmp,png,gif|dimensions:min_width=208,min_height=208',
@@ -198,11 +202,13 @@ class UsersController extends Controller
     }
   }
 
-  public function edit_password(User $user){    // 用户重设密码编辑
+  // 用户重设密码
+  public function edit_password(User $user){
     $this->authorize('update_user_info', $user);  // 授权判断
     return view('users.edit._edit_password',compact('user'));
   }
-  public function password_check(Request $request,User $user){       // 用户重设密码表单
+  // 用户重设密码-处理表单
+  public function password_check(Request $request,User $user){
     //dd($request->password);
     $this->authorize('update_user_info', $user);  // 授权判断
     $this->validate($request, [
@@ -215,6 +221,43 @@ class UsersController extends Controller
     session()->flash('success', '密码修改成功！');
     return redirect()->route('user_edit_password', $user->id);
   }
+
+  // 用户显示设置
+  public function edit_visible(User $user){
+    //dd($user->name);
+    $this->authorize('update_user_info', $user);  // 授权判断
+
+    $user_visible = UserVisible::where('user_id', Auth::user()->id)->first();
+    $checked='';
+    // 开关样式-选中
+    if(($user_visible->v_email || $user_visible->v_phone || $user_visible->v_university|| $user_visible->v_faculty || $user_visible->v_number || $user_visible->v_r_name)){
+      $checked='checked';
+    }
+    return view('users.edit._edit_visible',compact('user','user_visible'),['user_vis'=>$checked]);
+  }
+  // ajax获取用户可见设置
+  public function ajax_visible(){
+
+    $user_visible = UserVisible::where('user_id', Auth::user()->id)->first();
+    $res=[];
+    array_push($res,$user_visible);
+    return  $res[0];
+  }
+  // ajax修改用户可见设置
+  public function ajax_visible_data(UserVisible $user_visible,Request $request){
+
+    $user_visible->update($request->only([
+      'v_email',
+      'v_phone',
+      'v_university',
+      'v_faculty',
+      'v_number',
+      'v_r_name',
+    ]));
+    return [];
+  }
+
+
   /* end */
 
   /* 出售商品处理 */

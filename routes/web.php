@@ -37,6 +37,7 @@ Route::delete('logout', 'SessionsController@login_out')->name('login_out');   //
 /* 用户个人中心 */
 Route::get('/users/{user}', 'UsersController@user_show')->name('user_show');  // 主页展示
 
+
 Route::get('/users/{user}/user_booking', 'UsersController@user_booking')->name('user_booking');  // 我的预订
 
 Route::get('/users/{user}/sale_goods', 'UsersController@sale_goods')->name('sale_goods');  // 发布商品
@@ -57,7 +58,8 @@ Route::get('/users/{user}/settings/edit_password', 'UsersController@edit_passwor
 Route::post('/users/{user}/settings/check_password', 'UsersController@password_check')->name('user_edit_password_check');  // 修改密码表单
 
 Route::get('/users/{user}/settings/edit_visible', 'UsersController@edit_visible')->name('user_edit_visible');  // 显示设置
-
+Route::get('ajax_visible', 'UsersController@ajax_visible')->name('ajax_visible'); // ajax获取显示设置
+Route::post('/ajax_visible_data/{user_visible}', 'UsersController@ajax_visible_data')->name('ajax_visible_data'); // ajax修改显示设置
 
 /* 邮箱认证 */
 Route::get('/signup/email/verify', 'SessionsController@show_verify')->name('show_verify'); // 验证界面

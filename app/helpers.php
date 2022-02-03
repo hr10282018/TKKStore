@@ -86,9 +86,7 @@ function user_center_active($type){
     }
   }
 
-
 }
-
 
 
 
