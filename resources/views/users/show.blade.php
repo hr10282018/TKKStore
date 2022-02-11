@@ -76,7 +76,7 @@
 
       <a href="{{ route('sale_goods',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(4) }}">
         <i class="fas fa-store"></i>
-        <span>发布商品</span>
+        <span>我的商品</span>
       </a>
 
       <a href="{{ route('booking_notice',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(5) }}">
@@ -92,8 +92,6 @@
     </div>
 
   </div>
-
-
 
 </div>
 

@@ -59,6 +59,7 @@ if (input) {
       if (xhr.readyState === 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
           //处理服务端返回结果
+          console.log(xhr.response.data);
           if (xhr.response) {
             //console.log('未注册');
             input.classList.add("is-valid");

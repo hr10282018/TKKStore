@@ -11,9 +11,10 @@ Route::get('/category/{category_id}', 'PagesController@category_show')->name('ca
 Route::get('/goods_search', 'GoodsController@goods_search')->name('goods_search'); // 处理商品搜索
 Route::get('/goods/{goods_id}/detail', 'GoodsController@goods_detail')->name('goods_detail');  // 商品详情页
 
-/* 用户评论 */
-Route::post('/goods/{goods_id}/detail', 'CommentsController@goods_detail_comment')->name('goods_detail_comment');
-Route::delete('/goods/{goods_id}/detail', 'CommentsController@delete_comment')->name('delete_comment'); // 删除评论
+/* 评论 */
+Route::post('/goods/{goods_id}/detail/comments', 'CommentsController@goods_detail_comment')->name('goods_comment');  // 参与评论
+Route::delete('/goods/{comments_id}/detail', 'CommentsController@delete_comment')->name('delete_comment'); // 删除评论
+
 
 /* 预订商品 */
 Route::post('/goods/{goods_id}/detail', 'BookingsController@booking_goods')->name('booking_goods');
@@ -68,7 +69,7 @@ Route::post('/signup/email/verify/{token}', 'SessionsController@signup_verify2')
 
 /*发布商品*/
 Route::get('/create_goods', 'GoodsController@create_goods')->name('create_goods'); // 发布商品页面
-Route::put('/create_goods', 'GoodsController@create_goods_check')->name('create_goods'); // 处理发布商品
+Route::put('/create_goods', 'GoodsController@create_goods_check')->name('create_goods_check'); // 处理发布商品
 
 
 

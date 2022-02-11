@@ -62,12 +62,22 @@
         </div>
 
         <div class="lags  " style="color: rgb(99 ,107, 111);margin-top:25px;line-height:25px">
-          <i class="fas fa-tags " style="color: rgb(99 ,107, 111); font-size:20px;"></i>
-          <button class="btn btn-outline-info ml-2 mb-1" style="height: 30px;line-height:18px">标签</span>
+          <!-- <i class="fas fa-tags " style="color: rgb(99 ,107, 111); font-size:20px;"></i> -->
+          <img src="/images/iconfont/tag.png" alt="" style="width: 27px;height:27px">
+
+          @if(sizeof($tags_data) != 0)
+            @foreach($tags_data as $tag => $value)
+              <button type="button" class="btn btn_tag ml-2" style="outline:none;line-height:15px;height:27px;border-color:  #91d5ff; background: #e6f7ff;font-size: 12px;color: #1890ff">
+              {{ $value->name }}
+              </button>
+            @endforeach
+          @else
+            <span class="ml-2">无卖家标签 ^_^</span>
+          @endif
         </div>
 
-        <div class="price mt-2">
-          <i class="fas fa-money-check-alt" style="color: rgb(99 ,107, 111); font-size:20px;">
+        <div class="price mt-3">
+          <i class="fas fa-money-check-alt" style="color: rgb(99 ,107, 111); font-size:18px;">
           </i>
           <label class="ml-2" style="font-weight:400;color: red;font-size:17px;color:rgb(189 ,45, 48);">
             <em>￥</em>
@@ -83,17 +93,17 @@
 
         <div id="time" class="mt-2" style="color: rgb(99 ,107, 111);">
           <i class="far fa-clock" style="font-size: 20px;"></i>
-          <span class="ml-2" title="{{ $goods_info->created_at }}">{{ $goods_info->created_at->diffForHumans() }}</span>
+          <span class="ml-3" title="{{ $goods_info->created_at }}">{{ $goods_info->created_at->diffForHumans() }}</span>
         </div>
 
         <div id="view" class="mt-3" style="color: rgb(99 ,107, 111);">
           <i class="far fa-eye" style="font-size: 20px;"></i>
-          <span class="ml-2" style="font-size: 15px;">浏览 {{ $goods_info->view_count }}</span>
+          <span class="ml-3" style="font-size: 15px;">浏览 {{ $goods_info->view_count }}</span>
         </div>
 
         <div class="reply mt-3" style="color: rgb(99 ,107, 111);">
           <i class="far fa-comment" style="font-size: 20px;"></i>
-          <span class="ml-2" style="font-size: 15px;">评论 {{ $goods_info->reply_count }}</span>
+          <span class="ml-3" style="font-size: 15px;">评论 {{ $goods_info->reply_count }}</span>
         </div>
 
         <div class="row mt-4">
@@ -128,7 +138,7 @@
           @else
           <button class="btn btn-success btn-favor" >
             <i class="far fa-edit" ></i>
-            
+
             编辑
           </button>
 
@@ -160,14 +170,21 @@
 
             <li class="list-group-item">
               <div class="reply-box">
-                <form action="" method="POST" accept-charset="UTF-8">
+                <form class="form_comment" action="{{ route( 'goods_comment' ,$goods_info->id ) }}" method="POST" accept-charset="UTF-8">
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                  <input type="hidden" name="goods_id" value="{{ $goods_info->id }}">
+                  <!-- <input type="hidden" name="goods_id" value="{{ $goods_info->id }}"> -->
                   <div class="form-group">
                     <textarea class="form-control" rows="3" style="height:52px;max-height: 150px;min-height: 130px;" placeholder="快来分享你的想法~" name="content" required></textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary btn-sm">
-                    <i class="fa fa-share mr-1"></i>参与讨论</button>
+                  <button type="button" class="btn btn-primary btn-sm btn_comment">
+                    <i class="fa fa-share mr-1"></i>参与讨论
+                  </button>
+
+                  <!-- <button class="btn btn-primary btn-sm" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                  </button> -->
+
                 </form>
               </div>
             </li>
@@ -192,7 +209,8 @@
                       <form action="{{ route( 'delete_comment' ,$value->id ) }}" onsubmit="return confirm('确定要删除此评论？');" method="post">
                         {{ csrf_field() }}
                         {{ method_field('DELETE') }}
-                        <button type="submit" class="btn btn-default btn-xs pull-left text-secondary">
+                        <input type="hidden" name="goods_id" value="{{ $goods_info->id }}">
+                        <button type="submit" title="删除" class="btn btn-default btn-xs pull-left text-secondary">
                           <i class="far fa-trash-alt"></i>
                         </button>
                       </form>
@@ -209,7 +227,6 @@
             </li>
             @endforeach
           </ul>
-
         </div>
       </div>
     </div>
@@ -217,6 +234,19 @@
   </div>
 </div>
 </div>
-
-
 @endsection
+
+@section('scriptsAfterJs')
+<script>
+  $(document).ready(function(){
+    $('.btn_comment').click(function(){
+
+      // 加载样式
+      $(this).attr('disabled','true')
+      $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...')
+      $('.form_comment').submit()
+    })
+
+  })
+</script>
+@stop

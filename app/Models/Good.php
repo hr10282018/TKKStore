@@ -8,7 +8,7 @@ class Good extends Model
 {
   protected $fillable = [
     'title', 'description', 'image', 'state', 'old_price', 'price', 'category_id', 'reply_count',
-    'view_count', 'user_id',
+    'view_count', 'user_id','tags'
   ];
 
   public function user()

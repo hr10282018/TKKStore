@@ -23,7 +23,7 @@ class PagesController extends Controller
   {
     //session()->forget('primary');
 
-    $goods = Good::where('state', '1')->paginate(12);
+    $goods = Good::where('state', '1')->paginate(16);
 
     // $images = $goods->pluck('image');
     // for ($i = 0; $i < sizeof($images); $i++) {
@@ -39,7 +39,7 @@ class PagesController extends Controller
   {
     $categories = Category::where('id', $category_id)->first();
 
-    $goods = $good->where('category_id', $category_id)->paginate(12);
+    $goods = $good->where('category_id', $category_id)->paginate(16);
     // if(session()->get('primary')){
     //   session()->forget('primary');
     // }else{

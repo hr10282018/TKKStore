@@ -7,8 +7,8 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
       <div class="row mt-2">
-        <i class="far fa-edit ml-3 mr-2" style="font-size: 20px;"></i>
-        <h4 style="line-height: 20px;">发布商品</h4>
+        <i class="far fa-edit ml-3 mr-2" style="font-size: 20px;font-weight:bold;"></i>
+        <h4 style="line-height: 20px;font-weight:550">发布商品</h4>
       </div>
 
     </li>
@@ -16,40 +16,53 @@
   </ul>
 
   <div class="card-body">
-    <form action="{{ route('create_goods') }}" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
+    <form class="form_create_goods" action="{{ route('create_goods_check') }}" method="POST" accept-charset="UTF-8" enctype="multipart/form-data">
+
       <input type="hidden" name="_method" value="PUT">
       <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
       <div class="form-group " style="width:810px;">
-        <label for="title" style="color: #969696;font-weight:bold">标题</label>
+        <label for="title" style="font-size:16px">标题</label>
         <div class="row ml-0">
-          <input type="" name="title" class="form-control" id="title" placeholder="显示在商品列表页..." style="width:405px;" value="{{ old('title') }}" required>
+          <input type="" autocomplete="off" maxlength="255" name="title" class="form-control" id="title" placeholder="显示在商品列表页..." style="width:405px;" value="{{ old('title') }}" required>
           <div style="line-height:35px;color:#636b6f" class="ml-2"></div>
         </div>
       </div>
 
       <div class="form-group" style="width:750px;">
-        <label for="description" style="color: #969696;font-weight:bold;">描述</label>
-        <textarea class="form-control" id="description" rows="2" placeholder="显示在商品详情页..." name="description" style="height:52px;max-height: 126px;min-height: 52px;">{{ old('content') }}</textarea>
+        <label for="description" style="font-size:16px">描述</label>
+        <textarea class="form-control" id="description" rows="2" placeholder="显示在商品详情页..." name="description" style="height:52px;max-height: 126px;min-height: 52px;" required>{{ old('content') }}</textarea>
+      </div>
+
+      <div class="form-group" style="width:750px;">
+        <label for="description" style="font-size:15px">卖家标签</label>
+        <div>
+          @foreach($good_tag as $tags=>$tag)
+          <button type="button" class="btn btn_tag " style="outline:none;line-height:15px;height:27px;border: 1px solid #e8eaec; background: #f7f7f7;font-size: 12px;color: #515a6e">
+            {{ $tag->name }}
+          </button>
+          @endforeach
+        </div>
+        <input class="tags_data" type="text" name="tag_data"  hidden>
       </div>
 
       <div class="form-group">
-        <label for="price" style="color: #969696;font-weight:bold;">标价</label>
+        <label for="price" style="font-size:16px">标价</label>
         <div class="row ml-0">
-          <input type="" name="price" class="form-control" id="price" placeholder="请填写数字价格，保留一位小数..." style="width:405px;" value="{{ old('price') }}" required>
-          <div style="line-height:35px;color:#636b6f" class="ml-2">填写范围为0~9999</div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="old_price" style="color: #969696;font-weight:bold;">原价</label>
-        <div class="row ml-0">
-          <input type="" name="old_price" class="form-control" id="old_price" placeholder="请填写数字价格，保留一位小数..." style="width:405px;" value="{{ old('old_price') }}" required>
-          <div style="line-height:35px;color:#636b6f" class="ml-2">填写范围为0~9999.9</div>
+          <input type="" autocomplete="off" name="price" maxlength="6" minlength="1" class="form-control" id="price" placeholder="请填写数字价格，最多保留一位小数..." style="width:405px;" value="{{ old('price') }}" required>
+          <span style="line-height:35px ;color:#636b6f;" class="ml-2">填写范围为 0.1 ~ 9999.9</span>
+          <div class="wrong_tip_price"></div>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="u_phone" style="color: #969696;font-weight:bold;">分类</label>
+        <label for="old_price" style="font-size:15px">原价</label>
+        <input type="text" autocomplete="off" name="old_price" maxlength="6" class="form-control " id="old_price" placeholder="" style="width:405px;" value="{{ old('old_price') }}" required>
+        <div class="wrong_tip_oprice "></div>
+      </div>
+
+      <div class="form-group">
+        <label for="u_phone" style="font-size:16px">分类</label>
         <select class="form-control" name="category_id" id="category" style="width:405px;">
           <option>学习</option>
           <option>生活</option>
@@ -58,43 +71,360 @@
         </select>
       </div>
 
-      <div class="mt-3">
-        <p style="color:#636b6f;font-size:17px">商品图片：<small>第一张默认为封面图片</small>
+      <div class="form-group mt-4">
+        <p style="font-size:17px;">商品图片：<small style="color: #969696;">第一张默认为封面图片</small>
           <button type="button" id="add" class="btn btn-success ml-2" style="line-height:20px;width:90px;height:32px;">
             继续添加
           </button>
         </p>
       </div>
-      <div class="form-group border " style="height:48px;width: 800px;border-radius:5px;">
-        <input type="file"  name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file  ml-2 " title="请上传 (png,jpg,gif,jpeg) 格式的图片" style="margin-top: 12px;" required />
-      </div>
 
-      <div class="more_image ">
+      <div class="img_file">
+        <div class="form-group " style="border:1px #dee2e6 solid;height:48px;width: 800px;border-radius:5px;">
+          <input type="file" autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 " title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
+          <div class="wrong_tip_img  ml-1 mt-3 mb-1"></div>
+        </div>
 
-        <!-- <div class="input-group mb-3 border img" style="width: 800px; border-radius:5px;">
-          <input class="mt-2 ml-2" type="file" name="avatar" data-toggle="tooltip" data-placement="bottom" class="form-control-file  " title="请上传 (png,jpg,gif,jpeg) 格式的图片" style="margin-top:12px;width:745px;height:35px;" required />
-          <div class="input-group-append">
-            <button class="btn btn-outline-danger ml-1" type="button" id="button-addon2">
-            <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+        <!-- <div class="form-group mt-5" style="position:relative;border:1px #dee2e6 solid;height:48px;width:800px; border-radius:5px;">
+          <input type="file" autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 is-invalid" title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
+          <div class="input-group-append mb-4" style="height:44.5px;float:right;position:relative;top:-36.5px">
+            <button class="btn btn-outline-danger ml-1 file_` + index + `" type="button" id="button-addon2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
                 <path style="line-height:30px" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-            </svg>
+              </svg>
             </button>
           </div>
+        </div>
+        <div class="ml-2 wrong_tip_type" hidden style="color: #e3342f;font-size: 80%;">
+          <strong>格式错误！</strong>
+        </div>
+        <div class="ml-2 wrong_tip_size" hidden style="color: #e3342f;font-size: 80%;">
+          <strong>大小错误！</strong>
         </div> -->
 
       </div>
 
-
-      <div class="form-group form-check mb-2" style=" width:98px;right:20px">
-        <button type="submit" class="btn btn-primary mt-4" style="line-height:20px;margin-right:10px;width:800px;height:32px">
-          确认修改
+      <div class="form-group form-check mb-2 row" style="right:20px">
+        <button type="submit" hidden class="btn btn-primary mt-4 ml-3 btn_submit" style="line-height:20px;margin-right:10px;width:90px;height:32px">
         </button>
+        <button type="button" class="btn btn-primary mt-4 ml-3 btn_now" style="line-height:20px;margin-right:10px;width:90px;height:32px">
+          立即发布
+        </button>
+
+        <button type="button" title="保存" class="btn btn-secondary mt-4 ml-3 btn_wait" style="line-height:20px;margin-right:10px;width:90px;height:32px">
+          暂不发布
+        </button>
+
+        <input class="state" name="goods_state" type="text" hidden>
       </div>
+
     </form>
   </div>
 
 </div>
 
-<script src="/js/create_goods.js"></script>
+
+@stop
+
+@section('scriptsAfterJs')
+<script>
+  $(document).ready(function() {
+
+    // 默认选择第一个标签
+    $('.btn_tag').eq(0).css({
+      'background': '#2d8cf0',
+      'color': '#fff'
+    }).addClass('active')
+
+    // 标签按钮-点击事件
+    var max_tag = true // 记录标签能否选择
+    $('.btn_tag').click(function() {
+      if (max_tag) {
+        $(this).toggleClass('active')
+        if ($(this).hasClass('active')) {
+          $(this).css({
+            'background': '#2d8cf0',
+            'color': '#fff'
+          })
+        } else {
+          $(this).css({
+            'background': '#f7f7f7',
+            'color': '#515a6e'
+          })
+        }
+      } else {
+        //console.log('')
+        if ($(this).hasClass('active')) {
+          $(this).toggleClass('active')
+          $(this).css({
+            'background': '#f7f7f7',
+            'color': '#515a6e'
+          })
+        } else {
+          swal("最多选择四个标签", {
+            buttons: false,
+            icon: 'warning',
+            timer: 2500
+          });
+        }
+      }
+      // 最多选择四个标签
+      if ($('.btn_tag.active').length == 4) {
+        max_tag = false
+      } else {
+        max_tag = true
+      }
+    })
+
+    function reg_price() {
+      var price = $("#price").val();
+      var d_reg = /^\d{1,4}\.{1}[1-9]{1}$/; // 小数-首位可以0，小数位不为0
+      var d_reg2 = /^[1-9]{1,4}\.{1}\d{1}$/; //  小数-首位不能0，小数位可为0
+      var int_reg = /^[1-9]{1}\d{0,5}$/; // 整数-首位不能0
+      if ($('#price').val().length != 0) {
+        if (d_reg.test(price) || d_reg2.test(price) || int_reg.test(price)) { // 原价格式正确
+          $("#price").addClass('is-valid').removeClass('is-invalid');
+          $(".wrong_tip_price").addClass('valid-feedback').removeClass('invalid-feedback');
+          $(".wrong_tip_price").html('');
+        } else {
+          $("#price").addClass('is-invalid').removeClass('is-valid');
+          $(".wrong_tip_price").addClass('invalid-feedback').removeClass('valid-feedback');
+          $(".wrong_tip_price").html('<strong>格式错误，请重新填写！!</strong>');
+        }
+      } else {
+        $("#price").removeClass('is-valid').removeClass('is-invalid');
+        $(".wrong_tip_price").removeClass('valid-feedback').removeClass('invalid-feedback');
+        $(".wrong_tip_price").html('');
+      }
+    }
+    // 验证标价字段
+    reg_price()
+    $('#price').blur(function() {
+      reg_price()
+    })
+
+    function reg_old_price() {
+      var price = $("#old_price").val();
+      var d_reg = /^\d{1,4}\.{1}[1-9]{1}$/; // 小数-首位可以0，小数位不为0
+      var d_reg2 = /^[1-9]{1,4}\.{1}\d{1}$/; //  小数-首位不能0，小数位可为0
+      var int_reg = /^[1-9]{1}\d{0,5}$/; // 整数-首位不能0
+      if ($('#old_price').val().length != 0) {
+        if (d_reg.test(price) || d_reg2.test(price) || int_reg.test(price)) { // 原价格式正确
+          $("#old_price").addClass('is-valid').removeClass('is-invalid');
+          $(".wrong_tip_oprice").addClass('valid-feedback').removeClass('invalid-feedback');
+          $(".wrong_tip_oprice").html('');
+        } else {
+          $("#old_price").addClass('is-invalid').removeClass('is-valid');
+          $(".wrong_tip_oprice").addClass('invalid-feedback').removeClass('valid-feedback');
+          $(".wrong_tip_oprice").html('<strong>格式错误，请重新填写！!</strong>');
+        }
+      } else {
+        $("#old_price").removeClass('is-valid').removeClass('is-invalid');
+        $(".wrong_tip_oprice").removeClass('valid-feedback').removeClass('invalid-feedback');
+        $(".wrong_tip_oprice").html('');
+      }
+    }
+    // 验证原价字段
+    reg_old_price()
+    $('#old_price').blur(function() {
+      reg_old_price()
+    })
+
+    // 添加商品图片-点击事件
+    var add = document.getElementById('add');
+    var index = 0;
+
+    $("#add").click(function() {
+      console.log($("input[type='file']").length)
+      if($("input[type='file']").length >= 4){
+        // console.log('最多选择四个图片！')
+        swal("最多选择四个图片", {
+            buttons: false,
+            icon: 'warning',
+            timer: 2500
+        });
+        return false;
+      }
+
+      index++;
+      var el = $(
+        `<div class="form-group mb-3  mt-5" style="border:1px #dee2e6 solid;height:48px;width:800px; border-radius:5px;">
+            <input type="file" autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 is-invalid" title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
+            <div class="input-group-append mb-4" style="height:44.5px;float:right;position:relative;top:-36.5px">
+              <button class="btn btn-outline-danger ml-1 file_` + index + `" type="button" id="button-addon2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                  <path style="line-height:30px" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="ml-2 wrong_tip_type" hidden style="color: #e3342f;font-size: 80%;">
+            <strong>不支持该图片格式，请重新选择！!</strong>
+          </div>
+          <div class="ml-2 wrong_tip_size" hidden style="color: #e3342f;font-size: 80%;">
+            <strong>图片大小超过150K，请重新选择！!</strong>
+          </div>`);
+      el.appendTo($('.img_file'));
+
+    });
+
+    $(".img_file ").on("click", "button", function() {
+      $(this).parent().parent().remove();
+    })
+
+
+    // 验证上传图片(类型、大小、宽)-change事件
+    $(".img_file").on("change", "input", function() {
+      console.log($(this).index('input'))
+
+      file = $(this)[0].files[0]
+      img_ext = file.type // 获取图片类型
+      //console.log(img_ext)
+      var png = new RegExp('png');
+      var jpg = new RegExp('jpg');
+      var jpeg = new RegExp('jpeg');
+      var gif = new RegExp('gif');
+      img_size = Math.floor(file.size / 1024)
+      if (png.test(img_ext) || jpg.test(img_ext) || jpeg.test(img_ext) || gif.test(img_ext)) {
+
+        if (img_size > 150) {
+          $(this).parent('div').css('border', '1px solid #e3342f')
+          if ($(this).index('input') == 7) {
+            $(this).addClass('is-invalid').removeClass('is-valid');
+            $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
+            $(this).next().html('<strong>图片大小超过150K，请重新选择！!</strong>');
+          } else {
+            $('.wrong_tip_size').removeAttr('hidden')
+          }
+        } else { // 图片格式、大小都符合
+          $(this).parent('div').css('border', '1px solid #38c172')
+          if ($(this).index('input') == 7) {
+            $(this).addClass('is-valid').removeClass('is-invalid');
+            $(this).next().addClass('valid-feedback').removeClass('invalid-feedback');
+            $(this).next().html('');
+          } else {
+            $('.wrong_tip_size').prop("hidden", true)
+            $('.wrong_tip_type').prop("hidden", true)
+          }
+        }
+      } else { // 格式不正确
+        $(this).parent('div').css('border', '1px solid #e3342f')
+        if ($(this).index('input') == 7) {
+          $(this).addClass('is-invalid').removeClass('is-valid');
+          $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
+          $(this).next().html('<strong>不支持该图片格式，请重新选择！!</strong>');
+        } else {
+          $('.wrong_tip_type').removeAttr('hidden')
+        }
+        if (img_size > 150) { // 都不正确
+          if ($(this).index('input') == 7) {
+            $(this).next().append('<div class="mb-5"><strong>图片大小超过150K，请重新选择！!</strong></div>');
+          } else {
+            $('.wrong_tip_type').removeAttr('hidden')
+            $('.wrong_tip_size').removeAttr('hidden')
+          }
+        }
+      }
+      // 验证图片宽高
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(e) {
+        var data = e.target.result;
+        //加载图片获取图片真实宽度和高度
+        var image = new Image();
+        image.src = data;
+        // 图片先加载完，才可以得到图片宽度和高度
+        image.onload = function() {
+          var width = image.width;
+          var height = image.height;
+          // 验证图片宽高 最小宽和高278和318-最大宽和高480和518
+          // 宽超过480，则设计一个tip，提示自动裁剪
+          //console.log('宽：', width)
+          // if (width > 480) {
+          //   console.log('自动裁剪')
+          // }
+        }
+      }
+    })
+
+
+    // 立即发布按钮-点击事件
+    $('.btn_now').click(function() {
+      // 设置标签数据
+      //console.log($('.btn_tag'))
+      var tag_data = ''
+      $.each($('.btn_tag'),function(i,val){
+        if($(this).hasClass('active')){
+          if(tag_data == ''){
+            tag_data =(i+1)
+
+          }else{
+            tag_data =tag_data + '-' +(i+1)
+          }
+        }
+      })
+      $('.tags_data').val(tag_data)
+      //console.log($('.tags_data').val())
+
+      // 设置发布状态
+      $('.state').val(1)
+      
+      var file
+      for (var i = 0; i < $('.file').length; i++) { // 判断所有图片是否为空
+        if ($(".file").eq(i).val().length == 0) {
+          file = 0
+          break
+        }
+      }
+      if (file == 0 || $('#description').val().length == 0 || $('#title').val().length == 0 || $('#price').val().length == 0 || $('#old_price').val().length == 0) {
+        $('.btn_submit').trigger('click')
+      } else {
+        if ($('.is-invalid').length != 0) {
+          swal({
+            text: '有错误选项，无法提交！',
+            icon: 'error'
+          })
+        } else {
+
+          if ($('#old_price').val().length != 0 && $('#price').val().length != 0) {
+
+            var price = parseFloat($('#price').val());
+            var old_price = parseFloat($('#old_price').val())
+            if (price > old_price) {
+              // console.log('标价大于原价！')
+              swal({
+                title: '你确定吗?',
+                text: "该商品的标价高于原价 ！",
+                icon: 'warning',
+                buttons: ['取消', '确认无误'],
+                dangerMode: true,
+              }).then((res) => {
+                if (!res) return;
+                $('.form_create_goods').submit()
+              })
+              $('.swal-text').addClass('email_text'); // 控制swal-text的样式
+              $('.swal-footer').css("text-align", "center") // 确认取消按钮-居中
+            } else {
+              swal({
+                title: '确定立即发布?',
+                icon: 'warning',
+                buttons: ['取消', '确定'],
+                dangerMode: true,
+              }).then((res) => {
+                if (!res) return;
+                console.log($('.file').val())
+                $('.form_create_goods').submit()
+
+              })
+            }
+
+          }
+
+        }
+      }
+    })
+
+  })
+</script>
 
 @stop

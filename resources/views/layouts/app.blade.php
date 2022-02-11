@@ -17,7 +17,7 @@
 </head>
 
 <body>
-  <div id="app" class="{{ route_class() }}-page">
+  <div id="app" class="{{ route_class() }}-page" style="overflow:hidden">
 
     @include('layouts._header')
 
@@ -32,15 +32,16 @@
     </div>
 
     @include('layouts._footer')
+
   </div>
 
- 
+
   <!-- Scripts -->
   <script src="{{ mix('js/app.js') }}"></script>
-  <script src="/js/register.js"></script>
+  <!-- <script src="/js/register.js"></script> -->
   <script src="/js/test.js"></script>
-  <script src="/js/create_goods.js"></script>
-  <script src="/js/root.js"></script>
+  <!-- <script src="/js/create_goods.js"></script> -->
+  <!-- <script src="/js/root.js"></script> -->
   @yield('scriptsAfterJs')
   <!-- <script src="/js/confirm.js"></script> -->
   <!-- <script src="/js/_header.js"></script> -->

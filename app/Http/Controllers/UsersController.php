@@ -30,7 +30,7 @@ class UsersController extends Controller
 
     //限制访问频率1分钟3次
     $this->middleware('throttle:3,1')->only('edit_check','ajax_visible_data');
-    
+
   }
 
 
@@ -42,8 +42,9 @@ class UsersController extends Controller
   }
   public function register(Request $request)  // 注册信息验证
   {
+     //dd($request->All());
     $this->validate($request, [
-        'name' => 'required|unique:users|max:50',
+        'name' => 'required|unique:users|max:25',
         'email' => 'required|regex:/.{6,}@qq.com/|unique:users|max:255',
         'password' => 'required|confirmed|min:6',
         'captcha' => ['required', 'captcha'],
@@ -52,6 +53,8 @@ class UsersController extends Controller
       //返回的信息
       'captcha.required' => '验证码不能为空',
       'captcha.captcha' => '请输入正确的验证码',
+      'name.unique'  =>  '该名称已被注册，请重新填写！!',
+      'email.unique'  => '该邮箱已被注册，请重新填写！!',
       ]);
 
       $user = User::create([

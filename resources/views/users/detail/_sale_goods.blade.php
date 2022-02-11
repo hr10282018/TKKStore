@@ -86,7 +86,7 @@
     </ul>
 
     @else
-    <div class="card-body">
+  <div class="card-body">
       <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
         暂无数据 ~_~
       </div>

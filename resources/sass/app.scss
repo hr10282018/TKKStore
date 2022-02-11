@@ -66,7 +66,7 @@ body {
   height: 60px;
   background-color: #000;
 
-  .container {
+  .footer_container {
     padding-right: 15px;
     padding-left: 15px;
 
@@ -84,22 +84,7 @@ body {
 
 /* 注册框 */
 
-#goods_list{
-  margin-top: 10px;
-  //width: 422px;
-  transition-duration: 0.5s ;
-  position:relative;
-  border:1px solid #8dbd98;
-  &:hover{
-    margin-top: 5px;
-    -webkit-box-shadow: #ccc 0px 10px 10px;
-    -moz-box-shadow: #ccc 0px 10px 10px;
-    box-shadow: #ccc 0px 10px 10px;
-    transition-duration: 0.5s ;
-    border:none;
 
-  }
-}
 
 #r_input{
   width: 223px;
@@ -212,4 +197,69 @@ input:checked+.slider:before {
   transform: translateX(39px);
 }
 
+
+
+/* 商品展示 */
+.goods_img{
+  transition: all .5s;
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-delay: 0s;
+
+  &:hover{
+    transform: scale(1.05);
+    //width: 290px; height: 102%;
+    //transition-duration: 0.5s;
+  }
+
+}
+
+// 物品卡片
+.goods_list{
+  margin-top: 10px;
+  //top: 10px;
+  //width: 422px;
+  transition-duration: 0.5s ;
+  position:relative;
+  //border: 1px solid #38c172;
+
+  &:hover{
+    //top: 5px;
+    -webkit-box-shadow: #ccc 0px 10px 10px;
+    -moz-box-shadow: #ccc 0px 10px 10px;
+    box-shadow: #ccc 0px 10px 10px;
+    transition-duration: 0.5s ;
+    //border: none;
+  }
+}
+
+// 发布时间、评论、浏览图标
+.time{
+  color:#a5a5a5;
+  &:hover{
+    color: rgb(70, 70, 70);
+  }
+  i:hover{
+    color: rgb(70, 70, 70);
+  }
+}
+.eye{
+  color:#a5a5a5;
+  &:hover{
+    color: #38b;
+  }
+  // i:hover{
+  //   color: rgb(70, 70, 70);
+  // }
+}
+.reply{
+  color:#a5a5a5;
+  &:hover{
+    color: #b57c5b;
+  }
+  // i:hover{
+  //   color: rgb(70, 70, 70);
+  // }
+}
 

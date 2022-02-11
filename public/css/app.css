@@ -17155,35 +17155,21 @@ body {
   background-color: #000;
 }
 
-.footer .container {
+.footer .footer_container {
   padding-right: 15px;
   padding-left: 15px;
 }
 
-.footer .container p {
+.footer .footer_container p {
   margin: 19px 0;
   color: #c1c1c1;
 }
 
-.footer .container p a {
+.footer .footer_container p a {
   color: inherit;
 }
 
 /* 注册框 */
-
-#goods_list {
-  margin-top: 10px;
-  transition-duration: 0.5s;
-  position: relative;
-  border: 1px solid #8dbd98;
-}
-
-#goods_list:hover {
-  margin-top: 5px;
-  box-shadow: #ccc 0px 10px 10px;
-  transition-duration: 0.5s;
-  border: none;
-}
 
 #r_input {
   width: 223px;
@@ -17289,5 +17275,58 @@ body {
 
 input:checked + .slider:before {
   transform: translateX(39px);
+}
+
+/* 商品展示 */
+
+.goods_img {
+  transition: all 0.5s;
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-delay: 0s;
+}
+
+.goods_img:hover {
+  transform: scale(1.05);
+}
+
+.goods_list {
+  margin-top: 10px;
+  transition-duration: 0.5s;
+  position: relative;
+}
+
+.goods_list:hover {
+  box-shadow: #ccc 0px 10px 10px;
+  transition-duration: 0.5s;
+}
+
+.time {
+  color: #a5a5a5;
+}
+
+.time:hover {
+  color: #464646;
+}
+
+.time i:hover {
+  color: #464646;
+}
+
+.eye {
+  color: #a5a5a5;
+}
+
+.eye:hover {
+  color: #38b;
+}
+
+.reply {
+  color: #a5a5a5;
+}
+
+.reply:hover {
+  color: #b57c5b;
 }
 

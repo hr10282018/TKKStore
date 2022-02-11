@@ -14,7 +14,7 @@ class CreateGoodsTable extends Migration
       $table->bigIncrements('id');
       $table->string('title', 255);
       $table->text('description');    // 商品描述
-      $table->string('image');  // 商品图片
+      $table->text('image');  // 商品图片
       $table->tinyInteger('state');   // 商品状态(0-未发布，1-发布且正在售卖，2-发布且被预订，3-发布且已出售)
       $table->decimal('price', 5, 1);  // 商品价格，最大9999.9
       $table->decimal('old_price', 5, 1)->nullable();  // 商品原价，最大9999.9
