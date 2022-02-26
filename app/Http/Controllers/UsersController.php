@@ -193,7 +193,7 @@ class UsersController extends Controller
     // ]);
     $this->authorize('update_user_info', $user);  // 授权判断
     $data=$request->all();
-    $result = $uploader->save($request->avatar, 'avatars', $user->id, 416);//416-裁剪图像后的尺寸
+    $result = $uploader->save($request->avatar, 'avatars', $user->id);// -裁剪图像后的尺寸
     if ($result) {
       $data['avatar'] = $result['path'];
       $user->update($data);

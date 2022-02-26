@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use DB;
 use App\Models\GoodTag;
 use League\Flysystem\File;
+use Illuminate\Support\Facades\URL;
 
 class GoodsController extends Controller
 {
@@ -137,7 +138,7 @@ class GoodsController extends Controller
   }
 
   /* 商品详情 */
-  public function goods_detail($goods_id){
+  public function goods_detail($goods_id, Request $request){
 
     if(!Auth::user()->activated){
       return redirect()->route('show_verify');
@@ -149,6 +150,10 @@ class GoodsController extends Controller
       // 定义出错页面
     }
 
+     
+    //dd($request);
+  
+
     // 浏览量+1
     $old_view_count= $goods_info->view_count+1;
     $goods_info->update([
@@ -158,7 +163,7 @@ class GoodsController extends Controller
     $length=substr_count( $goods_info->image,',');
     $images=explode(',',$goods_info->image);
     $user=User::where('id',$goods_info->user_id)->first();
-
+    
     // 取标签数据
     $tags=[];
     for($i=0; $i<strlen($goods_info->tags); $i++){

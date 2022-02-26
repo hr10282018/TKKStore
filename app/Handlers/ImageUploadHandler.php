@@ -14,7 +14,7 @@ class ImageUploadHandler
       $file_prefix-文件名：用户id+time+随机10位数字
       $max_width-限制图像的尺寸
     */
-  public function save($file, $folder, $file_prefix, $max_width = false ,  $w_h)
+  public function save($file, $folder, $file_prefix, $max_width = false)
   {
     // 构建存储的文件夹规则，值如：uploads/images/avatars/202112/07/
     // 文件夹切割能让查找效率更高
@@ -43,7 +43,7 @@ class ImageUploadHandler
     if ($max_width && $extension != 'gif') {
 
       // 此类中封装的函数，用于裁剪图片
-      $this->reduceSize($upload_path . '/' . $filename, $max_width, $w_h);
+      $this->reduceSize($upload_path . '/' . $filename, $max_width);
     }
 
     return [
@@ -51,16 +51,26 @@ class ImageUploadHandler
     ];
   }
 
-  public function reduceSize($file_path, $max_width, $w_h)
+  public function reduceSize($file_path, $max_width)
   {
     // 先实例化，传参是文件的磁盘物理路径
     $image = Image::make($file_path);
 
     // 进行大小调整的操作
 
-    if($w_h == 'height'){
-      $image->resize(null, 518);
-      // $image->resize(480, 518, function ($constraint) {   // 对高操作
+    // if($w_h == 'height'){
+    //   $image->resize(null, 518);
+    //   // $image->resize(480, 518, function ($constraint) {   // 对高操作
+
+    //   //   // 设定宽度是 $max_width，高度等比例缩放
+    //   //   $constraint->aspectRatio();
+
+    //   //   // 防止裁图时图片尺寸变大
+    //   //   $constraint->upsize();
+    //   // });
+    // }else{
+
+      // $image->resize($max_width, null, function ($constraint) {   // 对高操作
 
       //   // 设定宽度是 $max_width，高度等比例缩放
       //   $constraint->aspectRatio();
@@ -68,16 +78,7 @@ class ImageUploadHandler
       //   // 防止裁图时图片尺寸变大
       //   $constraint->upsize();
       // });
-    }else{
-      $image->resize($max_width, null, function ($constraint) {   // 对高操作
-
-        // 设定宽度是 $max_width，高度等比例缩放
-        $constraint->aspectRatio();
-
-        // 防止裁图时图片尺寸变大
-        $constraint->upsize();
-      });
-    }
+    //}
 
     // $image->resize(null, $max_height, function ($constraint) {   // 对宽操作
     //   // 设定宽度是 $max_width，高度等比例缩放

@@ -81,8 +81,14 @@
 
       <div class="img_file">
         <div class="form-group " style="border:1px #dee2e6 solid;height:48px;width: 800px;border-radius:5px;">
-          <input type="file" autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 " title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
-          <div class="wrong_tip_img  ml-1 mt-3 mb-1"></div>
+          <input type="file" id="first_file"  autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 " title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
+          {{-- <div class="wrong_tip_img  ml-1 mt-3 mb-1"></div> --}}
+        </div>
+        <div class="ml-2 wrong_tip_type" hidden style="color: #e3342f;font-size: 80%;">
+          <strong>不支持该图片格式，请重新选择！!</strong>
+        </div>
+        <div class="ml-2 wrong_tip_size" hidden style="color: #e3342f;font-size: 80%;">
+          <strong>图片大小超过230K，请重新选择！!</strong>
         </div>
 
         <!-- <div class="form-group mt-5" style="position:relative;border:1px #dee2e6 solid;height:48px;width:800px; border-radius:5px;">
@@ -107,11 +113,11 @@
       <div class="form-group form-check mb-2 row" style="right:20px">
         <button type="submit" hidden class="btn btn-primary mt-4 ml-3 btn_submit" style="line-height:20px;margin-right:10px;width:90px;height:32px">
         </button>
-        <button type="button" class="btn btn-primary mt-4 ml-3 btn_now" style="line-height:20px;margin-right:10px;width:90px;height:32px">
+        <button type="button" class="btn btn-primary mt-5 ml-3 btn_now" style="line-height:20px;margin-right:10px;width:90px;height:32px">
           立即发布
         </button>
 
-        <button type="button" title="保存" class="btn btn-secondary mt-4 ml-3 btn_wait" style="line-height:20px;margin-right:10px;width:90px;height:32px">
+        <button type="button" title="保存" class="btn btn-secondary mt-5 ml-3 btn_wait" style="line-height:20px;margin-right:10px;width:90px;height:32px">
           暂不发布
         </button>
 
@@ -233,7 +239,7 @@
     // 添加商品图片-点击事件
     var add = document.getElementById('add');
     var index = 0;
-
+    var top = -37;
     $("#add").click(function() {
       console.log($("input[type='file']").length)
       if($("input[type='file']").length >= 4){
@@ -247,11 +253,12 @@
       }
 
       index++;
+      top--;
       var el = $(
         `<div class="form-group mb-3  mt-5" style="border:1px #dee2e6 solid;height:48px;width:800px; border-radius:5px;">
-            <input type="file" autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 is-invalid" title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
-            <div class="input-group-append mb-4" style="height:44.5px;float:right;position:relative;top:-36.5px">
-              <button class="btn btn-outline-danger ml-1 file_` + index + `" type="button" id="button-addon2">
+            <input type="file" autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 " title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
+            <div class="input-group-append mb-4" style="height:48px;float:right;position:relative;top:` + top + `px;left:1px">
+              <button class="btn btn-danger ml-1 file_` + index + `" type="button" id="button-addon2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
                   <path style="line-height:30px" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
                 </svg>
@@ -262,21 +269,23 @@
             <strong>不支持该图片格式，请重新选择！!</strong>
           </div>
           <div class="ml-2 wrong_tip_size" hidden style="color: #e3342f;font-size: 80%;">
-            <strong>图片大小超过150K，请重新选择！!</strong>
+            <strong>图片大小超过230K，请重新选择！!</strong>
           </div>`);
       el.appendTo($('.img_file'));
 
     });
 
     $(".img_file ").on("click", "button", function() {
+      
+      $(this).parent().parent().next().remove()
+      $(this).parent().parent().next().remove()
       $(this).parent().parent().remove();
     })
 
 
     // 验证上传图片(类型、大小、宽)-change事件
     $(".img_file").on("change", "input", function() {
-      console.log($(this).index('input'))
-
+     
       file = $(this)[0].files[0]
       img_ext = file.type // 获取图片类型
       //console.log(img_ext)
@@ -285,44 +294,48 @@
       var jpeg = new RegExp('jpeg');
       var gif = new RegExp('gif');
       img_size = Math.floor(file.size / 1024)
+      //console.log(img_size)
       if (png.test(img_ext) || jpg.test(img_ext) || jpeg.test(img_ext) || gif.test(img_ext)) {
 
-        if (img_size > 150) {
+        if (img_size > 230) {
           $(this).parent('div').css('border', '1px solid #e3342f')
-          if ($(this).index('input') == 7) {
-            $(this).addClass('is-invalid').removeClass('is-valid');
-            $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
-            $(this).next().html('<strong>图片大小超过150K，请重新选择！!</strong>');
-          } else {
-            $('.wrong_tip_size').removeAttr('hidden')
-          }
+          // if ($('#first_file').index('input') == $(this).index('input')) {
+            
+          //   $(this).addClass('is-invalid').removeClass('is-valid');
+          //   $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
+          //   $(this).next().html('<div class=""><strong>图片大小超过K，请重新选择！!</strong></div>');
+          // } else {
+            $(this).parent().next().next().removeAttr('hidden')
+          //}
         } else { // 图片格式、大小都符合
-          $(this).parent('div').css('border', '1px solid #38c172')
-          if ($(this).index('input') == 7) {
-            $(this).addClass('is-valid').removeClass('is-invalid');
-            $(this).next().addClass('valid-feedback').removeClass('invalid-feedback');
-            $(this).next().html('');
-          } else {
-            $('.wrong_tip_size').prop("hidden", true)
-            $('.wrong_tip_type').prop("hidden", true)
-          }
+          $(this).parent('div').css('border', '1px solid #dee2e6')
+          // if ($('#first_file').index('input') == $(this).index('input')) {
+          //   $(this).addClass('is-valid').removeClass('is-invalid');
+          //   $(this).next().addClass('valid-feedback').removeClass('invalid-feedback');
+          //   $(this).next().html('');
+          // } else {
+            $(this).parent().next().prop("hidden", true)
+            $(this).parent().next().next().prop("hidden", true)
+          //}
         }
       } else { // 格式不正确
         $(this).parent('div').css('border', '1px solid #e3342f')
-        if ($(this).index('input') == 7) {
-          $(this).addClass('is-invalid').removeClass('is-valid');
-          $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
-          $(this).next().html('<strong>不支持该图片格式，请重新选择！!</strong>');
-        } else {
-          $('.wrong_tip_type').removeAttr('hidden')
-        }
-        if (img_size > 150) { // 都不正确
-          if ($(this).index('input') == 7) {
-            $(this).next().append('<div class="mb-5"><strong>图片大小超过150K，请重新选择！!</strong></div>');
-          } else {
-            $('.wrong_tip_type').removeAttr('hidden')
-            $('.wrong_tip_size').removeAttr('hidden')
-          }
+        // if ($('#first_file').index('input') == $(this).index('input')) {
+
+        //   $(this).addClass('is-invalid').removeClass('is-valid');
+        //   $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
+        //   $(this).next().html('<strong>不支持该图片格式，请重新选择！!</strong>');
+        // } else {
+          $(this).parent().next().removeAttr('hidden')
+        //}
+        if (img_size > 230) { // 都不正确
+          // if ($('#first_file').index('input') == $(this).index('input')) {
+          //   $(this).next().append('<div class=""><strong>图片大小超过150K，请重新选择！!</strong></div>');
+          // } else {
+            
+            $(this).parent().next().removeAttr('hidden')
+            $(this).parent().next().next().removeAttr('hidden')
+          //}
         }
       }
       // 验证图片宽高

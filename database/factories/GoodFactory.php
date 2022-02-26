@@ -63,6 +63,7 @@ $factory->define(Good::class, function (Faker $faker) use ($images, $title) {
     'category_id' => $faker->randomElement([1, 2, 3, 4]),
     "view_count" => $faker->numberBetween(100, 1000),
     "reply_count"  =>  3,
+    "tags"  =>  '1-2-3',
     "price" => $faker->randomFloat(1, 1, 200),  //生成浮点数，两位小数点，范围1-200
     "old_price" => $faker->randomFloat(1, 10, 300),
     'created_at' => $created_at,

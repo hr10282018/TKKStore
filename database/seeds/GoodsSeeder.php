@@ -13,6 +13,7 @@ class GoodsSeeder extends Seeder
     foreach($goods as $good){
       factory(\App\Models\Comment::class,3)->create(['goods_id' => $good->id]);
     }
+
   }
 
 }
