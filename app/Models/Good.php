@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Encore\Admin\Traits\DefaultDatetimeFormat;    // 后台日期格式
 
 class Good extends Model
 {
+
+  use DefaultDatetimeFormat;
+
   protected $fillable = [
     'title', 'description', 'image', 'state', 'old_price', 'price', 'category_id', 'reply_count',
     'view_count', 'user_id','tags'

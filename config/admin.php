@@ -88,7 +88,7 @@ return [
     'upload' => [
 
         // 对应 filesystem.php 中的 disks
-        'disk' => 'admin',
+        'disk' => 'public',
 
         // image和file类型表单元素的上传目录
         'directory' => [

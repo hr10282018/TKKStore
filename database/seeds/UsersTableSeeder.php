@@ -9,7 +9,7 @@ class UsersTableSeeder extends Seeder
   public function run()
   {
     // 生成数据集合
-    $users = factory(User::class)->times(10)->create();
+    $users = factory(User::class)->times(20)->create();
     // foreach ($users as $user) {
     //   // 创建10个商品，并且每个商品 的 `user_id` 字段都设为当前循环的用戶id
     //   $goods= factory(\App\Models\Good::class,10)->create(['user_id' => $user->id]);

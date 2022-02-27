@@ -6,10 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Encore\Admin\Traits\DefaultDatetimeFormat;    // 后台日期格式
 
 class User extends Authenticatable
 {
   use Notifiable;
+  use DefaultDatetimeFormat;
 
   protected $fillable = [
     'name', 'email', 'password', 'avatar','activated', 'activation_token',
