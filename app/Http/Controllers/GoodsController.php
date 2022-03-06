@@ -41,8 +41,9 @@ class GoodsController extends Controller
   // 处理发布商品数据
   public function create_goods_check(Request $request, Good $good, ImageUploadHandler $uploader)
   {
+    //dd($request->session());
+    //dd($request->cookie());
 
-    //dd($request->all());
 
     // 最小宽和高316和418-最大宽和高480和500
     $goods = $request->all();
@@ -59,14 +60,22 @@ class GoodsController extends Controller
     }
 
     $goods['user_id'] = Auth::user()->id;   // 用户id
-    $goods['state'] = $request->goods_state;      // 1-商品发布且正在售卖
+    $goods['state'] = $request->goods_state;      // 商品状态：0-未发布 1-发布且正在售卖
     $goods['category_id'] = Category::where('name', $goods['category_id'])->first()->id;  // 分类id
 
     $goods['tags']=$request->tag_data;     // 先测试标签1
     $good->fill($goods);
     $good->save();
 
-    return redirect()->route('home')->with('success', '商品发布成功！');
+    // 判断商品发布状态
+    
+    if($goods['goods_state'] == 1){
+      return redirect()->route('home')->with('success', '商品发布成功！');
+    }elseif($goods['goods_state'] == 0){
+      //dd('未发布');
+      return redirect()->route('sale_goods',Auth::user()->id);
+    }
+    
   }
 
   // 测试-ajax验证商品数据
@@ -91,9 +100,10 @@ class GoodsController extends Controller
       $builder->where('category_id', $category_id);
     }
     if($key=$request->input('key', '')){    // 最新发布
-      $builder ->where('created_at', '>=', Carbon::now()->subWeeks('4')); // 最近一个月
-    }
 
+      $builder ->where('created_at', '>=', Carbon::now()->subWeeks('1')); // 最近一个月
+    }
+    //dd($request->all());
     // if ($search = $request->input('search', '')) {
     //   dd($search);
     //   if($search != null){
@@ -105,6 +115,7 @@ class GoodsController extends Controller
     //     });
     //   }
     // }
+
     $search=$request->search;
     if($search != null){
       $like = '%' .$search. '%';
@@ -115,9 +126,10 @@ class GoodsController extends Controller
     }
 
 
-    if ($state = $request->input('state', '')) {
+    if ($state = $request->input('state', '1')) {   // 若没有state，默人 1-已发布正在售卖
       $builder->where('state', $state);
     }
+
     if ($order = $request->input('order', '')) {
       if($order=='1'){
          $builder->orderBy('price', 'asc');
@@ -143,13 +155,18 @@ class GoodsController extends Controller
     if(!Auth::user()->activated){
       return redirect()->route('show_verify');
     }
-
+    
     $goods_info=Good::where('id',$goods_id)->first();
+    
+    // 当商品状态-未发布时，除了作者，其他人不展示
+    //dd($goods_info['user_id']);
+    if($goods_info['user_id'] != Auth::user()->id && $goods_info['state']=='0'){
+      return redirect()->back();
+    }
 
     if(!$goods_info){
       // 定义出错页面
     }
-
      
     //dd($request);
   

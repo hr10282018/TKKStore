@@ -41,7 +41,7 @@ Route::get('/users/{user}', 'UsersController@user_show')->name('user_show');  //
 
 Route::get('/users/{user}/user_booking', 'UsersController@user_booking')->name('user_booking');  // 我的预订
 
-Route::get('/users/{user}/sale_goods', 'UsersController@sale_goods')->name('sale_goods');  // 发布商品
+Route::get('/users/{user}/sale_goods', 'UsersController@sale_goods')->name('sale_goods');  // 我的商品
 Route::delete('/users/{user}/delete_goods', 'UsersController@delete_goods')->name('delete_goods');  // 删除商品
 
 Route::get('/users/{user}/booking_notice', 'UsersController@booking_notice')->name('booking_notice');  // 预订通知

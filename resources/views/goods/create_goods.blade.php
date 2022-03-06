@@ -88,7 +88,7 @@
           <strong>不支持该图片格式，请重新选择！!</strong>
         </div>
         <div class="ml-2 wrong_tip_size" hidden style="color: #e3342f;font-size: 80%;">
-          <strong>图片大小超过230K，请重新选择！!</strong>
+          <strong>图片大小超过200K，请重新选择！!</strong>
         </div>
 
         <!-- <div class="form-group mt-5" style="position:relative;border:1px #dee2e6 solid;height:48px;width:800px; border-radius:5px;">
@@ -120,8 +120,8 @@
         <button type="button" title="保存" class="btn btn-secondary mt-5 ml-3 btn_wait" style="line-height:20px;margin-right:10px;width:90px;height:32px">
           暂不发布
         </button>
-
         <input class="state" name="goods_state" type="text" hidden>
+        
       </div>
 
     </form>
@@ -241,7 +241,7 @@
     var index = 0;
     var top = -37;
     $("#add").click(function() {
-      console.log($("input[type='file']").length)
+      //console.log($("input[type='file']").length)
       if($("input[type='file']").length >= 4){
         // console.log('最多选择四个图片！')
         swal("最多选择四个图片", {
@@ -269,7 +269,7 @@
             <strong>不支持该图片格式，请重新选择！!</strong>
           </div>
           <div class="ml-2 wrong_tip_size" hidden style="color: #e3342f;font-size: 80%;">
-            <strong>图片大小超过230K，请重新选择！!</strong>
+            <strong>图片大小超过200K，请重新选择！!</strong>
           </div>`);
       el.appendTo($('.img_file'));
 
@@ -297,7 +297,7 @@
       //console.log(img_size)
       if (png.test(img_ext) || jpg.test(img_ext) || jpeg.test(img_ext) || gif.test(img_ext)) {
 
-        if (img_size > 230) {
+        if (img_size > 200) {
           $(this).parent('div').css('border', '1px solid #e3342f')
           // if ($('#first_file').index('input') == $(this).index('input')) {
             
@@ -328,9 +328,9 @@
         // } else {
           $(this).parent().next().removeAttr('hidden')
         //}
-        if (img_size > 230) { // 都不正确
+        if (img_size > 200) { // 都不正确
           // if ($('#first_file').index('input') == $(this).index('input')) {
-          //   $(this).next().append('<div class=""><strong>图片大小超过150K，请重新选择！!</strong></div>');
+          //   $(this).next().append('<div class=""><strong>图片大小超过200K，请重新选择！!</strong></div>');
           // } else {
             
             $(this).parent().next().removeAttr('hidden')
@@ -379,7 +379,7 @@
       $('.tags_data').val(tag_data)
       //console.log($('.tags_data').val())
 
-      // 设置发布状态
+      // 设置状态-发布
       $('.state').val(1)
       
       var file
@@ -425,7 +425,7 @@
                 dangerMode: true,
               }).then((res) => {
                 if (!res) return;
-                console.log($('.file').val())
+                //console.log($('.file').val())
                 $('.form_create_goods').submit()
 
               })
@@ -436,6 +436,62 @@
         }
       }
     })
+
+    // 暂不发布按钮-点击事件
+    $('.btn_wait').click(function(){
+      // 设置标签数据
+      //console.log($('.btn_tag'))
+      var tag_data = ''
+      $.each($('.btn_tag'),function(i,val){
+        if($(this).hasClass('active')){
+          if(tag_data == ''){
+            tag_data =(i+1)
+
+          }else{
+            tag_data =tag_data + '-' +(i+1)
+          }
+        }
+      })
+      $('.tags_data').val(tag_data)
+      //console.log($('.tags_data').val())
+
+      // 设置状态-未发布
+      $('.state').val(0)
+
+      var file
+      for (var i = 0; i < $('.file').length; i++) { // 判断所有图片是否为空
+        if ($(".file").eq(i).val().length == 0) {
+          file = 0
+          break
+        }
+      }
+      if (file == 0 || $('#description').val().length == 0 || $('#title').val().length == 0 || $('#price').val().length == 0 || $('#old_price').val().length == 0) {
+        $('.btn_submit').trigger('click')
+      }else{
+        swal({
+          title: '暂不发布',
+          text: '?',
+          buttons: ['取消', '确定'],
+        }).then((res)=>{
+          if (!res) return;
+            $('.form_create_goods').submit()
+          })
+
+        $('.swal-text').css({
+          "background-color": "#FEFAE3",
+          "padding": "17px",
+          "border": "1px solid #F0E1A1",
+          "display": "block",
+          "margin": "22px",
+          "text-align": "center",
+          "color": "#61534e"
+        })
+        $('.swal-text').html('未发布商品可在 "个人中心"&#10132"我的商品" 中进行查看')
+      }
+
+    })
+
+    
 
   })
 </script>

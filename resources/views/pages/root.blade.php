@@ -16,16 +16,18 @@
 
     <li class="list-group-item ">
       <div class="row ml-2 new_hot">
-        <a style="border-radius: 0.25rem;" class="nav-link  mr-2 {{ active_class( if_query('key','new')) }}" href="{{ route('goods_search') }}?key=new&category_id={{ isset($categories) ? $categories->id : '' }}">最新发布</a>
-        <a style="border-radius: 0.25rem;" class="nav-link  {{ active_class( if_query('key', 'hot')) }}" href="{{ route('goods_search') }}?key=hot">热门发布</a>
+        <a style="border-radius: 0.25rem;" class="nav-link  mr-2 new {{ active_class( if_query('key','new')) }}" href="{{ route('goods_search') }}?key=new&category_id={{ isset($categories) ? $categories->id : '' }}">最新发布</a>
+        <a style="border-radius: 0.25rem;" class="nav-link hot {{ active_class( if_query('key', 'hot')) }}" href="{{ route('goods_search') }}?key=hot&category_id={{ isset($categories) ? $categories->id : '' }}">热门发布</a>
+
 
         <form id="search_form" method="GET" action="{{ route('goods_search') }}" class="form-inline " style="margin-left: 485px;">
           {{--@csrf--}}
 
           <input type="" name="category_id" value="{{ isset($categories) ? $categories->id : '' }}" hidden>
+          <input type="" class="btn_new_hot" name="key" value="" hidden>
           <div class="input-group ">
             <div class="input-group-prepend">
-              <button class="btn btn-outline-success" type="submit" id="button-addon1">Search</button>
+              <button class="btn btn-outline-success btn_search" type="button" id="button-addon1">Search</button>
             </div>
             <input type="text" name="search" value="{{  isset($search) ? $search : '' }}" class="form-control" placeholder="快来发现宝藏..." style="width: 200px;" aria-label="Example text with button addon" aria-describedby="button-addon1" >
 
@@ -104,12 +106,35 @@
 <script>
   $(document).ready(function() {
 
-
-    // 选择排序方式-自动提交表单
-    $('#order_select').change(function() {
+    // 搜索
+    $('.btn_search').click(function(){
+      if($('.new').hasClass('active')){
+        //console.log('最新')
+        $('.btn_new_hot').val('new')
+      }else if($('.hot').hasClass('active')){
+        //console.log('最热')
+        $('.btn_new_hot').val('hot')
+      }
       $('#search_form').submit();
     })
+
+    // 排序方式-自动提交表单
+    $('#order_select').change(function() {
+      if($('.new').hasClass('active')){
+        $('.btn_new_hot').val('new')
+      }else if($('.hot').hasClass('active')){
+        $('.btn_new_hot').val('hot')
+      }
+      $('#search_form').submit();
+    })
+
+    // 商品状态
     $('#state_select').change(function() {
+      if($('.new').hasClass('active')){
+        $('.btn_new_hot').val('new')
+      }else if($('.hot').hasClass('active')){
+        $('.btn_new_hot').val('hot')
+      }
       $('#search_form').submit();
     })
 
@@ -172,8 +197,8 @@
           }
         }
         if (card_length <= 16 && card_length > 12) { // 一页有四行商品
-          console.log('四行')
-          console.log(cards)
+          //console.log('四行')
+          //console.log(cards)
           for (var i = 4; i < card_length; i++) {
             $('.goods_list').eq(i).css({
               "top": ($('.goods_list').eq(i - 4).position().top + cards[i - 4] + 30) - $('.goods_list').eq(i).position().top

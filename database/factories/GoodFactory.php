@@ -11,7 +11,7 @@ $images = [
   'http://onestore.tkk/images/goods/2_x.jpg,http://onestore.tkk/images/goods/2_y.jpg,',
   'http://onestore.tkk/images/goods/3_x.jpg,http://onestore.tkk/images/goods/3_y.jpg,',
   'http://onestore.tkk/images/goods/4_x.jpg,',
-  'http://onestore.tkk/images/goods/5_x.jpg,http://onestore.tkk/images/goods/5_y.jpg,',
+  'http://onestore.tkk/images/goods/5_x.jpg,http://onestore.tkk/images/goods/6_y.jpg,',
   'http://onestore.tkk/images/goods/7_x.jpg,http://onestore.tkk/images/goods/7_y.jpg,http://onestore.tkk/images/goods/7_z.jpg,',
   'http://onestore.tkk/images/goods/8_x.jpg,http://onestore.tkk/images/goods/8_y.jpg,http://onestore.tkk/images/goods/8_z.jpg,',
   'http://onestore.tkk/images/goods/9_x.jpg,',
