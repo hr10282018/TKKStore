@@ -38,10 +38,17 @@
           </div>
           <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="">
             <div class="card-body">
-              <span style="color:#6e7379;">{{ isset($user->email) ? $user->email : '没有数据 ^_^'  }}</span>
               @if (Auth::user()->can('update_user_info', $user))
-              <img src="/images/iconfont/private.png" title="@if($user_visible->v_email) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+                <span style="color:#6e7379;">{{ isset($user->email) ? $user->email : '没有数据 ^_^'  }}</span>
+                <img src="/images/iconfont/private.png" title="@if($user_visible->v_email) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+              @else
+                @if($user_visible->v_email)
+                <span style="color:#6e7379;">{{ isset($user->email) ? $user->email : '没有数据 ^_^'  }}</span>
+                @else
+                <span style="color:#6e7379;">限制访问 ~_~</span>
+                @endif
               @endif
+
             </div>
           </div>
         </div>
@@ -57,10 +64,17 @@
           </div>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="">
             <div class="card-body">
-              <span style="color:#6e7379;">{{ isset($user->phone ) ? $user->phone  : '没有数据 ^_^'  }}</span>
               @if (Auth::user()->can('update_user_info', $user))
-              <img src="/images/iconfont/private.png" title="@if($user_visible->v_phone) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+                <span style="color:#6e7379;">{{ isset($user->phone ) ? $user->phone  : '没有数据 ^_^'  }}</span>
+                <img src="/images/iconfont/private.png" title="@if($user_visible->v_phone) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+              @else
+                @if($user_visible->v_phone)
+                <span style="color:#6e7379;">{{ isset($user->phone) ? $user->phone : '没有数据 ^_^'  }}</span>
+                @else
+                <span style="color:#6e7379;">限制访问 ~_~</span>
+                @endif
               @endif
+
             </div>
           </div>
         </div>
@@ -76,9 +90,16 @@
           </div>
           <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="">
             <div class="card-body">
-              <span style="color:#6e7379;">{{ isset($user->university ) ? $user->university  : '没有数据 ^_^'  }}</span>
+              
               @if (Auth::user()->can('update_user_info', $user))
-              <img src="/images/iconfont/private.png" title="@if($user_visible->v_university) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+                <span style="color:#6e7379;">{{ isset($user->university ) ? $user->university  : '没有数据 ^_^'  }}</span>
+                <img src="/images/iconfont/private.png" title="@if($user_visible->v_university) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+              @else
+                @if($user_visible->v_university)
+                <span style="color:#6e7379;">{{ isset($user->university) ? $user->university : '没有数据 ^_^'  }}</span>
+                @else
+                <span style="color:#6e7379;">限制访问 ~_~</span>
+                @endif
               @endif
             </div>
           </div>
@@ -95,9 +116,16 @@
           </div>
           <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="">
             <div class="card-body">
-              <span style="color:#6e7379;">{{ isset($user->faculty ) ? $user->faculty  : '没有数据 ^_^'  }}</span>
+              
               @if (Auth::user()->can('update_user_info', $user))
+                <span style="color:#6e7379;">{{ isset($user->faculty ) ? $user->faculty  : '没有数据 ^_^'  }}</span>
                 <img src="/images/iconfont/private.png" title="@if($user_visible->v_faculty) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+              @else
+                @if($user_visible->v_faculty)
+                <span style="color:#6e7379;">{{ isset($user->faculty) ? $user->faculty : '没有数据 ^_^'  }}</span>
+                @else
+                <span style="color:#6e7379;">限制访问 ~_~</span>
+                @endif 
               @endif
             </div>
           </div>
@@ -114,9 +142,16 @@
           </div>
           <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="">
             <div class="card-body">
-              <span style="color:#6e7379;">{{ isset($user->number ) ? $user->number  : '没有数据 ^_^'  }} </span>
+              
               @if (Auth::user()->can('update_user_info', $user))
+                <span style="color:#6e7379;">{{ isset($user->number ) ? $user->number  : '没有数据 ^_^'  }} </span>
                 <img src="/images/iconfont/private.png" title="@if($user_visible->v_number) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+              @else
+                @if($user_visible->v_number)
+                <span style="color:#6e7379;">{{ isset($user->number) ? $user->number : '没有数据 ^_^'  }}</span>
+                @else
+                <span style="color:#6e7379;">限制访问 ~_~</span>
+                @endif              
               @endif
             </div>
           </div>
@@ -133,9 +168,17 @@
           </div>
           <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="">
             <div class="card-body">
-              <span style="color:#6e7379;">{{ isset($user->r_name ) ? $user->r_name  : '没有数据 ^_^'  }}</span>
+              
               @if (Auth::user()->can('update_user_info', $user))
-              <img src="/images/iconfont/private.png" title="@if($user_visible->v_r_name) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+                <span style="color:#6e7379;">{{ isset($user->r_name ) ? $user->r_name  : '没有数据 ^_^'  }}</span>
+                <img src="/images/iconfont/private.png" title="@if($user_visible->v_r_name) 所有人可见 @else 仅你自己可见 @endif" alt="" style="width:25px;height:25px;float:right;">
+              @else
+                @if($user_visible->v_r_name)
+                <span style="color:#6e7379;">{{ isset($user->r_name) ? $user->r_name : '没有数据 ^_^'  }}</span>
+                @else
+                <span style="color:#6e7379;">限制访问 ~_~</span>
+                @endif  
+              
               @endif
             </div>
           </div>

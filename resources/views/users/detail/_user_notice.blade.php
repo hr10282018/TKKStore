@@ -15,7 +15,9 @@
         </h1>
       </div>
     </div>
+
     <hr style="width: 650px;margin:0 auto;">
+
     <div class="card-body">
       <ul class="nav nav-tabs " id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -67,6 +69,7 @@
             @endif
           </ul>
         </div>
+        
         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <ul class="list-group list-group-flush">
             @if( count($yes_reply_booking) > 0 )

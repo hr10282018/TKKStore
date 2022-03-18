@@ -58,7 +58,7 @@ $factory->define(Good::class, function (Faker $faker) use ($images, $title) {
     "title" => $title[$index],
     "description" => $faker->text(255), //返回一段文本，最多200字符
     "image" => $images[$index],
-    "state" => $faker->randomElement([0, 1, 2, 3]),
+    "state" => $faker->randomElement([0, 1, 2, 3, 4]),
     'user_id' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
     'category_id' => $faker->randomElement([1, 2, 3, 4]),
     "view_count" => $faker->numberBetween(100, 1000),

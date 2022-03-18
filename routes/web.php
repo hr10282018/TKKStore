@@ -33,7 +33,7 @@ Route::get('ajax_email/{email}', 'UsersController@email_ajax')->name('email_ajax
 Route::get('login', 'SessionsController@login')->name('login'); // 登录页面
 //Route::get('login', 'SessionsController@create')->name('login');    //
 Route::post('login', 'SessionsController@login_check')->name('login_check'); // 处理登录信息
-Route::delete('logout', 'SessionsController@login_out')->name('login_out');   // 退出登录
+Route::post('logout', 'SessionsController@login_out')->name('login_out');   // 退出登录
 
 /* 用户个人中心 */
 Route::get('/users/{user}', 'UsersController@user_show')->name('user_show');  // 主页展示
@@ -41,8 +41,10 @@ Route::get('/users/{user}', 'UsersController@user_show')->name('user_show');  //
 
 Route::get('/users/{user}/user_booking', 'UsersController@user_booking')->name('user_booking');  // 我的预订
 
-Route::get('/users/{user}/sale_goods', 'UsersController@sale_goods')->name('sale_goods');  // 我的商品
-Route::delete('/users/{user}/delete_goods', 'UsersController@delete_goods')->name('delete_goods');  // 删除商品
+Route::get('/users/{user}/sale_goods/{state?}', 'UsersController@sale_goods')->name('sale_goods');  // 我的商品
+//Route::delete('/users/{user}/delete_goods', 'UsersController@delete_goods')->name('delete_goods');  // 删除商品
+Route::delete('ajax_del_gods/{goods}', 'UsersController@del_goods_ajax')->name('del_goods_ajax'); // ajax删除商品
+
 
 Route::get('/users/{user}/booking_notice', 'UsersController@booking_notice')->name('booking_notice');  // 预订通知
 Route::put('/users/{user}/agree_booking/{booking_id}', 'UsersController@agree_booking')->name('agree_booking');  // 接受预订
@@ -70,6 +72,7 @@ Route::post('/signup/email/verify/{token}', 'SessionsController@signup_verify2')
 /*发布商品*/
 Route::get('/create_goods', 'GoodsController@create_goods')->name('create_goods'); // 发布商品页面
 Route::put('/create_goods', 'GoodsController@create_goods_check')->name('create_goods_check'); // 处理发布商品
+Route::get('/edit_goods/{goods_id}', 'GoodsController@edit_goods')->name('edit_goods'); // 编辑商品页面
 
 
 

@@ -22,9 +22,9 @@ class PagesController extends Controller
   public function root(Request $request)
   {
     //session()->forget('primary');
-
+    //dd($request->session());
     $goods = Good::where('state', '1')->paginate(16);
-
+    
     // $images = $goods->pluck('image');
     // for ($i = 0; $i < sizeof($images); $i++) {
     //   $images[$i] = explode(',', $images[$i])[0];

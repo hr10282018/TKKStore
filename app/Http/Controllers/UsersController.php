@@ -14,6 +14,7 @@ use App\Models\UserVisible;
 use Mail;
 use Illuminate\Support\Str;
 use Auth;
+use Laravel\Ui\Presets\React;
 
 class UsersController extends Controller
 {
@@ -125,10 +126,16 @@ class UsersController extends Controller
     return view('users.detail._home_info',compact('user','user_visible')); // 默认路由-用户基本信息展示
 
   }
-  public function sale_goods(User $user,Category $category){    // 我的商品展示
+  public function sale_goods(User $user,$state=0){    // 我的商品展示
 
-    //dd($user);
-    $goods=Good::where('user_id',$user->id)->paginate(3);
+    //dd($state);
+    
+    $goods=Good::where('user_id',$user->id)->where('state',$state);
+
+    $count=sizeof($goods->get());
+
+    //dd($count);
+    $goods=$goods->paginate(5);
 
     $image=array();
     //$image=$goods->first()->image;
@@ -136,8 +143,12 @@ class UsersController extends Controller
       $image[]=explode(',',$goods[$i]->image)[0];
     }
 
-    return view('users.detail._sale_goods',compact('user','goods','image'));
+    return view('users.detail._sale_goods',compact('user','goods','image','count'));
   }
+
+
+
+
 
   /* end */
 
@@ -172,6 +183,8 @@ class UsersController extends Controller
       $user->save();
 
       session()->flush(); // 退出登录
+      //Auth::logout();
+
       return 'login';
     }
     return [];
@@ -185,22 +198,23 @@ class UsersController extends Controller
   // 用户头像编辑-处理表单
   public function avatar_check(Request $request,User $user,ImageUploadHandler $uploader){
     //dd($request->avatar);  // 测试上传头像
-    // $this->validate($request, [
-    //   'avatar' => 'mimes:jpeg,bmp,png,gif|dimensions:min_width=208,min_height=208',
-    // ],[
-    //   'avatar.mimes' =>'头像必须是 jpeg, bmp, png, gif 格式的图片',
-    //   'avatar.dimensions' => '图片的清晰度不够，宽和高需要 208px 以上',
-    // ]);
+ 
+    if(!isset($request->avatar)){
+      //dd('null');
+      session()->flash('null_data', '请上传图片！！');
+      return redirect()->back();
+    }
     $this->authorize('update_user_info', $user);  // 授权判断
     $data=$request->all();
-    $result = $uploader->save($request->avatar, 'avatars', $user->id);// -裁剪图像后的尺寸
+    $result = $uploader->save($request->avatar, 'avatars', $user->id,265);// -裁剪图像后的尺寸
     if ($result) {
       $data['avatar'] = $result['path'];
       $user->update($data);
-      session()->flash('success', '头像修改成功！');
+      session()->flash('success', '头像修改成功！!');
       return redirect()->route('user_edit_avatar', $user->id);
+      
     }else{
-      session()->flash('warning', '修改失败！请上传png,gif,jpg,jpeg格式的图片');
+      session()->flash('wrong_type', '请选择 【GIF JPG JPEG PNG】 格式的图片！!');
       return redirect()->route('user_edit_avatar', $user->id);
     }
   }
@@ -231,12 +245,28 @@ class UsersController extends Controller
     $this->authorize('update_user_info', $user);  // 授权判断
 
     $user_visible = UserVisible::where('user_id', Auth::user()->id)->first();
-    $checked='';
-    // 开关样式-选中
+
+    $checked='';    // 记录 个人信息 是否选中
+    $checked_buy_goods='';  // 记录 购买商品 是否选中
+    $checked_create_goods='';  // 记录 发布商品 是否选中
+    $checked_comment='';  // 记录 个人评论 是否选中
+
+    // 设置开关样式-选中  
     if(($user_visible->v_email || $user_visible->v_phone || $user_visible->v_university|| $user_visible->v_faculty || $user_visible->v_number || $user_visible->v_r_name)){
       $checked='checked';
     }
-    return view('users.edit._edit_visible',compact('user','user_visible'),['user_vis'=>$checked]);
+    if($user_visible->v_buy_booking_goods || $user_visible->v_buy_sale_goods){    // 购买商品
+      $checked_buy_goods='checked';
+    }
+    if($user_visible->v_booking_goods || $user_visible->v_sale_goods || $user_visible->v_saled_goods){    // 发布商品
+      $checked_create_goods='checked';
+    }
+    if($user_visible->v_comment ){
+      $checked_comment='checked';
+
+    }
+
+    return view('users.edit._edit_visible',compact('user','user_visible'),['user_vis'=>$checked,'buy_goods_vis'=>$checked_buy_goods,'create_goods_vis'=>$checked_create_goods,'comment_vis'=>$checked_comment]);
   }
   // ajax获取用户可见设置
   public function ajax_visible(){
@@ -256,6 +286,15 @@ class UsersController extends Controller
       'v_faculty',
       'v_number',
       'v_r_name',
+      
+      'v_buy_booking_goods',
+      'v_buy_sale_goods',
+      'v_booking_goods',
+      'v_sale_goods',
+      'v_saled_goods',
+      'v_comment',
+
+
     ]));
     return [];
   }
@@ -264,13 +303,13 @@ class UsersController extends Controller
   /* end */
 
   /* 出售商品处理 */
-  public function delete_goods(Request $request){   // 删除出售商品
-    // dd($request->all()['goods_id']); //商品id
+  public function del_goods_ajax(Good $goods,Request $request){   // 删除出售商品
+    //dd($request->all()); //商品id
 
-    Good::where('id', $request->all()['goods_id'])->first()->delete();  // 分类id
+    Good::where('id', $goods->id)->delete();  // 
  
-    session()->flash('success', '成功删除该商品！');
-    return back();
+    return [];
+
   }
 
 

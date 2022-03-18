@@ -8,7 +8,12 @@
     <li class="list-group-item">
       <div class="row mt-2">
         <i class="far fa-edit ml-3 mr-2" style="font-size: 20px;font-weight:bold;"></i>
+        @if(isset($goods_info->id))
+        <h4 style="line-height: 20px;font-weight:550">编辑商品</h4>
+        @else
         <h4 style="line-height: 20px;font-weight:550">发布商品</h4>
+        @endif
+
       </div>
 
     </li>
@@ -24,32 +29,36 @@
       <div class="form-group " style="width:810px;">
         <label for="title" style="font-size:16px">标题</label>
         <div class="row ml-0">
-          <input type="" autocomplete="off" maxlength="255" name="title" class="form-control" id="title" placeholder="显示在商品列表页..." style="width:405px;" value="{{ old('title') }}" required>
+          <input type="" autocomplete="on" maxlength="255" name="title" class="form-control" id="title" placeholder="显示在商品列表页..." style="width:750px" value="@if(isset($goods_info)){{ $goods_info->title }}@endif" required>
           <div style="line-height:35px;color:#636b6f" class="ml-2"></div>
         </div>
       </div>
 
       <div class="form-group" style="width:750px;">
         <label for="description" style="font-size:16px">描述</label>
-        <textarea class="form-control" id="description" rows="2" placeholder="显示在商品详情页..." name="description" style="height:52px;max-height: 126px;min-height: 52px;" required>{{ old('content') }}</textarea>
+        <textarea class="form-control" id="description" rows="2" placeholder="显示在商品详情页..." name="description" style="height:52px;max-height: 126px;min-height: 52px;" required>@if(isset($goods_info)){{ $goods_info->description }}@endif</textarea>
       </div>
 
       <div class="form-group" style="width:750px;">
         <label for="description" style="font-size:15px">卖家标签</label>
+
         <div>
+
           @foreach($good_tag as $tags=>$tag)
-          <button type="button" class="btn btn_tag " style="outline:none;line-height:15px;height:27px;border: 1px solid #e8eaec; background: #f7f7f7;font-size: 12px;color: #515a6e">
+          <button type="button" class="btn btn_tag @if(isset($goods_info->id) && $tags <= count($tags_data->toArray())-1 ) @if(in_array($tag->name,$tags_data->toArray()[$tags])) active @endif @elseif($tags == 0) active   @endif" style="outline:none;line-height:15px;height:27px;border: 1px solid #e8eaec; background: #f7f7f7;font-size: 12px;color: #515a6e">
             {{ $tag->name }}
           </button>
           @endforeach
+
         </div>
-        <input class="tags_data" type="text" name="tag_data"  hidden>
+
+        <input class="tags_data" type="text" name="tag_data" hidden>
       </div>
 
       <div class="form-group">
         <label for="price" style="font-size:16px">标价</label>
         <div class="row ml-0">
-          <input type="" autocomplete="off" name="price" maxlength="6" minlength="1" class="form-control" id="price" placeholder="请填写数字价格，最多保留一位小数..." style="width:405px;" value="{{ old('price') }}" required>
+          <input type="" autocomplete="on" name="price" maxlength="6" minlength="1" class="form-control" id="price" placeholder="请填写数字价格，最多保留一位小数..." style="width:405px;" value="@if(isset($goods_info)){{ $goods_info->price }}@endif" required>
           <span style="line-height:35px ;color:#636b6f;" class="ml-2">填写范围为 0.1 ~ 9999.9</span>
           <div class="wrong_tip_price"></div>
         </div>
@@ -57,17 +66,17 @@
 
       <div class="form-group">
         <label for="old_price" style="font-size:15px">原价</label>
-        <input type="text" autocomplete="off" name="old_price" maxlength="6" class="form-control " id="old_price" placeholder="" style="width:405px;" value="{{ old('old_price') }}" required>
+        <input type="text" autocomplete="off" name="old_price" maxlength="6" class="form-control " id="old_price" placeholder="" style="width:405px;" value="@if(isset($goods_info)){{ $goods_info->old_price }}@endif" required>
         <div class="wrong_tip_oprice "></div>
       </div>
 
       <div class="form-group">
         <label for="u_phone" style="font-size:16px">分类</label>
         <select class="form-control" name="category_id" id="category" style="width:405px;">
-          <option>学习</option>
-          <option>生活</option>
-          <option>娱乐</option>
-          <option>其他</option>
+          <option @if(isset($goods_info) && $goods_info->category_id == 1 ) selected @endif>学习</option>
+          <option @if(isset($goods_info) && $goods_info->category_id == 2 ) selected @endif>生活</option>
+          <option @if(isset($goods_info) && $goods_info->category_id == 3 ) selected @endif>娱乐</option>
+          <option @if(isset($goods_info) && $goods_info->category_id == 4 ) selected @endif>其他</option>
         </select>
       </div>
 
@@ -81,7 +90,7 @@
 
       <div class="img_file">
         <div class="form-group " style="border:1px #dee2e6 solid;height:48px;width: 800px;border-radius:5px;">
-          <input type="file" id="first_file"  autocomplete="off" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 " title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
+          <input type="file" id="first_file" autocomplete="on" value="xxx" name="goods_img[]" data-toggle="tooltip" data-placement="bottom" class="form-control-file file ml-2 " title="请上传 (PNG,JPG,GIF,JPEG) 格式的图片" style="margin-top: 12px;" required />
           {{-- <div class="wrong_tip_img  ml-1 mt-3 mb-1"></div> --}}
         </div>
         <div class="ml-2 wrong_tip_type" hidden style="color: #e3342f;font-size: 80%;">
@@ -121,7 +130,7 @@
           暂不发布
         </button>
         <input class="state" name="goods_state" type="text" hidden>
-        
+
       </div>
 
     </form>
@@ -136,11 +145,18 @@
 <script>
   $(document).ready(function() {
 
-    // 默认选择第一个标签
-    $('.btn_tag').eq(0).css({
-      'background': '#2d8cf0',
-      'color': '#fff'
-    }).addClass('active')
+    // 循环遍历-为active 添加样式
+    $(".btn_tag").each(function(index) {
+      
+      //console.log($(".btn_tag")[index]);
+      if ($(".btn_tag").eq(index).hasClass('active')) {
+        $(this).css({
+          'background': '#2d8cf0',
+          'color': '#fff'
+        })
+      }
+    })
+
 
     // 标签按钮-点击事件
     var max_tag = true // 记录标签能否选择
@@ -242,12 +258,12 @@
     var top = -37;
     $("#add").click(function() {
       //console.log($("input[type='file']").length)
-      if($("input[type='file']").length >= 4){
+      if ($("input[type='file']").length >= 4) {
         // console.log('最多选择四个图片！')
         swal("最多选择四个图片", {
-            buttons: false,
-            icon: 'warning',
-            timer: 2500
+          buttons: false,
+          icon: 'warning',
+          timer: 2500
         });
         return false;
       }
@@ -276,7 +292,7 @@
     });
 
     $(".img_file ").on("click", "button", function() {
-      
+
       $(this).parent().parent().next().remove()
       $(this).parent().parent().next().remove()
       $(this).parent().parent().remove();
@@ -285,7 +301,7 @@
 
     // 验证上传图片(类型、大小、宽)-change事件
     $(".img_file").on("change", "input", function() {
-     
+
       file = $(this)[0].files[0]
       img_ext = file.type // 获取图片类型
       //console.log(img_ext)
@@ -300,12 +316,12 @@
         if (img_size > 200) {
           $(this).parent('div').css('border', '1px solid #e3342f')
           // if ($('#first_file').index('input') == $(this).index('input')) {
-            
+
           //   $(this).addClass('is-invalid').removeClass('is-valid');
           //   $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
           //   $(this).next().html('<div class=""><strong>图片大小超过K，请重新选择！!</strong></div>');
           // } else {
-            $(this).parent().next().next().removeAttr('hidden')
+          $(this).parent().next().next().removeAttr('hidden')
           //}
         } else { // 图片格式、大小都符合
           $(this).parent('div').css('border', '1px solid #dee2e6')
@@ -314,8 +330,8 @@
           //   $(this).next().addClass('valid-feedback').removeClass('invalid-feedback');
           //   $(this).next().html('');
           // } else {
-            $(this).parent().next().prop("hidden", true)
-            $(this).parent().next().next().prop("hidden", true)
+          $(this).parent().next().prop("hidden", true)
+          $(this).parent().next().next().prop("hidden", true)
           //}
         }
       } else { // 格式不正确
@@ -326,15 +342,15 @@
         //   $(this).next().addClass('invalid-feedback').removeClass('valid-feedback');
         //   $(this).next().html('<strong>不支持该图片格式，请重新选择！!</strong>');
         // } else {
-          $(this).parent().next().removeAttr('hidden')
+        $(this).parent().next().removeAttr('hidden')
         //}
         if (img_size > 200) { // 都不正确
           // if ($('#first_file').index('input') == $(this).index('input')) {
           //   $(this).next().append('<div class=""><strong>图片大小超过200K，请重新选择！!</strong></div>');
           // } else {
-            
-            $(this).parent().next().removeAttr('hidden')
-            $(this).parent().next().next().removeAttr('hidden')
+
+          $(this).parent().next().removeAttr('hidden')
+          $(this).parent().next().next().removeAttr('hidden')
           //}
         }
       }
@@ -366,13 +382,13 @@
       // 设置标签数据
       //console.log($('.btn_tag'))
       var tag_data = ''
-      $.each($('.btn_tag'),function(i,val){
-        if($(this).hasClass('active')){
-          if(tag_data == ''){
-            tag_data =(i+1)
+      $.each($('.btn_tag'), function(i, val) {
+        if ($(this).hasClass('active')) {
+          if (tag_data == '') {
+            tag_data = (i + 1)
 
-          }else{
-            tag_data =tag_data + '-' +(i+1)
+          } else {
+            tag_data = tag_data + '-' + (i + 1)
           }
         }
       })
@@ -381,7 +397,7 @@
 
       // 设置状态-发布
       $('.state').val(1)
-      
+
       var file
       for (var i = 0; i < $('.file').length; i++) { // 判断所有图片是否为空
         if ($(".file").eq(i).val().length == 0) {
@@ -415,7 +431,7 @@
                 if (!res) return;
                 $('.form_create_goods').submit()
               })
-              $('.swal-text').addClass('email_text'); // 控制swal-text的样式
+              $('.swal-text').addClass('warning_text'); // 控制swal-text的样式
               $('.swal-footer').css("text-align", "center") // 确认取消按钮-居中
             } else {
               swal({
@@ -438,17 +454,17 @@
     })
 
     // 暂不发布按钮-点击事件
-    $('.btn_wait').click(function(){
+    $('.btn_wait').click(function() {
       // 设置标签数据
       //console.log($('.btn_tag'))
       var tag_data = ''
-      $.each($('.btn_tag'),function(i,val){
-        if($(this).hasClass('active')){
-          if(tag_data == ''){
-            tag_data =(i+1)
+      $.each($('.btn_tag'), function(i, val) {
+        if ($(this).hasClass('active')) {
+          if (tag_data == '') {
+            tag_data = (i + 1)
 
-          }else{
-            tag_data =tag_data + '-' +(i+1)
+          } else {
+            tag_data = tag_data + '-' + (i + 1)
           }
         }
       })
@@ -467,15 +483,15 @@
       }
       if (file == 0 || $('#description').val().length == 0 || $('#title').val().length == 0 || $('#price').val().length == 0 || $('#old_price').val().length == 0) {
         $('.btn_submit').trigger('click')
-      }else{
+      } else {
         swal({
           title: '暂不发布',
           text: '?',
           buttons: ['取消', '确定'],
-        }).then((res)=>{
+        }).then((res) => {
           if (!res) return;
-            $('.form_create_goods').submit()
-          })
+          $('.form_create_goods').submit()
+        })
 
         $('.swal-text').css({
           "background-color": "#FEFAE3",
@@ -491,7 +507,7 @@
 
     })
 
-    
+
 
   })
 </script>

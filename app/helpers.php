@@ -89,4 +89,22 @@ function user_center_active($type){
 }
 
 
+// 我的商品-状态选中样式
+function my_goods_active($state){
+
+  // 
+  if($state == 0){
+    if(if_route('sale_goods') && (if_route_param('state', $state) || if_route_param('state', ''))){
+      return true;
+    }
+  }
+
+  if((if_route('sale_goods') && if_route_param('state', $state))){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+
 

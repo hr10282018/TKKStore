@@ -209,7 +209,6 @@
               max_last = $('.goods_list').eq(i).position().top + cards[i]
             }
           }
-
         }
         $('.card_div').css("height", max_last - 55)
       }

@@ -75,6 +75,7 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'cache',
+            
         ],
 
         'dynamodb' => [

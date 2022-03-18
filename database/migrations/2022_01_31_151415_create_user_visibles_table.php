@@ -11,6 +11,7 @@ class CreateUserVisiblesTable extends Migration
   {
     Schema::create('user_visibles', function (Blueprint $table) {
       $table->id();
+      // 个人信息
       $table->unsignedBigInteger('user_id');    // 用户id
       $table->boolean('v_email')->default(true);     // 邮箱-默认可见
       $table->boolean('v_phone')->default(true);
@@ -18,6 +19,7 @@ class CreateUserVisiblesTable extends Migration
       $table->boolean('v_faculty')->default(true);
       $table->boolean('v_number')->default(true);
       $table->boolean('v_r_name')->default(true);
+      
       $table->timestamps();
     });
   }

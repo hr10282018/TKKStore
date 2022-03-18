@@ -57,7 +57,7 @@
         <label for="u_phone" style="color: #969696;font-weight:bold;">手机号码</label>
         <div class="row ml-0">
           <input type="phone" class="form-control user_phone" id="u_phone" style="width:405px;" maxlength="11" value="{{ $user->phone }}">
-          <div style="line-height:35px;color:#636b6f" class="ml-2">您的手机号，长度必须为 11</div>
+          <div style="line-height:35px;color:#636b6f" class="ml-2">您的手机号，长度必须为 11位</div>
           <div class="wrong_tip_phone"></div>
         </div>
       </div>
@@ -154,9 +154,9 @@
           $(this).addClass('is-invalid').removeClass('is-valid');
           $(".wrong_tip_email").addClass('invalid-feedback').removeClass('valid-feedback');
         if(email==''){
-          $(".wrong_tip_email").html('<span>请填写您的邮箱！!</span>');
+          $(".wrong_tip_email").html('<span>请填写您的邮箱！！</span>');
         }else{
-          $(".wrong_tip_email").html('<span>您的邮箱格式不正确，请重新填写！!</span>');
+          $(".wrong_tip_email").html('<span>您的邮箱格式不正确，请重新填写！！</span>');
         }
       }
     })
@@ -165,20 +165,26 @@
     var current_phone= $(".user_phone").val();
     $('.user_phone').blur(function(){
       if(current_phone == $(".user_phone").val()){
-        $(this).removeClass('is-valid').removeClass('is-invalid');
+        $('.user_phone').removeClass('is-valid').removeClass('is-invalid');
         $(".wrong_tip_phone").removeClass('valid-feedback').removeClass('invalid-feedback');
+        $(".wrong_tip_phone").html('');
       }else{
-        if( $(this).val().length>0 && $(this).val().length<11){
-          $(this).addClass('is-invalid').removeClass('is-valid');
+        if( $('.user_phone').val().length>0 && $('.user_phone').val().length<11){
+          
+          $('.user_phone').addClass('is-invalid').removeClass('is-valid');
           $(".wrong_tip_phone").addClass('invalid-feedback').removeClass('valid-feedback');
-          $(".wrong_tip_phone").html('<span>手机号码长度必须为 11位 ！!</span>');
-        }else if($(this).val().length==11){
-          $(this).addClass('is-valid').removeClass('is-invalid');
+          $(".wrong_tip_phone").html('<span>手机号码长度必须为 11位 ！！</span>');
+        }else if($('.user_phone').val().length==11){
+          
+          $('.user_phone').addClass('is-valid').removeClass('is-invalid');
           $(".wrong_tip_phone").addClass('valid-feedback').removeClass('invalid-feedback');
           $(".wrong_tip_phone").html('');
-        }else if($(this).val().length==0){
-          $(this).removeClass('is-valid').removeClass('is-invalid');
+          
+        }else if($('.user_phone').val().length==0){
+          
+          $('.user_phone').removeClass('is-valid').removeClass('is-invalid');
           $(".wrong_tip_phone").removeClass('valid-feedback').removeClass('invalid-feedback');
+          $(".wrong_tip_phone").html('');
         }
       }
 
@@ -252,7 +258,7 @@
               //console.log(error.response.data.errors)
             })
           });
-          $('.swal-text').addClass('email_text'); // 控制swal-text的样式
+          $('.swal-text').addClass('warning_text'); // 控制swal-text的样式
           $('.swal-footer').css("text-align","center")  // 确认取消按钮-居中
 
         }else{          // 用户没有修改邮箱

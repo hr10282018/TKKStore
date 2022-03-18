@@ -1,265 +1,287 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
-
 // Fontawesome
 @import '~@fortawesome/fontawesome-free/scss/fontawesome';
 @import '~@fortawesome/fontawesome-free/scss/regular';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/brands';
-
-
 body {
-  font-family: Helvetica, "Microsoft YaHei", Arial, sans-serif;
-  font-size: 14px;
-
+    font-family: Helvetica, "Microsoft YaHei", Arial, sans-serif;
+    font-size: 14px;
 }
 
-.bgimg{
-  background-image: url('/images/school.jpeg');
-  width: 1100px;
-  height: 700px;
+.bgimg {
+    background-image: url('/images/school.jpeg');
+    width: 1100px;
+    height: 700px;
 }
+
 
 /* 头部 */
 
 .navbar-static-top {
-  border-color: #e7e7e7;
-  background-color: #fff;
-  box-shadow: 0px 1px 11px 2px rgba(42, 42, 42, 0.1);
-  border-top: 4px solid #00b5ad;
-  border-bottom: 1px solid #e8e8e8;
-  margin-bottom: 40px;
-  margin-top: 0px;
+    border-color: #e7e7e7;
+    background-color: #fff;
+    box-shadow: 0px 1px 11px 2px rgba(42, 42, 42, 0.1);
+    border-top: 4px solid #00b5ad;
+    border-bottom: 1px solid #e8e8e8;
+    margin-bottom: 40px;
+    margin-top: 0px;
 }
+
 @media (min-width: 1200px) {
-  .container-xl,
-  .container-lg,
-  .container-md,
-  .container-sm,
-  .container {
-    max-width: 1440px;
-  }
+    .container-xl,
+    .container-lg,
+    .container-md,
+    .container-sm,
+    .container {
+        max-width: 1440px;
+    }
 }
 
 
 /* 底部样式 */
+
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  background-color: #000;
-
-  .footer_container {
-    padding-right: 15px;
-    padding-left: 15px;
-
-    p {
-      margin: 19px 0;
-      color: #c1c1c1;
-
-      a {
-        color: inherit;
-      }
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    background-color: #000;
+    .footer_container {
+        padding-right: 15px;
+        padding-left: 15px;
+        p {
+            margin: 19px 0;
+            color: #c1c1c1;
+            a {
+                color: inherit;
+            }
+        }
     }
-  }
 }
 
 
 /* 注册框 */
 
+#r_input {
+    width: 223px;
+}
+
+#captcha {
+    width: 223px;
+}
+
+.comfirm_pwd {
+    margin-left: 20px;
+}
+
+.verify {
+    margin-left: 10px;
+}
 
 
-#r_input{
-  width: 223px;
-}
-#captcha{
-  width: 223px;
-}
-.comfirm_pwd{
-  margin-left: 20px;
-}
-.verify{
-  margin-left: 10px;
-}
 /* 验证码 */
-.signup-page {
-  img.captcha {
-    cursor: pointer;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    padding: 3px;
 
-  }
+.signup-page {
+    img.captcha {
+        cursor: pointer;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 3px;
+    }
 }
+
 
 /* 个人中心 */
 
 // 选中.list-group-item.active {}
 
 /* 最新发布 */
-.new_hot{
-  .active{
-    color: #fff;
-    background-color: #3490dc;
-  }
+
+.new_hot {
+    .active {
+        color: #fff;
+        background-color: #3490dc;
+    }
 }
 
 // 编辑个人资料按钮
-.edit_info{
-  &:hover{
-  color: whitesmoke;
-  background-color: #3490dc;
-  }
+.edit_info {
+    &:hover {
+        color: whitesmoke;
+        background-color: #3490dc;
+    }
 }
 
-// swal-text(编辑个人信息-确认修改邮箱弹框样式)
-.email_text {
-  background-color: #fff3cd;
-  padding: 17px;
-  border: 1px solid #ffeeba;
-  display: block;
-  margin: 22px;
-  text-align: center;
-  color: #856404;
+// swal-text 警告
+.warning_text {
+    background-color: #fff3cd;
+    padding: 17px;
+    border: 1px solid #ffeeba;
+    display: block;
+    margin: 22px;
+    text-align: center;
+    color: #856404;
+}
+
+// danger 危险
+.danger_text {
+    background-color: #f8d7da;
+    padding: 17px;
+    border: 1px solid #f5c6cb;
+    display: block;
+    margin: 22px;
+    text-align: center;
+    color: #721c24;
+    border-radius: 5px;
 }
 
 // 个人资料展示-箭头样式
-.arrow_box{
-  display: inline-block;
-  transition: transform 0.5s;
-  -moz-transition: -moz-transform 0.5s;
-  /* Firefox 4 */
-  -webkit-transition: -webkit-transform 0.5s;
-  /* Safari 和 Chrome */
-  -o-transition: -o-transform 0.5s;
+.arrow_box {
+    display: inline-block;
+    transition: transform 0.5s;
+    -moz-transition: -moz-transform 0.5s;
+    /* Firefox 4 */
+    -webkit-transition: -webkit-transform 0.5s;
+    /* Safari 和 Chrome */
+    -o-transition: -o-transform 0.5s;
 }
 
 // 显示设置-滑块样式
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 25px;
-}
-.switch input {
-  display: none;
-}
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 34px;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 23px;
-  width: 19px;
-  left: 1px;
-  bottom: 1px;
-  background-color: #fdfbfb;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 50%;
-}
-.switch input:checked+.slider {
-  background-color: #2185d0;
-}
-.switch input:focus+.slider {
-  box-shadow: 0 0 1px #2185d0;
-}
-input:checked+.slider:before {
-  -webkit-transform: translateX(39px);
-  -ms-transform: translateX(39px);
-  transform: translateX(39px);
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 25px;
 }
 
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 23px;
+    width: 19px;
+    left: 1px;
+    bottom: 1px;
+    background-color: #fdfbfb;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.switch input:checked+.slider {
+    background-color: #2185d0;
+}
+
+.switch input:focus+.slider {
+    box-shadow: 0 0 1px #2185d0;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(39px);
+    -ms-transform: translateX(39px);
+    transform: translateX(39px);
+}
 
 
 /* 商品展示 */
-.goods_img{
-  transition: all .5s;
-  transition-property: all;
-  transition-duration: 0.5s;
-  transition-timing-function: ease;
-  transition-delay: 0s;
 
-  &:hover{
-    transform: scale(1.05);
-    //width: 290px; height: 102%;
-    //transition-duration: 0.5s;
-  }
-
+.goods_img {
+    transition: all .5s;
+    transition-property: all;
+    transition-duration: 0.5s;
+    transition-timing-function: ease;
+    transition-delay: 0s;
+    &:hover {
+        transform: scale(1.05);
+        //width: 290px; height: 102%;
+        //transition-duration: 0.5s;
+    }
 }
 
 // 物品卡片
-.goods_list{
-  margin-top: 10px;
-  //top: 10px;
-  //width: 422px;
-  transition-duration: 0.5s ;
-  position:relative;
-  //border: 1px solid #38c172;
-
-  &:hover{
-    //top: 5px;
-    -webkit-box-shadow: #ccc 0px 10px 10px;
-    -moz-box-shadow: #ccc 0px 10px 10px;
-    box-shadow: #ccc 0px 10px 10px;
-    transition-duration: 0.5s ;
-    //border: none;
-  }
+.goods_list {
+    margin-top: 10px;
+    //top: 10px;
+    //width: 422px;
+    transition-duration: 0.5s;
+    position: relative;
+    //border: 1px solid #38c172;
+    &:hover {
+        //top: 5px;
+        -webkit-box-shadow: #ccc 0px 10px 10px;
+        -moz-box-shadow: #ccc 0px 10px 10px;
+        box-shadow: #ccc 0px 10px 10px;
+        transition-duration: 0.5s;
+        //border: none;
+    }
 }
 
 // 发布时间、评论、浏览图标
-.time{
-  color:#a5a5a5;
-  &:hover{
-    color: rgb(70, 70, 70);
-  }
-  i:hover{
-    color: rgb(70, 70, 70);
-  }
-}
-.eye{
-  color:#a5a5a5;
-  &:hover{
-    color: #38b;
-  }
-  // i:hover{
-  //   color: rgb(70, 70, 70);
-  // }
-}
-.reply{
-  color:#a5a5a5;
-  &:hover{
-    color: #b57c5b;
-  }
-  // i:hover{
-  //   color: rgb(70, 70, 70);
-  // }
+.time {
+    color: #a5a5a5;
+    &:hover {
+        color: rgb(70, 70, 70);
+    }
+    i:hover {
+        color: rgb(70, 70, 70);
+    }
 }
 
+.eye {
+    color: #a5a5a5;
+    &:hover {
+        color: #38b;
+    }
+    // i:hover{
+    //   color: rgb(70, 70, 70);
+    // }
+}
+
+.reply {
+    color: #a5a5a5;
+    &:hover {
+        color: #b57c5b;
+    }
+    // i:hover{
+    //   color: rgb(70, 70, 70);
+    // }
+}
+
+// 创建商品
+.custom-file-label::after {
+  
+  content: "浏览...";
+ 
+}

@@ -35,7 +35,8 @@ class SessionsController extends Controller
     ]);
 
     if (Auth::attempt($credentials,$request->has('remember'))) {  // 第二个参数bool(记住我)
-        //dd(Auth::user()->name);
+
+        //dd($request->session());
       if(Auth::user()->activated) {
         Auth::user();
         session()->flash('success', '欢迎回来！');
@@ -57,12 +58,19 @@ class SessionsController extends Controller
       return redirect()->back()->withInput();
     }
   }
+
   public function login_out(Request $request){    // 退出登录
+
+    
     Auth::logout();
+    //dd($request ->cookie());
     session()->flash('success', '您已成功退出！');
+
     if($request->ajax()){
       return [];
     }
+
+    //dd($request->session());
     return redirect()->route('login');
   }
 

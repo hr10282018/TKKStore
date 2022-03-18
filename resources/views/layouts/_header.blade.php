@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-static-top">
-  <div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-static-top" >
+  <div class="container" >
 
     <!-- 校徽 -->
     <img class="mr-2" src="/images/xujc.jpg" alt="" style="width: 45px; height:45px; border-radius: 50%;">
@@ -58,7 +58,7 @@
             <a class="dropdown-item" id="logout" href="#">
               <form action="{{ route('login_out') }}" method="POST">
                 {{ csrf_field() }}
-                {{ method_field('DELETE') }}
+                {{-- {{ method_field('DELETE') }} --}}
                 <!-- <input type="hidden" name="_method" value="DELETE"> -->
                 <button class="btn btn-block btn-danger" type="submit" name="button">退出</button>
               </form>

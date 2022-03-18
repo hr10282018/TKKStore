@@ -49,34 +49,62 @@
     <div class="card">
       <!-- <i class="fas fa-caret-left" style="color:aqua"></i> -->
 
-      <li class="list-group-item "> <strong style="font-size: 16px; color:#a5a5a5">我的信息</strong></li>
+      <li class="list-group-item ">
+        <strong style="font-size: 16px; color:#a5a5a5">
+          @if (Auth::user()->can('update_user_info', $user))
+          我的信息
+          @else
+          Ta 的信息
+          @endif
+        </strong>
+      </li>
 
       <a href="{{ route('user_show',$user->id) }}" style=" z-index:1" class="list-group-item list-group-item-action {{ user_center_active(0) }}">
         <i class="fas fa-user mr-2"></i>
-        个人信息
+          个人信息
       </a>
 
       <a href="{{ route('user_booking' , $user->id )  }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(1) }}">
         <i class="fas fa-heart mr-1"></i>
-        我的预订
+        @if (Auth::user()->can('update_user_info', $user))
+          我的预订
+        @else
+          Ta 的预订
+        @endif
+        
       </a>
       <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;" class="list-group-item list-group-item-action ">
         <i class="fab fa-twitch" style="font-size:16px"></i>
-        我的评论
+        @if (Auth::user()->can('update_user_info', $user))
+          我的评论
+        @else
+          Ta 的评论
+        @endif
+        
       </a>
 
       <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;">
         <img src="/images/order3.png" alt="" style="width: 18px; height:18px; margin-right:1px">
-        购买订单
+        
+        购买商品
       </a>
     </div>
 
     <div class="card mt-3">
-      <li class="list-group-item "> <strong style="font-size: 16px; color:#a5a5a5">我的店铺</strong></li>
+      <li class="list-group-item "> 
+        <strong style="font-size: 16px; color:#a5a5a5">
+        @if (Auth::user()->can('update_user_info', $user))
+          我的店铺
+        @else
+          Ta 的店铺
+        @endif
+        </strong>
+        
+      </li>
 
       <a href="{{ route('sale_goods',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(4) }}">
         <i class="fas fa-store"></i>
-        <span>我的商品</span>
+        <span>发布商品</span>
       </a>
 
       <a href="{{ route('booking_notice',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(5) }}">
