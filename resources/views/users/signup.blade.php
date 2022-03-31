@@ -33,7 +33,8 @@
           <div class="form-group ml-5">
             <label for="password" class="form-inline" />密码：
             <input type="password" style="width: 223px;" maxlength="255" name="password" id="user_pwd" class="form-control upwd" value="{{ old('password') }}" placeholder="密码不能少于6位" required>
-            <div class="offset-md-2" id="upwd_tip">
+            <div class="offset-md-2 {{ $errors->has('password') ? ' invalid-feedback' : '' }}" id="upwd_tip">
+            <strong>{{ $errors->first('password') }}</strong>
             </div>
           </div>
 

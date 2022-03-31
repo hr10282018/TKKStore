@@ -28,10 +28,12 @@
         <li class="list-group-item " style="width: 230px; margin:0 auto;"></li>
 
         <div class="card-body" style="height:60px">
+          @if(Auth::user()->can('update_user_info', $user))
           <a href="{{ route('user_edit',Auth::user()) }}" class="btn edit_info" style="border:#3490dc 1px solid; width:215px; height:35px">
             <i class="fas fa-user-edit"></i>
             编辑个人资料
           </a>
+          @endif
         </div>
         <li class="list-group-item " style="width: 230px; height:2px; margin:0 auto;"></li>
       </ul>
@@ -73,7 +75,7 @@
         @endif
         
       </a>
-      <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;" class="list-group-item list-group-item-action ">
+      <a href="{{ route('user_comment' , $user->id )  }}"  style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(2) }}">
         <i class="fab fa-twitch" style="font-size:16px"></i>
         @if (Auth::user()->can('update_user_info', $user))
           我的评论
@@ -86,7 +88,7 @@
       <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;">
         <img src="/images/order3.png" alt="" style="width: 18px; height:18px; margin-right:1px">
         
-        购买商品
+        订购商品
       </a>
     </div>
 

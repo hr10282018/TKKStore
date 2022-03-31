@@ -41,13 +41,14 @@
 
       <div class="form-group" style="width:750px;">
         <label for="description" style="font-size:15px">卖家标签</label>
-
         <div>
-
+          <?php  $index=0 ?>
+          
           @foreach($good_tag as $tags=>$tag)
-          <button type="button" class="btn btn_tag @if(isset($goods_info->id) && $tags <= count($tags_data->toArray())-1 ) @if(in_array($tag->name,$tags_data->toArray()[$tags])) active @endif @elseif($tags == 0) active   @endif" style="outline:none;line-height:15px;height:27px;border: 1px solid #e8eaec; background: #f7f7f7;font-size: 12px;color: #515a6e">
+        
+          <button type="button" class="btn btn_tag @if(isset($goods_info) && $index <= count($tags_data->toArray())-1) @if($tag->name == $tags_data->toArray()[$index]['name'] ) active  <?php  $index++ ?> @endif @elseif($tags == 0) active  @endif" style="outline:none;line-height:15px;height:27px;border: 1px solid #e8eaec; background: #f7f7f7;font-size: 12px;color: #515a6e">
             {{ $tag->name }}
-          </button>
+          </button> 
           @endforeach
 
         </div>
@@ -137,6 +138,10 @@
     <input class="state" name="goods_state" type="text" hidden>
     <!--记录状态-->
     <input class="goods_old_img" type="text" name="goods_old_img" hidden> <!-- 记录old_img -->
+
+    @if(isset($goods_info->id))
+      <input class="id" type="text" value="{{ $goods_info->id }}" name="id" hidden>
+    @endif
 
     @foreach (['wrong_type', 'null_data'] as $msg)
       @if(session()->has($msg))
@@ -574,7 +579,10 @@
                 dangerMode: true,
               }).then((res) => {
                 if (!res) return;
-              
+                
+                $(this).attr('disabled', 'true')
+                $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...')
+
                 if(arrImg)  $('.goods_old_img').val(arrImg)
                 else $('.goods_old_img').val(null)
                 $('.form_create_goods').submit()
@@ -622,7 +630,7 @@
 
       var file
       for (var i = 0; i < $('.file').length; i++) { // 判断所有图片是否为空
-        console.log($(".file").eq(i).val())
+        //console.log($(".file").eq(i).val())
         if ($(".file").eq(i).val().length == 0) {
           
           if (arrImg != false && arrImg[i] != '0') {
@@ -657,6 +665,9 @@
             buttons: ['取消', '确定'],
           }).then((res) => {
             if (!res) return;
+
+            $(this).attr('disabled', 'true')
+            $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...')
 
             if(arrImg)  $('.goods_old_img').val(arrImg)  // 传 旧图url
             else $('.goods_old_img').val(null)

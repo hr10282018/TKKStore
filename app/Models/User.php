@@ -14,8 +14,8 @@ class User extends Authenticatable
   use DefaultDatetimeFormat;
 
   protected $fillable = [
-    'name', 'email', 'password', 'avatar','activated', 'activation_token',
-    'sex','signature','phone','university','faculty','number','r_name',
+    'name', 'email', 'password', 'avatar', 'activated', 'activation_token',
+    'sex', 'signature', 'phone', 'university', 'faculty', 'number', 'r_name',
   ];
 
   protected $hidden = [
@@ -51,6 +51,9 @@ class User extends Authenticatable
     return $this->hasMany(Booking::class);     // 一个用户有多个预订
   }
 
-
-
+  public function userVisibles()       // 一个用户有一个 可见设置
+  {
+    return $this->hasOne(UserVisible::class);
+  }
+  
 }

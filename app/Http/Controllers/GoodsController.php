@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Handlers\ImageUploadHandler;
 use App\Http\Requests\GoodInfoRequest;
+use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Comment;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ use Cache;
 use Doctrine\Common\Cache\Cache as CacheCache;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Redis;
+use Arr;
 
 class GoodsController extends Controller
 {
@@ -51,23 +53,24 @@ class GoodsController extends Controller
     //dd($request->all());
 
     $goods = $request->all();
-    
+    //dd($goods);
     if ($goods['goods_old_img'] == null  && !isset($goods['goods_img'])) {
       //dd('你的图片未上传');
       session()->flash('null_data', '你还有未填的选项，无法提交！');
       return redirect()->back();
-    } else {
-      if (in_array(null, $goods)) {
-        //dd('你还有未填的选项');
-        session()->flash('null_data', '你还有未填的选项，无法提交！');
-        return redirect()->back();
-      }
     }
+
+    if (in_array(null, $goods) && $goods['goods_old_img'] != null) {
+      dd('你还有未填的选项');
+      session()->flash('null_data', '你还有未填的选项，无法提交！');
+      return redirect()->back();
+    }
+
 
     $goods['image'] = '';
     if ($goods['goods_old_img']) {    // 编辑
-      //dd('编辑');
-
+      //dd('编辑');;
+      
       $goods['goods_old_img'] = explode(',', $goods['goods_old_img']);
       for ($i = 0; $i < sizeof($goods['goods_old_img']); $i++) {
         if ($goods['goods_old_img'][$i] == 'update') {
@@ -101,8 +104,26 @@ class GoodsController extends Controller
     $goods['category_id'] = Category::where('name', $goods['category_id'])->first()->id;  // 分类id
 
     $goods['tags'] = $request->tag_data;     // 先测试标签1
-    $good->fill($goods);
-    $good->save();
+
+    
+    //dd($goods);
+    if ($goods['goods_old_img']) {
+      $good=Good::where('id',$goods['id']);
+      $good->update([
+        'title' => $goods['title'],
+        'description' => $goods['description'],
+        'image' => $goods['image'],
+        'state' => $goods['state'],
+        'price' => $goods['price'],
+        'old_price' => $goods['old_price'],
+        'category_id' => $goods['category_id'],
+        'tags' => $goods['tags'],
+      ]);
+    }else{
+      $good->fill($goods);
+      $good->save();
+    }
+    
 
     // 判断商品发布状态
 
@@ -118,7 +139,7 @@ class GoodsController extends Controller
   public function edit_goods($goods_id, GoodTag $good_tag)
   {
 
-    $good_tag = GoodTag::get();
+    $good_tag = GoodTag::get();       // 所有 tag
     $goods_info = Good::where('id', $goods_id)->first();
     // 取标签数据
     $tags = [];
@@ -130,7 +151,8 @@ class GoodsController extends Controller
       }
     }
     //dd($tags);
-    $tags_data = GoodTag::whereIn('id', $tags)->get();
+    $tags_data = GoodTag::whereIn('id', $tags)->get();      // 该商品的tag
+    //dd($tags_data);
 
     return view('goods.create_edit_goods', compact('goods_info', 'tags_data', 'good_tag'));
   }
@@ -148,7 +170,7 @@ class GoodsController extends Controller
   /* 商品查询 */
   public function goods_search(Request $request, Good $good, Category $category)
   {
-    //dd($request->input('category_id', ''));
+    //dd($request->input('key', ''));
     $builder = Good::query();
     //dd($request->search);
     if ($category_id = $request->input('category_id', '')) {
@@ -156,22 +178,6 @@ class GoodsController extends Controller
       $categories = Category::where('id', $category_id)->first();
       $builder->where('category_id', $category_id);
     }
-    if ($key = $request->input('key', '')) {    // 最新发布
-
-      $builder->where('created_at', '>=', Carbon::now()->subWeeks('1')); // 最近一个月
-    }
-    //dd($request->all());
-    // if ($search = $request->input('search', '')) {
-    //   dd($search);
-    //   if($search != null){
-    //     //dd($search);
-    //     $like = '%' . $search . '%';
-    //     $builder->where(function ($query) use ($like) {
-    //       $query->where('title', 'like', $like)
-    //             ->orWhere('description', 'like', $like);
-    //     });
-    //   }
-    // }
 
     $search = $request->search;
     if ($search != null) {
@@ -183,20 +189,30 @@ class GoodsController extends Controller
       });
     }
 
-
-    if ($state = $request->input('state', '1')) {   // 若没有state，默人 1-已发布正在售卖
+    if ($state = $request->input('state', '2')) {   // 若没有state，默人 2-正出售
+      //dd($state);
       $builder->where('state', $state);
     }
-
-    if ($order = $request->input('order', '')) {
+    
+    if ($key = $request->input('key', '') ) {    // 最新发布
+      if($key == 'new'){
+        //dd('new');
+        $builder->where('created_at', '>=', Carbon::now()->subWeeks('2')); // 最近2周，后期可以改成随用户选择
+      }
+    }
+    if ($order = $request->input('order', '1')) {
+      //dd($order);
       if ($order == '1') {
-        $builder->orderBy('price', 'asc');
-      } elseif ($order == '2') {
-        $builder->orderBy('price', 'desc');
-      } elseif ($order == '3') {
-        $builder->orderBy('created_at', 'asc');
-      } else {
         $builder->orderBy('created_at', 'desc');
+        
+      } elseif ($order == '2') {
+        $builder->orderBy('created_at', 'asc');
+        
+      } elseif ($order == '3') {
+        $builder->orderBy('price', 'asc');
+        
+      }elseif ($order == '4') {
+        $builder->orderBy('price', 'desc');
       }
     }
 
@@ -205,6 +221,15 @@ class GoodsController extends Controller
       return view('pages.root', compact('goods', 'categories', 'search', 'order', 'state'));
     }
     return view('pages.root', compact('goods', 'search', 'order', 'state'));
+  }
+
+  // 热门商品
+  public function goods_hot(Good $goods){
+    
+    //dd('hot');
+    $hot_goods = $goods->getHotGoods();
+    //dd($hot_goods);
+    return view('pages.root', compact('hot_goods'));
   }
 
   /* 商品详情 */
@@ -218,14 +243,16 @@ class GoodsController extends Controller
 
     $goods_info = Good::where('id', $goods_id)->first();
 
+
+    if (!$goods_info) {      // 定义出错页面
+
+      //throw new \Exception('没有此商品');
+    }
+
     // 当商品状态-未发布、审核 时，除了作者，其他人不展示
     //dd($goods_info['user_id']);
     if ($goods_info['user_id'] != Auth::user()->id && $goods_info['state'] == '0' && $goods_info['state'] == '1') {
       return redirect()->back();
-    }
-
-    if (!$goods_info) {
-      // 定义出错页面
     }
 
 
@@ -272,9 +299,11 @@ class GoodsController extends Controller
     $tags_data = GoodTag::whereIn('id', $tags)->get();
     //dd($tags_data);
 
-    $comments = Comment::where('goods_id', $goods_id)->orderBy('created_at', 'desc')->get();
+    $comments = Comment::where('goods_id', $goods_id)->orderBy('created_at', 'desc')->paginate(5);
     //$c_count=$comments->count();  // 商品评论
     //dd($comments);
+
+    //$booking=Booking::where('user_state','2')->where('goods_id',$goods_id)->where('buyer_id',$goods_id)->first();
 
     return view('goods.detail', compact('comments', 'tags_data'), compact('images', 'length', 'goods_info', 'user'));
   }

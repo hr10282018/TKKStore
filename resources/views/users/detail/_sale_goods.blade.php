@@ -14,6 +14,7 @@
     <div class="card-body">
       <div class="row mt-2 ">
         <i class="fas fa-store mr-2 ml-3 mt-2" style="font-size: 26px;color:#636b6f"></i>
+        <input id="user_id" type="text"  value="{{$user->id}}" hidden>
         <h1 class="ml-2 mt-2" style="line-height: 24px;color:#636b6f; font-size:20px;font-weight:bold; ">
           {{$user->name}}
           <span style="letter-spacing:2px">发布的商品</span>
@@ -29,31 +30,31 @@
       <ul class="nav nav-tabs " id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(0)) active @endif" id="unput-tab" data-toggle="tab" href="#unput" role="tab" aria-controls="unput" aria-selected="@if(my_goods_active(0)) true @else false @endif">
-            未发布 @if(my_goods_active(0)) [{{ $count }}] @endif
+            预发布 @if(my_goods_active(0)) 【{{ $count }}】 @endif
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(1)) active @endif" id="check-tab" data-toggle="tab" href="#check" role="tab" aria-controls="check" aria-selected=" @if(my_goods_active(1)) true @else false @endif ">
-            审核中 @if(my_goods_active(1)) [{{ $count }}] @endif
+            审核中 @if(my_goods_active(1)) 【{{ $count }}】 @endif
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(2)) active @endif" id="onsale-tab" data-toggle="tab" href="#onsale" role="tab" aria-controls="onsale" aria-selected="@if(my_goods_active(2)) true @else false @endif">
-            出售中 @if(my_goods_active(2)) [{{ $count }}] @endif
+            出售中 @if(my_goods_active(2)) 【{{ $count }}】 @endif
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(3)) active @endif" id="booking-tab" data-toggle="tab" href="#booking" role="tab" aria-controls="booking" aria-selected="@if(my_goods_active(3)) true @else false @endif">
-            已预定 @if(my_goods_active(3)) [{{ $count }}] @endif
+            预定中 @if(my_goods_active(3)) 【{{ $count }}】 @endif
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(4)) active @endif" id="alput-tab" data-toggle="tab" href="#alput" role="tab" aria-controls="alput" aria-selected="@if(my_goods_active(4)) true @else false @endif">
-            已出售 @if(my_goods_active(4)) [{{ $count }}] @endif
+            已出售 @if(my_goods_active(4)) 【{{ $count }}】 @endif
           </a>
         </li>
       </ul>
@@ -79,7 +80,7 @@
             <li class="list-group-item">
               <div class="row no-gutters">
                 <div class="mt-2" style="">
-                  <a href="{{ route('goods_detail', $value->id) }}">
+                  <a href="{{ route('goods_detail', $value->id) }}" target='_blank' >
                     <img src="{{ $image[$i] }}" class="img-thumbnail" style="width: 100px; height:90px;" alt="...">
                     {{-- <p style="display: none;">{{$i++}}</p> --}}
                     <?php $i++ ?>
@@ -164,7 +165,7 @@
             <li class="list-group-item">
               <div class="row no-gutters">
                 <div class="mt-2" style="">
-                  <a href="{{ route('goods_detail', $value->id) }}">
+                  <a href="{{ route('goods_detail', $value->id) }}" target='_blank' >
                     <img src="{{ $image[$i] }}" class="img-thumbnail" style="width: 100px; height:90px;" alt="...">
                     {{-- <p style="display: none;">{{$i++}}</p> --}}
                     <?php $i++ ?>
@@ -174,8 +175,7 @@
 
                 <div class="card-body" style="padding: 0.8rem;">
                   <h5 class="card-title">
-                    <a href="{{ route('goods_detail', $value->id) }}" style="">{{ Str::limit($value->title,30,'...')
-                      }}</a>
+                    <a href="{{ route('goods_detail', $value->id) }}" style="">{{ Str::limit($value->title,30,'...') }}</a>
                   </h5>
 
                   <div class="mt-3">
@@ -202,7 +202,7 @@
                 <div class="btn-group dropleft " style="height: 15px">
                   <!-- 编辑 -->
                   <div class="dropdown-menu mt-2 " style="width: 75px;min-width:0;padding:0;">
-                    <a class="dropdown-item btn_edit" type="button" href="{{ route('edit_goods',$value->id) }} target='_blank'">编辑</a>
+                    <a class="dropdown-item btn_edit" type="button" href="{{ route('edit_goods',$value->id) }}" target='_blank' >编辑</a>
                     <button value="{{ $value->id }}" class="dropdown-item btn_del" type="button" href="">删除</button>
                   </div>
                   <i class="fas fa-ellipsis-v edit_del " style="float:right;cursor:pointer;color:#636b6f"></i>
@@ -232,7 +232,13 @@
         <!-- 出售中 -->
         <div class="tab-pane @if(my_goods_active(2)) show active @else fade @endif" id="onsale" role="tabpanel" aria-labelledby="onsale-tab">
           <ul class="list-group list-group-flush">
-            
+            @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_sale_goods)
+              <div class="card-body">
+                <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+                  限制访问 ~_~
+                </div>
+              </div>
+            @else
 
             @if(count($user->goods) > 0)
             {{-- <p style="display: none;">{{ $i=0 }}</p> --}}
@@ -242,7 +248,7 @@
             <li class="list-group-item">
               <div class="row no-gutters">
                 <div class="mt-2" style="">
-                  <a href="{{ route('goods_detail', $value->id) }}">
+                  <a href="{{ route('goods_detail', $value->id) }}" target='_blank' >
                     <img src="{{ $image[$i] }}" class="img-thumbnail" style="width: 100px; height:90px;" alt="...">
                     {{-- <p style="display: none;">{{$i++}}</p> --}}
                     <?php $i++ ?>
@@ -257,7 +263,7 @@
                   </h5>
 
                   <div class="mt-3">
-                    <span class="" style="color: #d73038;hegiht:25px;margin-bottom:0" title="售价">
+                    <span class="" style="color: #d73038;height:25px;margin-bottom:0" title="售价">
                       ￥{{ $value->price }}元
                     </span>
                     <span class="ml-4">
@@ -277,6 +283,7 @@
 
                   </div>
                 </div>
+                @if(Auth::user()->can('update_user_info', $user))
                 <div class="btn-group dropleft " style="height: 15px">
                   <!-- 编辑 -->
                   <div class="dropdown-menu mt-2 " style="width: 75px;min-width:0;padding:0;">
@@ -285,7 +292,7 @@
                   </div>
                   <i class="fas fa-ellipsis-v edit_del " style="float:right;cursor:pointer;color:#636b6f"></i>
                 </div>
-
+                @endif
               </div>
             </li>
             @endforeach
@@ -303,13 +310,21 @@
               </div>
             </div>
             @endif
-
+            @endif
           </ul>
         </div>
 
         <!-- 已预订 -->
         <div class="tab-pane @if(my_goods_active(3)) show active @else fade @endif" id="booking" role="tabpanel" aria-labelledby="booking-tab">
           <ul class="list-group list-group-flush">
+            @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_booking_goods)
+              <div class="card-body">
+                <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+                  限制访问 ~_~
+                </div>
+              </div>
+            @else
+
             @if(count($user->goods) > 0)
             {{-- <p style="display: none;">{{ $i=0 }}</p> --}}
             <?php $i = 0 ?>
@@ -318,7 +333,7 @@
             <li class="list-group-item">
               <div class="row no-gutters">
                 <div class="mt-2" style="">
-                  <a href="{{ route('goods_detail', $value->id) }}">
+                  <a href="{{ route('goods_detail', $value->id) }}" target='_blank' >
                     <img src="{{ $image[$i] }}" class="img-thumbnail" style="width: 100px; height:90px;" alt="...">
                     {{-- <p style="display: none;">{{$i++}}</p> --}}
                     <?php $i++ ?>
@@ -333,7 +348,7 @@
                   </h5>
 
                   <div class="mt-3">
-                    <span class="" style="color: #d73038;hegiht:25px;margin-bottom:0" title="售价">
+                    <span class="" style="color: #d73038;height:25px;margin-bottom:0" title="售价">
                       ￥{{ $value->price }}元
                     </span>
                     <span class="ml-4">
@@ -353,14 +368,17 @@
 
                   </div>
                 </div>
+
+                @if(Auth::user()->can('update_user_info', $user))
                 <div class="btn-group dropleft " style="height: 15px">
                   <!-- 编辑 -->
                   <div class="dropdown-menu mt-2 " style="width: 75px;min-width:0;padding:0;">
-                    <a class="dropdown-item btn_edit" type="button" href="" target='_blank'>编辑</a>
+                    <!-- <a class="dropdown-item btn_edit" type="button" href="" target='_blank'>编辑</a> -->
                     <button value="{{ $value->id }}" class="dropdown-item btn_del" type="button" href="">删除</button>
                   </div>
                   <i class="fas fa-ellipsis-v edit_del " style="float:right;cursor:pointer;color:#636b6f"></i>
                 </div>
+                @endif
 
               </div>
             </li>
@@ -379,11 +397,21 @@
               </div>
             </div>
             @endif
+            @endif
           </ul>
         </div>
 
+        <!-- 已出售 -->
         <div class="tab-pane @if(my_goods_active(4)) show active @else fade @endif" id="alput" role="tabpanel" aria-labelledby="alput-tab">
           <ul class="list-group list-group-flush">
+            @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_saled_goods)
+              <div class="card-body">
+                <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+                  限制访问 ~_~
+                </div>
+              </div>
+            @else
+
             @if(count($goods) > 0)
             {{-- <p style="display: none;">{{ $i=0 }}</p> --}}
             <?php $i = 0 ?>
@@ -392,7 +420,7 @@
             <li class="list-group-item">
               <div class="row no-gutters">
                 <div class="mt-2" style="">
-                  <a href="{{ route('goods_detail', $value->id) }}">
+                  <a href="{{ route('goods_detail', $value->id) }}" target='_blank'>
                     <img src="{{ $image[$i] }}" class="img-thumbnail" style="width: 100px; height:90px;" alt="...">
                     {{-- <p style="display: none;">{{$i++}}</p> --}}
                     <?php $i++ ?>
@@ -427,15 +455,16 @@
 
                   </div>
                 </div>
+                @if(!Auth::user()->can('update_user_info', $user))
                 <div class="btn-group dropleft " style="height: 15px">
                   <!-- 编辑 -->
                   <div class="dropdown-menu mt-2 " style="width: 75px;min-width:0;padding:0;">
-                    <a class="dropdown-item btn_edit" type="button" href="" target='_blank'>编辑</a>
+                    <!-- <a class="dropdown-item btn_edit" type="button" href="" target='_blank'>编辑</a> -->
                     <button value="{{ $value->id }}" class="dropdown-item btn_del" type="button" href="">删除</button>
                   </div>
                   <i class="fas fa-ellipsis-v edit_del " style="float:right;cursor:pointer;color:#636b6f"></i>
                 </div>
-
+                @endif
               </div>
             </li>
             @endforeach
@@ -453,6 +482,7 @@
                 暂无数据 ~_~
               </div>
             </div>
+            @endif
             @endif
           </ul>
 
@@ -470,22 +500,23 @@
 @section('scriptsAfterJs')
 <script>
   $(document).ready(function() {
+    user_id=$('#user_id').val()
 
     // 商品状态-点击
     $('#unput-tab').click(function() { // 未发布
-      window.location.href = "/users/1/sale_goods/0";
+      window.location.href = "/users/"+user_id+"/sale_goods/0";
     })
     $('#check-tab').click(function() { // 审核ing
-      window.location.href = "/users/1/sale_goods/1";
+      window.location.href = "/users/"+user_id+"/sale_goods/1";
     })
     $('#onsale-tab').click(function() { //出售ing
-      window.location.href = "/users/1/sale_goods/2";
+      window.location.href = "/users/"+user_id+"/sale_goods/2";
     })
     $('#booking-tab').click(function() { // 预定
-      window.location.href = "/users/1/sale_goods/3";
+      window.location.href = "/users/"+user_id+"/sale_goods/3";
     })
     $('#alput-tab').click(function() { // 已出售
-      window.location.href = "/users/1/sale_goods/4";
+      window.location.href = "/users/"+user_id+"/sale_goods/4";
     })
 
 
@@ -530,7 +561,6 @@
         }).then(function(error) {
           //swal('删除失败', '', 'error');
         })
-
 
       })
       $('.swal-text').addClass('danger_text'); // 样式-危险

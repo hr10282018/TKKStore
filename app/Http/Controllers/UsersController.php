@@ -9,6 +9,7 @@ use App\Handlers\ImageUploadHandler;    // 上传图片处理器
 use App\Http\Requests\UserInfoRequest;
 use App\Models\Booking;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Good;
 use App\Models\UserVisible;
 use Mail;
@@ -56,6 +57,7 @@ class UsersController extends Controller
       'captcha.captcha' => '请输入正确的验证码',
       'name.unique'  =>  '该名称已被注册，请重新填写！!',
       'email.unique'  => '该邮箱已被注册，请重新填写！!',
+      'password.confirmed' => '两次密码不一致，请重新填写！!',
       ]);
 
       $user = User::create([
@@ -95,8 +97,8 @@ class UsersController extends Controller
   // {
   //   $view = 'users.email.confirm';
   //   $data = compact('user');
-  //   $from = 'summer@example.com';
-  //   $name = 'Summer';
+  //   $from = '@example.com';
+  //   $name = '';
   //   $to = $user->email;
   //   $subject = "感谢注册 ！请确认你的邮箱。";
 
@@ -126,25 +128,52 @@ class UsersController extends Controller
     return view('users.detail._home_info',compact('user','user_visible')); // 默认路由-用户基本信息展示
 
   }
-  public function sale_goods(User $user,$state=0){    // 我的商品展示
+
+  public function user_comment(User $user){     // 我的评论
+
+
+    $comments=Comment::where('user_id',$user->id)->orderBy('created_at', 'desc');
+    $count=$comments->count();
+    $comments=$comments->paginate(5);
+
+    // 可见数据
+    $user_visible = $user->userVisibles;
+
+    return view('users.detail._user_comments',compact('user','comments','count','user_visible'));
+  }
+
+  public function buy_goods(User $user,$state=3){       // 订购商品-预定|已购
+
+    $goods=Good::where('user_id',$user->id)->where('state',$state);
+
+    // 取可见数据
+    $user_visible = UserVisible::where('user_id', $user->id)->first();
+
+
+  }
+  public function sale_goods(User $user,$state=0){    // 发布商品
 
     //dd($state);
     
-    $goods=Good::where('user_id',$user->id)->where('state',$state);
-
-    $count=sizeof($goods->get());
-
-    //dd($count);
+    $goods=Good::where('user_id',$user->id)->where('state',$state)->orderBy('created_at', 'desc');
+    $count=$goods->count();
+    //$count=sizeof($goods->get());
     $goods=$goods->paginate(5);
-
     $image=array();
     //$image=$goods->first()->image;
     for($i=0; $i<sizeof($goods); $i++){
       $image[]=explode(',',$goods[$i]->image)[0];
     }
 
-    return view('users.detail._sale_goods',compact('user','goods','image','count'));
+    //dd();
+
+    // 取可见数据
+    $user_visible = $user->userVisibles;
+
+
+    return view('users.detail._sale_goods',compact('user','goods','image','count','user_visible'));
   }
+
 
 
 
@@ -255,7 +284,7 @@ class UsersController extends Controller
     if(($user_visible->v_email || $user_visible->v_phone || $user_visible->v_university|| $user_visible->v_faculty || $user_visible->v_number || $user_visible->v_r_name)){
       $checked='checked';
     }
-    if($user_visible->v_buy_booking_goods || $user_visible->v_buy_sale_goods){    // 购买商品
+    if($user_visible->v_buy_booking_goods || $user_visible->v_buy_sale_goods){    // 订购商品
       $checked_buy_goods='checked';
     }
     if($user_visible->v_booking_goods || $user_visible->v_sale_goods || $user_visible->v_saled_goods){    // 发布商品

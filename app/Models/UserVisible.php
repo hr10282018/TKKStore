@@ -36,4 +36,11 @@ class UserVisible extends Model
     'v_saled_goods' => 'boolean',
     'v_comment' => 'boolean',
   ];
+
+
+  // 一个可见属于一个用户
+  
+
+  
+
 }

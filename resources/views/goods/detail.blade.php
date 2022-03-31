@@ -4,8 +4,50 @@
 @section('content')
 
 <div class="col-lg-10 offset-lg-1 " style="margin-bottom: 120px;">
-  <div class="card " >
-    <div class="card-body product-info " >
+  <div class="card ">
+    <div class="card-body product-info ">
+
+    @if( Auth::user()->id == $goods_info->user_id)
+      @if($goods_info->state=='0')
+      <div class="alert alert-info" role="alert" style="height: 40px;">
+        <div class="" style="position:relative; top:-4px"> 
+        预发布
+        <img class="ml-3" src="/images/iconfont/private.png" title=" 仅你自己可见 " alt="" style="width:25px;height:25px;">
+        </div>
+      </div>
+      @elseif($goods_info->state=='1')
+      <div class="alert alert-info" role="alert" style="height: 40px;">
+        <div class="" style="position:relative; top:-4px"> 
+          审核中
+          <img class="ml-3" src="/images/iconfont/private.png" title=" 仅你自己可见 " alt="" style="width:25px;height:25px;">
+        </div>
+      </div>
+      @elseif($goods_info->state=='2')
+      <div class="alert alert-info" role="alert" style="height: 40px;">
+        <div class="" style="position:relative; top:-4px"> 
+          出售中
+          <img class="ml-3" src="/images/iconfont/private.png" title=" 所有人可见 " alt="" style="width:25px;height:25px;">
+        </div>
+      </div>
+     
+      @elseif($goods_info->state=='3')
+      <div class="alert alert-info" role="alert" style="height: 40px;">
+        <div class="" style="position:relative; top:-4px"> 
+          预定中
+          <img class="ml-3" src="/images/iconfont/private.png" title=" 所有人可见 " alt="" style="width:25px;height:25px;">
+        </div>
+      </div>
+      @elseif($goods_info->state=='4')
+      <div class="alert alert-info" role="alert" style="height: 40px;">
+        <div class="" style="position:relative; top:-4px"> 
+          已出售
+          <img class="ml-3" src="/images/iconfont/private.png" title=" 所有人可见 " alt="" style="width:25px;height:25px;">
+        </div>
+      </div>
+
+      @endif
+    @endif
+
       <div class="row">
         <!-- 商品轮播图 -->
         <div class="col-5">
@@ -52,11 +94,21 @@
           <a href="{{ route('user_show', $user->id ) }}">
             <img src="{{ $user->avatar }}" class="img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
           </a>
-          <a href="{{ route('user_show', $user->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline">
-            <label for="" style="font-size:18px">{{ $user->name }}</label>
+          <a href="{{ route('user_show', $user->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;">
+            <label for="" style="font-size:18px; ">{{ $user->name }}</label>
           </a>
-
+          {{-- (此处等写 预定再来写)   状态： 预定，则显示预订人；出售则显示买家 --}}
+          {{-- 
+          <a href="{{ route('user_show', $user->id ) }}">
+            <img src="{{ $user->avatar }}" class="img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+          </a>
+          <a href="{{ route('user_show', $user->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;">
+            <label for="" style="font-size:18px; ">{{ $user->name }}</label>
+          </a>
+          --}}
+          
         </div>
+        
         <div class="title mt-3">
           <h3 style="font-weight: 510;">{{ $goods_info->title }}</h3>
         </div>
@@ -66,13 +118,13 @@
           <img src="/images/iconfont/tag.png" alt="" style="width: 27px;height:27px">
 
           @if(sizeof($tags_data) != 0)
-            @foreach($tags_data as $tag => $value)
-              <button type="button" class="btn btn_tag ml-2" style="outline:none;line-height:15px;height:27px;border-color:  #91d5ff; background: #e6f7ff;font-size: 12px;color: #1890ff">
-              {{ $value->name }}
-              </button>
-            @endforeach
+          @foreach($tags_data as $tag => $value)
+          <button type="button" class="btn btn_tag ml-2" style="outline:none;line-height:15px;height:27px;border-color:  #91d5ff; background: #e6f7ff;font-size: 12px;color: #1890ff">
+            {{ $value->name }}
+          </button>
+          @endforeach
           @else
-            <span class="ml-2">无卖家标签 ^_^</span>
+          <span class="ml-2">无卖家标签 ^_^</span>
           @endif
         </div>
 
@@ -107,43 +159,43 @@
         </div>
 
         <div class="row mt-4">
-          @if( Auth::user()->id != $goods_info->user_id)
-
-          @if($goods_info->state=='1')
-          <form action="{{ route('booking_goods', $goods_info->id) }}" method="POST" accept-charset="UTF-8" onsubmit="return confirm('预定后一天之内无法取消预订，确定要预订吗？');">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="user_id" value="{{ $goods_info->user_id }}">
-            <button class="btn btn-success btn-favor" type="submit">
-              <i class="fas fa-heart" ></i>
-              预订
+          {{-- 当前用户是 商品作者 --}}
+          @if( Auth::user()->id == $goods_info->user_id)
+            @if($goods_info->state=='0' || $goods_info->state=='1' || $goods_info->state=='2')
+           
+            <button class="btn btn-success"><i class="far fa-edit"></i>
+              编辑
             </button>
-
-          </form>
-          <button class="btn btn-primary btn-add-to-cart ml-3">加入收藏</button>
-
-          @elseif($goods_info->state=='2')
-          <button class="btn btn-danger btn-favor" disabled>
-            <i class="fas fa-heart" style="color:red"></i>
-            已被预订
-          </button>
-          <button class="btn btn-primary btn-add-to-cart ml-3">加入收藏</button>
-          @else($goods_info->state=='3')
-          <button class="btn btn-secondary btn-favor" disabled>
-            <i class="fas fa-heart" style="color:#a5a5a5;"></i>
-
-            已出售
-          </button>
-          @endif
+            <button class="btn btn-danger  ml-4"><i class="fas fa-backspace"></i>
+              删除
+            </button>
+            @elseif($goods_info->state=='3' || $goods_info->state=='4')
+            <button class="btn btn-danger  ml-4"><i class="fas fa-backspace"></i>
+              删除
+            </button>
+            @endif
 
           @else
-          <button class="btn btn-success btn-favor" >
-            <i class="far fa-edit" ></i>
+            @if($goods_info->state=='2')
+            <button class="btn btn-success btn-favor" type="submit">
+              <i class="fas fa-heart"></i>
+              预订
+            </button>
+            {{-- 此处等写 预定再来写
+            @elseif($goods_info->state=='3')
+              @if()    // 当前用户是否为预定者 
+              
 
-            编辑
-          </button>
+              @else
 
+              @endif
+            <button class="btn btn-secondary btn-favor" disabled>
+              <i class="fas fa-heart" style="color:#a5a5a5;"></i>
+              已出售
+            </button>
+            --}}
 
-
+            @endif
           @endif
 
         </div>
@@ -154,18 +206,20 @@
     <div class="product_detail mt-4">
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" href="#product-detail-tab" aria-controls="product-detail-tab" role="tab" data-toggle="tab" aria-selected="true">商品详情</a>
+          <a class="nav-link @if(!comment_tab()) active @endif" href="#product-detail-tab" aria-controls="product-detail-tab" role="tab" data-toggle="tab" aria-selected="@if(!comment_tab()) true @else false @endif">商品详情</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#product-reviews-tab" aria-controls="product-reviews-tab" role="tab" data-toggle="tab" aria-selected="false">商品评论</a>
+          <a class="nav-link @if(comment_tab()) active @endif" id="comment_url" href="#product-comment-tab" aria-controls="product-reviews-tab" role="tab" data-toggle="tab" aria-selected="@if(comment_tab()) true @else false @endif">商品评论</a>
         </li>
       </ul>
       <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active mt-3" id="product-detail-tab">
+        {{-- 详情 --}}
+        <div role="tabpanel" class="tab-pane  @if(!comment_tab()) active @endif mt-3" id="product-detail-tab">
           <span class="mt-3 ml-3" style="font-size: 20px;">{{ $goods_info->description }}</span>
         </div>
 
-        <div role="tabpanel" class="tab-pane" id="product-reviews-tab">
+        {{-- 评论 --}}
+        <div role="tabpanel" class="tab-pane  @if(comment_tab()) active @endif" id="product-comment-tab">
           <ul class="list-group list-group-flush">
 
             <li class="list-group-item">
@@ -174,7 +228,7 @@
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                   <!-- <input type="hidden" name="goods_id" value="{{ $goods_info->id }}"> -->
                   <div class="form-group">
-                    <textarea class="form-control" rows="3" style="height:52px;max-height: 150px;min-height: 130px;" placeholder="快来分享你的想法~" name="content" required></textarea>
+                    <textarea class="form-control content" rows="3" maxlength="255" style="height:52px;max-height: 150px;min-height: 130px;" placeholder="快来分享你的想法~" name="content"></textarea>
                   </div>
                   <button type="button" class="btn btn-primary btn-sm btn_comment">
                     <i class="fa fa-share mr-1"></i>参与讨论
@@ -188,7 +242,7 @@
                 </form>
               </div>
             </li>
-
+            @if(count($comments) > 0)
             @foreach($comments as $comment=>$value)
             <li class="list-group-item mt-2">
               <div class=" row ">
@@ -199,33 +253,43 @@
                 <div class="media-body">
                   <div class="media-heading mt-1 ml-2 text-secondary">
                     <a href="{{ route('user_show', $value->user_id) }}" title="">
-                    {{ $value->user->name }}
+                      {{ $value->user->name }}
                     </a>
                     <span class="text-secondary"> • </span>
                     <span class="meta text-secondary" title="{{  $value->created_at }}">{{ $value->created_at->diffForHumans() }}</span>
 
                     @can('delete_comment',$value,$goods_info)
                     <span class="meta float-right ">
-                      <form action="{{ route( 'delete_comment' ,$value->id ) }}" onsubmit="return confirm('确定要删除此评论？');" method="post">
-                        {{ csrf_field() }}
-                        {{ method_field('DELETE') }}
-                        <input type="hidden" name="goods_id" value="{{ $goods_info->id }}">
-                        <button type="submit" title="删除" class="btn btn-default btn-xs pull-left text-secondary">
-                          <i class="far fa-trash-alt"></i>
-                        </button>
-                      </form>
+                      <input type="hidden" name="goods_id" value="{{ $goods_info->id }}">
+                      <button type="button" title="删除" class="btn btn-default btn-xs pull-left text-secondary del_comment">
+                        <i class="far fa-trash-alt"></i>
+                      </button>
                     </span>
                     @endcan
+
                   </div>
                 </div>
               </div>
 
-              <div class="reply-content text-secondary " style="position:relative;bottom:23px;margin-left:48px;font-size:17px;" >
+              <div id="comment-{{ $value->id }}" class="reply-content text-secondary " style="position:relative;bottom:23px;margin-left:48px;font-size:17px;">
                 {{ $value->content }}
               </div>
 
             </li>
             @endforeach
+            <li class="list-group-item">
+              <div class="card-body">
+                {!! $comments->appends(Request::except('page'))->render() !!}
+              </div>
+            </li>
+            @else
+            <div class="card-body">
+              <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+                暂无评论 ~_~
+              </div>
+            </div>
+
+            @endif
           </ul>
         </div>
       </div>
@@ -238,14 +302,70 @@
 
 @section('scriptsAfterJs')
 <script>
-  $(document).ready(function(){
-    $('.btn_comment').click(function(){
+  $(document).ready(function() {
 
-      // 加载样式
-      $(this).attr('disabled','true')
-      $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...')
-      $('.form_comment').submit()
+    // 跳转
+    $('#comment_url').click(function() {
+      console.log(window.location.href + '&tab=comments')
+      if (window.location.href.indexOf('tab=comments') < 0) {
+        if (window.location.href.indexOf('?') < 0) {
+          window.location.href = window.location.href + '?tab=comments'
+        } else {
+          window.location.href = window.location.href + '&tab=comments'
+        }
+      } else {
+        window.location.href = window.location.href
+      }
+
     })
+
+    $('.btn_comment').click(function() {
+      // 加载样式
+
+      if ($('.content').val().length <= 0) {
+        swal({
+          text: '请至少输入一个字符 ^_^',
+          icon: 'warning'
+        })
+      } else {
+        $(this).attr('disabled', 'true')
+        $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...')
+        $('.form_comment').submit()
+      }
+
+
+
+    })
+
+    // 删除评论
+    $('.del_comment').click(function() {
+      swal({
+        title: '你确认要删除吗?',
+        text: "此操作不可逆！",
+        icon: 'warning',
+        buttons: ['取消', '确定'],
+        dangerMode: true,
+      }).then((res) => {
+        if (!res) {
+          return;
+        }
+
+        // 删除请求
+        axios.delete('{{ route('delete_comment', ['goods_id' => $goods_info->id ,'comments_id' => $value->id ]) }}').then(function(res) {
+          //console.log(res.data)
+          swal('删除成功', '', 'success').then((res) => {
+            location.reload();
+          });
+
+        }).then(function(error) {
+          //swal('删除失败', '', 'error');
+        })
+
+      })
+      $('.swal-text').addClass('danger_text'); // 样式-危险
+
+    })
+
 
   })
 </script>

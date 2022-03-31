@@ -49,8 +49,8 @@
 
 
 
-      <!-- 购买商品 -->
-      <div class="mb-2 mt-4" style="color:#969696;font-weight:bold">购买商品</div>
+      <!-- 订购商品 -->
+      <div class="mb-2 mt-4" style="color:#969696;font-weight:bold">订购商品</div>
       
       <label class="switch vis_switch_buy_goods ">
         <input value="true" type="checkbox" {{ $buy_goods_vis }}>

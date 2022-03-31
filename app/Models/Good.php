@@ -9,6 +9,8 @@ class Good extends Model
 {
 
   use DefaultDatetimeFormat;
+  use Traits\HotGoodsHelper;    // 热度商品
+
 
   protected $fillable = [
     'title', 'description', 'image', 'state', 'old_price', 'price', 'category_id', 'reply_count',
@@ -27,7 +29,7 @@ class Good extends Model
 
   public function comments()
   {
-    return $this->hasMany(Comment::class);     // 一个商品有多个评论
+    return $this->hasMany(Comment::class,'goods_id');     // 一个商品有多个评论 ，需要指定字段名，默认是(good_id)
   }
 
   public function bookings()
@@ -35,4 +37,7 @@ class Good extends Model
     return $this->hasMany(Booking::class);     // 一个商品有多个预订
   }
 
+  // 一个商品有多个标签
+  
 }
+

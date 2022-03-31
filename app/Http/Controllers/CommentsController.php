@@ -30,12 +30,13 @@ class CommentsController extends Controller
     return redirect()->back()->with('success', '评论发表成功！');
   }
 
-  public function delete_comment(Request $request,$comments_id){     // 删除评论
+  public function delete_comment($goods_id,$comments_id){     // 删除评论
     //dd($request->goods_id);
     
     Comment::destroy($comments_id);
-    Good::where('id',$request->goods_id)->decrement('reply_count');  // -1
-    return redirect()->back()->with('success', '评论删除成功！');
+    Good::where('id',$goods_id)->decrement('reply_count');  // -1
+
+    return [];
   }
 
 }

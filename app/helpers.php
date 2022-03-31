@@ -70,7 +70,10 @@ function user_center_active($type){
       return '326';
     } elseif ((if_route('booking_notice'))) {
       return '375';
+    }elseif((if_route('user_comment'))){
+      return '162';
     }
+
   }else{
     if ((if_route('user_show')) && $type==0 ) {
       return 'active';
@@ -78,12 +81,18 @@ function user_center_active($type){
     if ((if_route('user_booking')) && $type == 1) {
       return 'active';
     }
+
+    if ((if_route('user_comment')) && $type == 2) {
+      return 'active';
+    }
+
     if ((if_route('sale_goods')) && $type == 4) {
       return 'active';
     }
     if ((if_route('booking_notice')) && $type == 5) {
       return 'active';
     }
+    
   }
 
 }
@@ -91,7 +100,6 @@ function user_center_active($type){
 
 // 我的商品-状态选中样式
 function my_goods_active($state){
-
   // 
   if($state == 0){
     if(if_route('sale_goods') && (if_route_param('state', $state) || if_route_param('state', ''))){
@@ -106,5 +114,14 @@ function my_goods_active($state){
   }
 }
 
-
+// 商品详情-评论tab
+function comment_tab(){
+  if(if_query ('tab', 'comments')){
+    return true;
+  }else{
+    return false;
+  }
+  
+ 
+}
 

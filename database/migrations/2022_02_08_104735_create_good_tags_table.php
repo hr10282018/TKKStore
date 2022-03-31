@@ -11,7 +11,7 @@ class CreateGoodTagsTable extends Migration
   {
     Schema::create('good_tags', function (Blueprint $table) {
       $table->id();
-      $table->string('name', 12);
+      $table->string('name', 12);   // 6
       $table->timestamps();
     });
   }

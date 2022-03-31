@@ -18,6 +18,8 @@ class CreateCommentsTable extends Migration
       //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
       $table->text('content');    // 评论内容
+      //$table->string('content', 512);
+
       $table->timestamps();
     });
   }

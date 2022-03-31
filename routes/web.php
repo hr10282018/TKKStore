@@ -5,15 +5,23 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', 'goods')->name('root');  // 首页跳转
 
-/* 商品路由 */
+/* 商品展示 */
 Route::get('goods', 'PagesController@root')->name('home');  // 主页-商品列表
 Route::get('/category/{category_id}', 'PagesController@category_show')->name('category');  // 商品列表分类
 Route::get('/goods_search', 'GoodsController@goods_search')->name('goods_search'); // 处理商品搜索
 Route::get('/goods/{goods_id}/detail', 'GoodsController@goods_detail')->name('goods_detail');  // 商品详情页
+Route::get('/goods/goods_hot', 'GoodsController@goods_hot')->name('goods_hot');  // 热门商品
+
+
+/*发布商品*/
+Route::get('/create_goods', 'GoodsController@create_goods')->name('create_goods'); // 发布商品页面
+Route::put('/create_goods', 'GoodsController@create_goods_check')->name('create_goods_check'); // 处理发布商品
+Route::get('/edit_goods/{goods_id}', 'GoodsController@edit_goods')->name('edit_goods'); // 编辑商品页面
+
 
 /* 评论 */
 Route::post('/goods/{goods_id}/detail/comments', 'CommentsController@goods_detail_comment')->name('goods_comment');  // 参与评论
-Route::delete('/goods/{comments_id}/detail', 'CommentsController@delete_comment')->name('delete_comment'); // 删除评论
+Route::delete('/goods/{goods_id}/{comments_id}/delete', 'CommentsController@delete_comment')->name('delete_comment'); // 删除评论
 
 
 /* 预订商品 */
@@ -41,7 +49,11 @@ Route::get('/users/{user}', 'UsersController@user_show')->name('user_show');  //
 
 Route::get('/users/{user}/user_booking', 'UsersController@user_booking')->name('user_booking');  // 我的预订
 
-Route::get('/users/{user}/sale_goods/{state?}', 'UsersController@sale_goods')->name('sale_goods');  // 我的商品
+Route::get('/users/{user}/user_comment', 'UsersController@user_comment')->name('user_comment');  // 我的评论
+
+Route::get('/users/{user}/buy_goods/{state?}', 'UsersController@buy_goods')->name('buy_goods');  // 订购商品
+
+Route::get('/users/{user}/sale_goods/{state?}', 'UsersController@sale_goods')->name('sale_goods');  // 发布商品
 //Route::delete('/users/{user}/delete_goods', 'UsersController@delete_goods')->name('delete_goods');  // 删除商品
 Route::delete('ajax_del_gods/{goods}', 'UsersController@del_goods_ajax')->name('del_goods_ajax'); // ajax删除商品
 
@@ -64,15 +76,13 @@ Route::get('/users/{user}/settings/edit_visible', 'UsersController@edit_visible'
 Route::get('ajax_visible', 'UsersController@ajax_visible')->name('ajax_visible'); // ajax获取显示设置
 Route::post('/ajax_visible_data/{user_visible}', 'UsersController@ajax_visible_data')->name('ajax_visible_data'); // ajax修改显示设置
 
+
 /* 邮箱认证 */
 Route::get('/signup/email/verify', 'SessionsController@show_verify')->name('show_verify'); // 验证界面
 Route::get('/signup/email/verify/{token}', 'SessionsController@signup_verify')->name('signup_verify'); // 登录验证
 Route::post('/signup/email/verify/{token}', 'SessionsController@signup_verify2')->name('signup_verify'); // 再次验证
 
-/*发布商品*/
-Route::get('/create_goods', 'GoodsController@create_goods')->name('create_goods'); // 发布商品页面
-Route::put('/create_goods', 'GoodsController@create_goods_check')->name('create_goods_check'); // 处理发布商品
-Route::get('/edit_goods/{goods_id}', 'GoodsController@edit_goods')->name('edit_goods'); // 编辑商品页面
+
 
 
 

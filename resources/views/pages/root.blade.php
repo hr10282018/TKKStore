@@ -17,9 +17,11 @@
     <li class="list-group-item ">
       <div class="row ml-2 new_hot">
         <a style="border-radius: 0.25rem;" class="nav-link  mr-2 new {{ active_class( if_query('key','new')) }}" href="{{ route('goods_search') }}?key=new&category_id={{ isset($categories) ? $categories->id : '' }}">最新发布</a>
-        <a style="border-radius: 0.25rem;" class="nav-link hot {{ active_class( if_query('key', 'hot')) }}" href="{{ route('goods_search') }}?key=hot&category_id={{ isset($categories) ? $categories->id : '' }}">热门发布</a>
+        <a style="border-radius: 0.25rem;" class="nav-link hot {{ active_class(if_route('goods_hot')) }}" href="{{ route('goods_hot') }}">
+          热门发布 
+        </a>
 
-
+        @if(!isset($hot_goods))
         <form id="search_form" method="GET" action="{{ route('goods_search') }}" class="form-inline " style="margin-left: 485px;">
           {{--@csrf--}}
 
@@ -32,25 +34,79 @@
             <input type="text" name="search" value="{{  isset($search) ? $search : '' }}" class="form-control" placeholder="快来发现宝藏..." style="width: 200px;" aria-label="Example text with button addon" aria-describedby="button-addon1" >
 
             <select class="custom-select" name="order" id="order_select" style="width: 105px; ">
-              <option value="" selected>排序</option>
-              <option value="1" {{ isset($order) && $order=='1' ? 'selected': '' }}>价格升序</option>
-              <option value="2" {{ isset($order) && $order=='2' ? 'selected': '' }}>价格降序</option>
-              <option value="3" {{ isset($order) && $order=='3' ? 'selected': '' }}>时间升序</option>
-              <option value="4" {{ isset($order) && $order=='4' ? 'selected': '' }}>时间降序</option>
+              <option value="1" selected>时间降序</option>
+              <option value="2" {{ isset($order) && $order=='2' ? 'selected': '' }}>时间升序</option>
+              <option value="3" {{ isset($order) && $order=='3' ? 'selected': '' }}>价格升序</option>
+              <option value="4" {{ isset($order) && $order=='4' ? 'selected': '' }}>价格降序</option>
+              <!-- <option value="4" {{ isset($order) && $order=='4' ? 'selected': '' }}>时间降序</option> -->
             </select>
             <select class="custom-select" name="state" id="state_select" style="width: 105px;">
 
-              <option value="1" selected>正出售</option>
-              <option value="2" {{ isset($state) && $state=='2' ? 'selected': '' }}>已预订</option>
-              <option value="3" {{ isset($state) && $state=='3' ? 'selected': '' }}>已出售</option>
+              <option value="2" selected>正出售</option>
+              <option value="3" {{ isset($state) && $state=='3' ? 'selected': '' }}>已预订</option>
+              <option value="4" {{ isset($state) && $state=='4' ? 'selected': '' }}>已出售</option>
             </select>
           </div>
         </form>
-
+        @endif
       </div>
     </li>
 
     <div class="row ml-3 mt-4 card_div" style="height:auto">
+      @if(isset($hot_goods))
+        @if(count($hot_goods) > 0)
+        <?php $index=1; ?>
+        @foreach ($hot_goods as $value)
+        <div class="card mr-4  mb-3 goods_list" id="goods_list" style="width: 270px; overflow: hidden;">
+
+          <a href="{{ route('goods_detail',$value->id) }}?from={{ isset($categories) ? $categories->id : 'all' }} ">
+            <img style="width: 268px; " src="{{ Str::before($value->image,',') }}" class="card-img-top  goods_img" alt="...">
+          </a>
+
+          <div class="card-body " id="" style="position:relative;padding-bottom:0px; margin-bottom:30px">
+            <span id="" class="card-title card_title" style="height:35px;font-size:110%;letter-spacing: 0.5px;">
+              {{ Str::limit($value->title,25,'...') }}
+            </span>
+
+            <div class="card-text mt-2 time card_time" id="" title="{{ $value->created_at }}" style="position:relative; font-size:12px">
+              <i class="far fa-clock"></i> <span class="ml-1">发布于 {{ $value->created_at->diffForHumans() }} </span>
+            </div>
+
+            <div class="row mt-1 card_vr" id="" style="height:20px">
+              <p class="card-text ml-3 mt-1 mr-1 eye" style="position:relative; font-size:12px; left:0px">
+                <i class="far fa-eye"></i> <span class="ml-1">{{$value->view_count}}</span>
+              </p>
+              <p class="card-text ml-5 mt-1 mr-1 reply" style="position:relative; font-size:12px; left:0px;">
+                <i class="far fa-comment-dots"></i> <span class="ml-1">{{$value->reply_count}}</span>
+              </p>
+
+              <p class="card-text ml-4 mt-1 mr-1 reply" style="position:relative; font-size:15px; left:0px;">
+              @if($index == 1)
+                <i class="fab fa-hotjar" style="width: 25px;height:25px;display:flex;color:#d73038;margin:0 auto"> <span class="ml-1">【1】</span></i>
+              @elseif($index== 2)
+              <i class="fab fa-hotjar" style="width: 25px;height:25px;display:flex;color:#ff5c38;margin:0 auto"> <span class="ml-1">【2】</span></i>
+              @elseif($index== 3)
+              <i class="fab fa-hotjar" style="width: 25px;height:25px;display:flex;color:#ffb821;margin:0 auto"> <span class="ml-1">【3】</span></i>
+              @else
+              <i class="fab fa-hotjar" style="width: 25px;height:25px;display:flex;color:#7f7f8c;margin:0 auto"> <span class="ml-1">【{{$index}}】</span></i>
+              @endif
+              </p>
+              <?php $index++; ?>
+            </div>
+
+            <p class="card-text mt-2 card_price" id="" style="color:#d73038; ">￥ {{ $value->price }}元</p>
+          </div>
+        </div>
+        @endforeach
+        @else
+        <div class="card-body">
+          <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+            暂无物品 ~_~
+          </div>
+        </div>
+        @endif
+
+      @else
       @if(count($goods) > 0)
       @foreach ($goods as $good => $value)
 
@@ -90,16 +146,16 @@
     </div>
   </ul>
 
-  @else
-  <div class="card-body">
-    <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
-      暂无物品 ~_~
+    @else
+    <div class="card-body">
+      <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+        暂无物品 ~_~
+      </div>
     </div>
+    @endif
+    @endif
   </div>
-  @endif
-
-</div>
-</div>
+  </div>
 @stop
 
 @section('scriptsAfterJs')

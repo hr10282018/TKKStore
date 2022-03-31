@@ -35,7 +35,7 @@ class AddFieldToUsersVisibles extends Migration
    */
   public function down()
   {
-    Schema::table('users_visibles', function (Blueprint $table) {
+    Schema::table('user_visibles', function (Blueprint $table) {
       //
       $table->dropColumn(['v_buy_booking_goods', 'v_buy_sale_goods', 'v_booking_goods','v_sale_goods','v_saled_goods','v_comment']);
     });
