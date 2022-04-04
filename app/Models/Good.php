@@ -21,6 +21,7 @@ class Good extends Model
   {   // 命名有要求，不然出现bug
     return $this->belongsTo(User::class);   //一个商品属于一个用户
   }
+ 
 
   public function category()
   {
@@ -34,7 +35,7 @@ class Good extends Model
 
   public function bookings()
   {
-    return $this->hasMany(Booking::class);     // 一个商品有多个预订
+    return $this->hasMany(Booking::class,'goods_id')->orderBy('created_at','desc');     // 一个商品有多个预订  时间降序
   }
 
   // 一个商品有多个标签

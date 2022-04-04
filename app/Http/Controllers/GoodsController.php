@@ -241,7 +241,25 @@ class GoodsController extends Controller
       return redirect()->route('show_verify');
     }
 
-    $goods_info = Good::where('id', $goods_id)->first();
+    $goods_info = Good::where('id', $goods_id)->with('bookings')->first();    // 关联
+
+    $booker_id=$goods_info->bookings->where('user_state',2)->first();  // 获取预定用户id
+
+    if($booker_id == null){
+      $booker=$booker_id;
+    }else{
+      $booker=User::find($booker_id->booker_id);
+    }
+
+    //dd($booker);
+    
+
+    // 还需要购买用户-订单
+    //dd($booker);
+
+    $booker_login=$goods_info->bookings->where('booker_id',Auth::user()->id)->first();   // 当前登录用户 是否 为预定者
+    
+    //dd( isset( $booker));
 
 
     if (!$goods_info) {      // 定义出错页面
@@ -305,6 +323,6 @@ class GoodsController extends Controller
 
     //$booking=Booking::where('user_state','2')->where('goods_id',$goods_id)->where('buyer_id',$goods_id)->first();
 
-    return view('goods.detail', compact('comments', 'tags_data'), compact('images', 'length', 'goods_info', 'user'));
+    return view('goods.detail', compact('comments', 'tags_data','booker_login','booker'), compact('images', 'length', 'goods_info', 'user'));
   }
 }

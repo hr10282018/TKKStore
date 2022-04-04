@@ -25,7 +25,9 @@ Route::delete('/goods/{goods_id}/{comments_id}/delete', 'CommentsController@dele
 
 
 /* 预订商品 */
-Route::post('/goods/{goods_id}/detail', 'BookingsController@booking_goods')->name('booking_goods');
+Route::post('/goods/{goods}/{user_id}', 'BookingsController@ajax_booking_goods')->name('ajax_booking_goods');
+Route::get('/goods/booking_count/{goods}', 'BookingsController@ajax_booking_count')->name('ajax_booking_count');    // 预定次数
+Route::delete('/goods/cancel_booking/{goods}', 'BookingsController@ajax_cancel_booking')->name('ajax_cancel_booking'); // 取消预定
 
 
 /* 注册路由 */
@@ -45,7 +47,6 @@ Route::post('logout', 'SessionsController@login_out')->name('login_out');   // �
 
 /* 用户个人中心 */
 Route::get('/users/{user}', 'UsersController@user_show')->name('user_show');  // 主页展示
-
 
 Route::get('/users/{user}/user_booking', 'UsersController@user_booking')->name('user_booking');  // 我的预订
 
@@ -81,8 +82,3 @@ Route::post('/ajax_visible_data/{user_visible}', 'UsersController@ajax_visible_d
 Route::get('/signup/email/verify', 'SessionsController@show_verify')->name('show_verify'); // 验证界面
 Route::get('/signup/email/verify/{token}', 'SessionsController@signup_verify')->name('signup_verify'); // 登录验证
 Route::post('/signup/email/verify/{token}', 'SessionsController@signup_verify2')->name('signup_verify'); // 再次验证
-
-
-
-
-

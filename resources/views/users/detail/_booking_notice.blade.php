@@ -4,115 +4,242 @@
 @extends('users.show')
 @section('user_info')
 
-<div class="col-lg-6 col-md-7 col-sm-12 col-xs-12 " style="margin-left: 60px;">
+<div class="col-lg-6 col-md-7 col-sm-12 col-xs-12 " style="margin-left: 60px;margin-bottom:75px">
   <div class="card ">
-    <ul class="list-group">
-      <li class="list-group-item" >
-        <div class="row mt-2 ">
 
-          <i class="far fa-envelope mr-2 ml-3 mt-2" style="font-size: 26px;color:#636b6f"></i>
-          <h1 class="ml-2 mt-2" style="line-height: 24px;color:#636b6f; font-size:20px;font-weight:bold; ">
-            {{ $user->name }}
-            <span style="letter-spacing:2px">预订通知</span>
-            （{{ count($bookings) }}）
-          </h1>
-
-          <div  class="mt-2" style="margin-left: 250px;">
-          <a href="">待处理</a>
-          <a href="">已处理</a>
-
-          </div>
-
-        </div>
-      </li>
-
-      @if( count($bookings) > 0 )
-
-      @foreach ($bookings as $book => $value)
-
-      <li class="list-group-item">
-        <div class="row no-gutters">
-          <div class="">
-            <a href="{{ route('goods_detail', $value->goods_id) }}">
-              <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
-            </a>
-          </div>
-          <div class=" ml-3" style="width: 500px;">
-
-            <!-- <h5 class="card-title">
-              <a href="{{ route('goods_detail', $value->id) }}">{{ $value->goods->title }}</a>
-            </h5> -->
-            <!-- <span>接受预订</span> -->
-            <div class="mt-4">
-            <a href="{{ route('user_show', $value->user_id) }}">
-                <img src="{{ $value->user->avatar }}" alt="{{ $value->user->name }}" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
-            </a>
-            <a href="">{{ $value->buyer->name }}</a>  向你发送了商品预订请求，请尽快处理！
-            </div>
-
-
-            <div class=" mt-3 ml-0">
-              <p class="card-text"><small title="{{ $value->created_at }}" class="text-muted">预订于 {{ $value->created_at->diffForHumans() }}</small></p>
-
-              <div class="" style="margin-left: 280px;">
-                <!-- <a class="btn btn-primary"  style="width: 58px; height:29px;line-height:15px;">接受</a> -->
-
-                <form action="{{ route('refuse_booking',array($user->id,$value->id)) }}" method="post" onsubmit="return confirm('您确定吗？');" class="float-right del_goods">
-                  {{ csrf_field() }}
-
-                  <input type="" name="goods_id" value="{{ $value->id }}" hidden>
-                  <button type="submit" class="btn btn-sm btn-outline-danger delete-btn ml-3 " style="width: 58px; height:29px;">拒绝</button>
-                </form>
-
-                <form action="{{ route('agree_booking',array($user->id,$value->id)) }}" method="post" onsubmit="return confirm('？');" class="float-right del_goods">
-                  {{ csrf_field() }}
-                  @method('PUT')
-                  <input type="" name="goods_id" value="{{ $value->id }}" hidden>
-                  <button type="submit" class="btn btn-sm btn-outline-success delete-btn ml-3 " style="width: 58px; height:29px;">接受</button>
-                </form>
-
-                <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        你确定要删除该商品吗？此操作不可逆！
-                      </div>
-                      <div class="modal-footer del_goods_btn">
-                        <button type="button" class="btn btn-secondary no" data-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary yes">确定</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </li>
-      @endforeach
-      <div class="card-body">
-        {!! $bookings->render() !!}
-      </div>
-    </ul>
-
-    @else
     <div class="card-body">
-      <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
-        暂无数据 ~_~
+      <div class="row ">
+      <i class="far fa-envelope mr-2 ml-3 mt-2" style="font-size: 26px;color:#636b6f"></i>
+        <h1 class="ml-2 mt-2" style="line-height: 24px;color:#636b6f; font-size:20px;font-weight:bold; ">
+         {{ $user->name }}
+          <span style="letter-spacing:2px"> 预订通知</span>
+          （{{ count($user->bookingsUser) }}）
+          
+        </h1>
       </div>
     </div>
-    @endif
+
+    <hr style="width: 650px;margin:0 auto;">
+
+    <div class="card-body">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item no_reply" role="presentation">
+          <a class="nav-link  @if(reply_acyive('no')) active @endif" id="home-tab" data-toggle="tab" href="#no_reply" role="tab" aria-controls="no_reply" aria-selected="@if(reply_acyive('no')) true @else false @endif">
+            待回复 @if(reply_acyive('no')) 【{{ $no_reply_count }}】 @endif
+          </a>
+        </li>
+        <li class="nav-item yes_reply" role="presentation">
+          <a class="nav-link @if(reply_acyive('yes')) active @endif" id="profile-tab" data-toggle="tab" href="#yes_reply" role="tab" aria-controls="yes_reply" aria-selected="@if(reply_acyive('yes')) true @else false @endif">
+            已回复 @if(reply_acyive('yes'))【{{ $yes_reply_count }}】@endif
+          </a>
+        </li>
+      </ul>
+
+      <input type="text" value="{{ $no_reply_count/5 }}" name="" id="no_reply_count" hidden>   <!-- 当前页多少条 -->
+
+      <div class="tab-content" id="myTabContent">
+
+        <div class="tab-pane fade @if(reply_acyive('no')) show active @endif" id="no_reply" role="tabpanel" aria-labelledby="home-tab">
+          <ul class="list-group list-group-flush">
+            @if( count($no_reply_booking) > 0 )
+              @foreach ($no_reply_booking as $booking => $value)
+              <li class="list-group-item">
+                <div class="row no-gutters">
+                  <div class="">
+                    <a href="{{ route('goods_detail',$value->goods->id ) }}" target="_blank">
+                      <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
+                    </a>
+                  </div>
+                  <div class="ml-2" >
+
+                    <div class="mt-1">
+                      <a href="{{ route('user_show' , $value->buyer->id) }}">
+                        <img src="{{ $value->buyer->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                      </a>
+                      <a href="{{ route('user_show' , $value->buyer->id) }}">{{ $value->buyer->name }}</a>  向你发送了商品预订请求，请尽快处理！
+                    </div>
+
+                    <div class="card-text mt-1 ml-3 row" >
+                      <small  title="{{ $value->created_at }}" class="text-muted mt-2">预订于 {{ $value->created_at->diffForHumans() }}</small>
+                    </div>
+
+                    <div class="card-text mt-2">
+                      <button type="submit" class="btn btn-sm btn-outline-success delete-btn ml-2 " style="width: 58px; height:29px;">同意</button>
+                      <button type="submit" class="btn btn-sm btn-outline-danger delete-btn ml-2 " style="width: 58px; height:29px;">拒绝</button>
+                    </div>
+
+                  </div>
+                </div>
+              </li>
+              @endforeach
+            <div class="card-body">
+              {!! $no_reply_booking->appends(Request::except('page'))->render() !!}
+            </div>
+            @else
+            <div class="card-body">
+              <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+                暂无数据 ~_~
+              </div>
+            </div>
+            @endif
+          </ul>
+        </div>
+
+        <div class="tab-pane fade @if(reply_acyive('yes')) show active @endif" id="yes_reply" role="tabpanel" aria-labelledby="profile-tab">
+          <ul class="list-group list-group-flush">
+            @if( count($yes_reply_booking) > 0 )
+
+            @foreach ($yes_reply_booking as $booking => $value)
+            <li class="list-group-item">
+              <div class="row no-gutters">
+                <div class="">
+                  <a href="{{ route('goods_detail',$value->goods->id ) }}">
+                    <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
+                  </a>
+                </div>
+                <div class="ml-2" >
+                  <div class="mt-4">
+                    
+                    @if($value->user_state=='0' || $value->user_state=='1')
+                      <a href="{{ route('user_show' , $value->user->id) }}" target="_blank">
+                        <img src="{{ $value->user->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                      </a>
+                      <a href="{{ route('user_show' , $value->user->id) }}" target="_blank">{{ $value->user->name }}</a>
+                      <span style="color:{{ ($value->user_state=='1') ? 'green':'red'  }};">{{ ($value->user_state=='1') ? '【同意】':'【拒绝】' }}</span> 预订！
+                    
+                    @elseif($value->user_state=='3')
+                      {{ $value->user->id }}
+                      {{$user->id }}
+                      <a href="{{ route('user_show' , $value->buyer->id) }}" target="_blank">
+                        <img src="{{ $value->buyer->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                      </a>
+                      <a href="{{ route('user_show' , $value->buyer->id) }}" target="_blank">{{ $value->buyer->name }}</a>
+                      <span style="color:#636b6f">【取消】</span> 预定！
+                    @endif
+                  </div>
+                  <div class="row">
+                    <div class="card-text mt-1 ml-3"><small title="{{ $value->created_at }}" class="text-muted">预订于 {{ $value->created_at->diffForHumans() }}</small></div>
+                    <div class="card-text mt-1 ml-3"><small title="{{ $value->updated_at }}" class="text-muted">
+                    @if($value->user_state=='0' || $value->user_state=='1')
+                      回复于 {{ $value->updated_at->diffForHumans() }}
+                    @elseif($value->user_state=='3')
+                      取消于 {{ $value->updated_at->diffForHumans() }}
+                    @endif
+
+                    </small></div>
+                  </div>
+
+                </div>
+              </div>
+            </li>
+            @endforeach
+            <div class="card-body">
+              {!! $yes_reply_booking->appends(Request::except('page'))->render() !!}
+            </div>
+
+            @else
+            <div class="card-body">
+              <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+                暂无数据 ~_~
+              </div>
+            </div>
+            @endif
+          </ul>
+
+        </div>
+
+      </div>
+    </div>
+    
   </div>
 </div>
 
+@stop
 
+@section('scriptsAfterJs')
+<script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var old_tail_url=[]   // 记录之前状态 -页数
+    var lastPage=Math.ceil($('#no_reply_count').val())  // 获取 待回复最后一页
+    if (lastPage==0) lastPage=1
+    var now_url_page=window.location.href.split('page=')[1]    // 获取当前页
+    
+
+    if(document.referrer.indexOf('booking_notice') == -1){
+      // console.log('跳转')
+      old_tail_url=['reply=no','reply=yes']
+      
+      
+      $.removeCookie('notice_no_reply_old_url')
+      $.removeCookie('notice_yes_reply_old_url')
+    }else{
+      //console.log('刷新')
+      
+      if(!$.cookie('notice_no_reply_old_url')){
+        no_reply='reply=no'
+      }else{
+
+        // 判断 待回复页数是否为0，且url为待回复
+        if(now_url_page > lastPage){  //      最后一页问题-如果取消预定一个商品刚好没有下一页，而用户点了下一页，则改页数据为空，需返回第1页
+          $.removeCookie('notice_no_reply_old_url')
+          no_reply='reply=no'
+        }else if(now_url_page <= lastPage){
+          no_reply=$.cookie('notice_no_reply_old_url')
+        }
+        
+      }
+      if(!$.cookie('notice_yes_reply_old_url')){
+        yes_reply='reply=yes'
+      }else{
+        yes_reply=$.cookie('notice_yes_reply_old_url')
+      }
+    
+      old_tail_url=[no_reply,yes_reply]
+      //console.log(old_tail_url)
+    }
+    
+    
+    
+    
+    // 待回复 -点击
+    $('.no_reply').click(function(){
+      
+      now_url=window.location.href
+
+      index=now_url.indexOf("reply")
+      head=now_url.substring(0,index)
+
+      window.location.href=head+old_tail_url[0]
+      console.log(old_tail_url[0])
+      //console.log(now_url.substring(index))
+    })
+    $('.yes_reply').click(function(){
+      now_url=window.location.href
+
+      index=now_url.indexOf("reply")
+      head=now_url.substring(0,index)
+      window.location.href=head+old_tail_url[1]
+    })
+
+    // 页数跳转-点击
+    $('a.page-link').click(function(){
+      next_url=$(this).attr('href')
+      index=next_url.indexOf("reply")
+      tail=next_url.substring(index)
+      //var reply_expire= new Date();
+      //reply_expire.setTime(expiresDate.getTime() + (60*1000));   // 2小时
+
+      if(window.location.href.indexOf("reply=no") != -1){
+        $.cookie('notice_no_reply_old_url', tail);
+      }else if((window.location.href.indexOf("reply=yes") != -1)){
+        $.cookie('notice_yes_reply_old_url', tail)
+      }
+    })
+
+
+  })
+
+</script>
 
 @stop

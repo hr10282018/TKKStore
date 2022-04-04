@@ -7,7 +7,7 @@
   <div class="col-lg-2 col-md-1 hidden-sm hidden-xs user-info">
     <div class="card " style="width: 274px;">
       <ul class="list-group list-group-flush  ">
-        <a href="{{ route('user_edit_avatar',Auth::user()) }}">
+        <a href="{{ route('user_edit_avatar',$user->id) }}">
           <img src="{{ $user->avatar }}" class="card-img-top mt-4 ml-1 " style="width: 264px; height:262px; margin:0 auto; " alt="{{ $user->name }}">
         </a>
         <div class="mt-4" style="height:1px; width: 230px; background-color:rgb(223,223,223) ;margin:0 auto;"></div>
@@ -66,7 +66,7 @@
           个人信息
       </a>
 
-      <a href="{{ route('user_booking' , $user->id )  }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(1) }}">
+      <a href="{{ route('user_booking' , $user->id) }}?reply=no" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(1) }}">
         <i class="fas fa-heart mr-1"></i>
         @if (Auth::user()->can('update_user_info', $user))
           我的预订
@@ -109,7 +109,7 @@
         <span>发布商品</span>
       </a>
 
-      <a href="{{ route('booking_notice',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(5) }}">
+      <a href="{{ route('booking_notice',$user->id) }}?reply=no" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(5) }}">
         <i class="far fa-envelope" style="font-size:17px"></i>
         <span class="ml-1">预订通知</span>
       </a>

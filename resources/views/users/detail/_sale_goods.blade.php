@@ -2,7 +2,7 @@
 @extends('users.show')
 @section('user_info')
 
-<div class="col-lg-6 col-md-7 col-sm-12 col-xs-12 " style="margin-left: 60px;">
+<div class="col-lg-6 col-md-7 col-sm-12 col-xs-12 " style="margin-left: 60px;margin-bottom:75px">
 
   <!-- <div class="card " style="height: 51px;">
       <div class="card-body" style="line-height:22px">
@@ -10,7 +10,7 @@
       </div>
     </div> -->
 
-  <div class="card mb-5">
+  <div class="card ">
     <div class="card-body">
       <div class="row mt-2 ">
         <i class="fas fa-store mr-2 ml-3 mt-2" style="font-size: 26px;color:#636b6f"></i>

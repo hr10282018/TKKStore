@@ -91,22 +91,13 @@
       <!-- 商品右侧 -->
       <div class="col-6 ml-3">
         <div class="row">
-          <a href="{{ route('user_show', $user->id ) }}">
+          <a href="{{ route('user_show', $user->id ) }}" target="_blank">
             <img src="{{ $user->avatar }}" class="img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
           </a>
-          <a href="{{ route('user_show', $user->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;">
+          <a href="{{ route('user_show', $user->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;" target="_blank">
             <label for="" style="font-size:18px; ">{{ $user->name }}</label>
           </a>
-          {{-- (此处等写 预定再来写)   状态： 预定，则显示预订人；出售则显示买家 --}}
-          {{-- 
-          <a href="{{ route('user_show', $user->id ) }}">
-            <img src="{{ $user->avatar }}" class="img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
-          </a>
-          <a href="{{ route('user_show', $user->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;">
-            <label for="" style="font-size:18px; ">{{ $user->name }}</label>
-          </a>
-          --}}
-          
+
         </div>
         
         <div class="title mt-3">
@@ -157,48 +148,89 @@
           <i class="far fa-comment" style="font-size: 20px;"></i>
           <span class="ml-3" style="font-size: 15px;">评论 {{ $goods_info->reply_count }}</span>
         </div>
+        
 
-        <div class="row mt-4">
-          {{-- 当前用户是 商品作者 --}}
+        <div class="row mt-3">
+          {{-- 当前登录用户 是否 商品作者 --}}
           @if( Auth::user()->id == $goods_info->user_id)
-            @if($goods_info->state=='0' || $goods_info->state=='1' || $goods_info->state=='2')
            
-            <button class="btn btn-success"><i class="far fa-edit"></i>
-              编辑
-            </button>
-            <button class="btn btn-danger  ml-4"><i class="fas fa-backspace"></i>
+            <div class="reply ml-3" style="color: rgb(99 ,107, 111);font-size:20px">
+              @if($goods_info->state=='3')
+                预定用户：
+                <a href="{{ route('user_show', $booker->id ) }}" target="_blank">
+                  <img src="{{ $booker->avatar }}" class="img-responsive img-circle" width="35px" height="35px" style="border-radius: 50%;">
+                </a>
+                <a href="{{ route('user_show', $booker->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;;" target="_blank">
+                  <label for="" style="font-size:18px; ">{{ $booker->name  }}</label>
+                </a>
+              @elseif($goods_info->state=='4')
+                购买用户：
+                xxxxxxx
+              @endif
+            </div>
+
+            @if($goods_info->state=='0' || $goods_info->state=='1' || $goods_info->state=='2')
+
+            <a href="{{ route('edit_goods', $goods_info->id) }}" target="_blank">
+              <button class="btn btn-success ml-3"><i class="far fa-edit"></i>
+                编辑
+              </button>
+            </a>
+            <button class="btn btn-danger ml-4  del_goods"><i class="fas fa-backspace"></i>
               删除
             </button>
-            @elseif($goods_info->state=='3' || $goods_info->state=='4')
-            <button class="btn btn-danger  ml-4"><i class="fas fa-backspace"></i>
+
+            @elseif($goods_info->state=='3')
+            <a href="" target="_blank">
+              <button class="btn btn-primary ml-3 "><i class="fas fa-reply-all"></i>
+                回复预定
+              </button>
+            </a>
+
+            @elseif($goods_info->state=='4')
+            <button class="btn btn-danger ml-3 del_goods"><i class="fas fa-backspace"></i>
               删除
             </button>
             @endif
 
           @else
             @if($goods_info->state=='2')
-            <button class="btn btn-success btn-favor" type="submit">
+            <button class="btn btn-success btn-favor btn_booking" type="button" title="【每个商品用户仅限预定3次】">
               <i class="fas fa-heart"></i>
               预订
             </button>
-            {{-- 此处等写 预定再来写
-            @elseif($goods_info->state=='3')
-              @if()    // 当前用户是否为预定者 
-              
-
+            
+            
+            {{-- 预定中 --}}
+            @elseif($goods_info->state=='3')    
+              @if(isset($booker_login))      {{-- 当前登录为预定者 --}}
+                @if($booker_login->user_state == 2)   {{-- 状态为预定中 --}}
+                <button class="btn btn-danger btn-favor ml-3 btn_cancel_booking" type="button">
+                  <i class="fas fa-heart"></i>
+                    取消预定
+                </button>
+                @else
+                <button class="btn btn-danger btn-favor ml-3" type="button" disabled>
+                  <i class="fas fa-heart"></i>
+                    预订中
+                </button>
+                @endif
               @else
-
+              <button class="btn btn-danger btn-favor ml-3" type="button" disabled>
+                  <i class="fas fa-heart"></i>
+                    预订中
+              </button>
               @endif
-            <button class="btn btn-secondary btn-favor" disabled>
-              <i class="fas fa-heart" style="color:#a5a5a5;"></i>
-              已出售
-            </button>
-            --}}
-
+              @elseif($goods_info->state=='4')
+                <button class="btn btn-dark btn-favor ml-3" type="button" disabled>
+                  <i class="fas fa-heart"></i>
+                    已出售
+                </button>
+             
             @endif
           @endif
-
         </div>
+
 
       </div>
     </div>
@@ -261,6 +293,7 @@
                     @can('delete_comment',$value,$goods_info)
                     <span class="meta float-right ">
                       <input type="hidden" name="goods_id" value="{{ $goods_info->id }}">
+                      <input type="hidden" name="goods_id" value="{{ $value->id }}">
                       <button type="button" title="删除" class="btn btn-default btn-xs pull-left text-secondary del_comment">
                         <i class="far fa-trash-alt"></i>
                       </button>
@@ -332,10 +365,40 @@
         $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...')
         $('.form_comment').submit()
       }
-
-
-
     })
+
+    // 作者删除商品
+    $('.del_goods').click(function(){
+      console.log('del');
+      swal({
+        title: '你确认要删除吗?',
+        text: "此操作不可逆！",
+        icon: 'warning',
+        buttons: ['取消', '确定'],
+        dangerMode: true,
+      }).then( (res) => {
+        if(!res){
+          return;
+        }
+        // 删除请求
+        axios.delete('{{ route('del_goods_ajax', ['goods' => $goods_info->id]) }}').then(function(res){
+          //console.log(res.data)
+          swal('删除成功', '', 'success').then((res) => {
+            //$goods_info
+            location.href='{{ route('sale_goods', ['user' => Auth::user()->id,'state' => $goods_info->state]) }}';
+          });
+        }).then(function(error) {
+          if (error.response.status === 404) {
+            swal('删除失败', '', 'error');
+          }
+          //swal('删除失败', '', 'error');
+        })
+
+      })
+
+      $('.swal-text').addClass('danger_text'); // 样式-危险
+    })
+
 
     // 删除评论
     $('.del_comment').click(function() {
@@ -351,7 +414,10 @@
         }
 
         // 删除请求
-        axios.delete('{{ route('delete_comment', ['goods_id' => $goods_info->id ,'comments_id' => $value->id ]) }}').then(function(res) {
+        comments_id=$(this).prev().val();
+        goods_id=$(this).prev().prev().val();
+
+        axios.delete('/goods/'+goods_id+'/'+comments_id+'/delete').then(function(res) {
           //console.log(res.data)
           swal('删除成功', '', 'success').then((res) => {
             location.reload();
@@ -366,6 +432,75 @@
 
     })
 
+    var booking_count
+    function getBookingCount(){
+        axios.get('{{ route('ajax_booking_count',['goods' => $goods_info->id] ) }}').then((res) => {
+        booking_count=res.data
+      },function(error){
+        console.log('error')
+      })
+    }
+    getBookingCount();    // 预定次数
+    // 预定商品
+     $('.btn_booking').click(function(){
+      //console.log(1)
+      
+      console.log(booking_count)
+      if(booking_count >= 3){
+        swal({
+          title: '预定失败！',
+          text: "你已经预定该商品3次，无法再预定！",
+          icon: 'error',
+        })
+        $('.swal-text').addClass('danger_text'); // 样式-危险
+      }else{
+        count=3-booking_count
+        swal({
+        title: '你确认要预定吗?',
+        text: "你还可以预定此商品 "+count+" 次！",
+        icon: 'info',
+        buttons: ['取消', '确定'],
+        
+        }).then((res) => {
+          if (!res) {
+            return;
+          }
+          axios.post('{{ route('ajax_booking_goods',['goods' => $goods_info->id, 'user_id' =>$goods_info->user_id ]) }}').then(function(res){
+            console.log(res.data)
+            swal('预定成功', '', 'success').then((res) => {
+              location.reload();
+            });
+          })
+        })
+
+        $('.swal-text').addClass('info_text'); // 样式-info
+      }
+    })
+    
+    
+    // 取消预定
+    $('.btn_cancel_booking').click(function(){
+      swal({
+        title: '你确认要取消吗?',
+        text: "",
+        icon: 'warning',
+        buttons: ['取消', '确定'],
+        dangerMode: true,
+      }).then((res)=>{
+        if(!res){
+          return;
+        }
+        axios.delete('{{ route('ajax_cancel_booking',['goods' => $goods_info->id]) }}').then(function(res){
+          console.log(res.data)
+          swal('取消预定成功！', '', 'success').then((res) => {
+            location.reload();
+          });
+        },function(error){
+
+        })
+      })
+
+    })
 
   })
 </script>

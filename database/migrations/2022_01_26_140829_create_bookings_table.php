@@ -18,7 +18,7 @@ class CreateBookingsTable extends Migration
       $table->unsignedBigInteger('user_id')->index();     // 商品所属用户id
       //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-      $table->unsignedBigInteger('buyer_id')->index();     // 预订者id  booker_id
+      $table->unsignedBigInteger('booker_id')->index();     // 预订者id  booker_id
       //$table->foreign('buyer_id')->references('id')->on('users')->onDelete('cascade');
 
       $table->string('user_state', 2)->nullable();   // 卖家是否同意出售  0-拒绝 1-同意 2-未同意未拒绝(预定ing)

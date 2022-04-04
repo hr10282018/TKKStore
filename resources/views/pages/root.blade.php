@@ -42,8 +42,8 @@
             </select>
             <select class="custom-select" name="state" id="state_select" style="width: 105px;">
 
-              <option value="2" selected>正出售</option>
-              <option value="3" {{ isset($state) && $state=='3' ? 'selected': '' }}>已预订</option>
+              <option value="2" selected>出售中</option>
+              <option value="3" {{ isset($state) && $state=='3' ? 'selected': '' }}>预定中</option>
               <option value="4" {{ isset($state) && $state=='4' ? 'selected': '' }}>已出售</option>
             </select>
           </div>

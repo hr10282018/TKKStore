@@ -48,7 +48,11 @@ class User extends Authenticatable
 
   public function bookings()
   {
-    return $this->hasMany(Booking::class);     // 一个用户有多个预订
+    return $this->hasMany(Booking::class,'booker_id');     // 一个买家有多个预订
+  }
+  public function bookingsUser()
+  {
+    return $this->hasMany(Booking::class,'user_id');     // 一个卖家有多个预订通知
   }
 
   public function userVisibles()       // 一个用户有一个 可见设置

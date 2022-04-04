@@ -2,34 +2,42 @@
 @extends('users.show')
 @section('user_info')
 
-<div class="col-lg-6 col-md-7 col-sm-12 col-xs-12 " style="margin-left: 60px;">
+<div class="col-lg-6 col-md-7 col-sm-12 col-xs-12 " style="margin-left: 60px;margin-bottom:75px">
   <div class="card ">
 
     <div class="card-body">
       <div class="row ">
         <i class="far fa-envelope mr-2 ml-3 mt-2" style="font-size: 26px;color:#636b6f"></i>
         <h1 class="ml-2 mt-2" style="line-height: 24px;color:#636b6f; font-size:20px;font-weight:bold; ">
-          Sakura
+         {{ $user->name }}
           <span style="letter-spacing:2px">的预订</span>
-          （{{ count($yes_reply_booking)+count($no_reply_booking) }}）
+          （{{ count($user->bookings) }}）
+          
         </h1>
       </div>
     </div>
 
     <hr style="width: 650px;margin:0 auto;">
 
-    <div class="card-body">
+    <div class="card-body ">
       <ul class="nav nav-tabs " id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">待回复</a>
+        <li class="nav-item no_reply" role="presentation">
+          <a class="nav-link @if(reply_acyive('no')) active @endif " id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected=" @if(reply_acyive('no')) true @else false @endif">
+            待回复 @if(reply_acyive('no')) 【{{ $no_reply_count }}】 @endif
+            
+          </a>
         </li>
-        <li class="nav-item" role="presentation">
-          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">已回复</a>
+        <li class="nav-item yes_reply" role="presentation">
+          <a class="nav-link @if(reply_acyive('yes')) active @endif" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="@if(reply_acyive('yes')) true @else false @endif">
+            已回复 @if(reply_acyive('yes'))【{{ $yes_reply_count }}】@endif
+          </a>
         </li>
       </ul>
 
+      <input type="text" value="{{ $no_reply_count/5 }}" name="" id="no_reply_count" hidden>   <!-- 当前页多少条 -->
+
       <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="tab-pane fade  @if(reply_acyive('no')) show active @endif" id="home" role="tabpanel" aria-labelledby="home-tab">
           <ul class="list-group list-group-flush">
             @if( count($no_reply_booking) > 0 )
             @foreach ($no_reply_booking as $booking => $value)
@@ -37,27 +45,25 @@
               <div class="row no-gutters">
 
                 <div class="">
-                  <a href="">
+                  <a href="{{ route('goods_detail',$value->goods->id ) }}" target="_blank">
                     <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
                   </a>
-
                 </div>
                 <div class="ml-2" >
                   <div class="mt-4">
-                    <a href="">
+                    <a href="{{ route('user_show' , $value->user->id) }}">
                       <img src="{{ $value->user->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
                     </a>
-                     <a href="">{{ $value->user->name }}</a>  未回复您的预订！
+                     <a href="{{ route('user_show' , $value->user->id) }}">{{ $value->user->name }}</a>  <span style="color:#636b6f">【未回复】</span> 您的预订！
                   </div>
-
-
                   <div class="card-text mt-1 ml-3"><small title="{{ $value->created_at }}" class="text-muted">预订于 {{ $value->created_at->diffForHumans() }}</small></div>
                 </div>
               </div>
             </li>
             @endforeach
             <div class="card-body">
-              {!! $no_reply_booking->render() !!}
+             
+              {!! $no_reply_booking->appends(Request::except('page'))->render() !!}
             </div>
 
             @else
@@ -70,28 +76,46 @@
           </ul>
         </div>
         
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <ul class="list-group list-group-flush">
+        <div class="tab-pane fade @if(reply_acyive('yes')) show active @endif" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+          <ul class="list-group list-group-flush">
             @if( count($yes_reply_booking) > 0 )
+
             @foreach ($yes_reply_booking as $booking => $value)
             <li class="list-group-item">
               <div class="row no-gutters">
                 <div class="">
-                  <a href="">
+                  <a href="{{ route('goods_detail',$value->goods->id ) }}">
                     <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
                   </a>
                 </div>
                 <div class="ml-2" >
                   <div class="mt-4">
-                    <a href="">
-                      <img src="/images/avatar.png" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
-                    </a>
-                    <a href="">{{ $value->user->name }}</a> <span style="color:{{ ($value->user_state=='1') ? 'green':'red'  }};">{{ ($value->user_state=='1') ? '同意':'拒绝' }}</span> 您的预订！
+                    
+                    @if($value->user_state=='0' || $value->user_state=='1')
+                      <a href="{{ route('user_show' , $value->user->id) }}" target="_blank">
+                        <img src="{{ $value->user->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                      </a>
+                      <a href="{{ route('user_show' , $value->user->id) }}" target="_blank">{{ $value->user->name }}</a>
+                      <span style="color:{{ ($value->user_state=='1') ? 'green':'red'  }};">{{ ($value->user_state=='1') ? '【同意】':'【拒绝】' }}</span> 您的预订！
+                    
+                    @elseif($value->user_state=='3')
+                      <a href="{{ route('user_show' , $user->id) }}" target="_blank">
+                        <img src="{{ $user->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                      </a>
+                      <a href="{{ route('user_show' , $user->id) }}" target="_blank">{{ $user->name }}</a>
+                      <span style="color:#636b6f">【取消】</span> 了预定！
+                    @endif
                   </div>
                   <div class="row">
                     <div class="card-text mt-1 ml-3"><small title="{{ $value->created_at }}" class="text-muted">预订于 {{ $value->created_at->diffForHumans() }}</small></div>
-                    <div class="card-text mt-1 ml-3"><small title="{{ $value->updated_at }}" class="text-muted">回复于 {{ $value->updated_at->diffForHumans() }}</small></div>
+                    <div class="card-text mt-1 ml-3"><small title="{{ $value->updated_at }}" class="text-muted">
+                    @if($value->user_state=='0' || $value->user_state=='1')
+                      回复于 {{ $value->updated_at->diffForHumans() }}
+                    @elseif($value->user_state=='3')
+                      取消于 {{ $value->updated_at->diffForHumans() }}
+                    @endif
 
+                    </small></div>
                   </div>
 
                 </div>
@@ -99,7 +123,7 @@
             </li>
             @endforeach
             <div class="card-body">
-              {!! $yes_reply_booking->render() !!}
+              {!! $yes_reply_booking->appends(Request::except('page'))->render() !!}
             </div>
 
             @else
@@ -119,4 +143,102 @@
 
 
 </div>
+@stop
+
+@section('scriptsAfterJs')
+<script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+  $(document).ready(function() {
+
+    var old_tail_url=[]   // 记录之前状态 -页数
+    var lastPage=Math.ceil($('#no_reply_count').val())  // 获取 待回复最后一页
+    if (lastPage==0) lastPage=1
+    var now_url_page=window.location.href.split('page=')[1]    // 获取当前页
+
+    
+    if(document.referrer.indexOf('user_booking') == -1){
+      // console.log('跳转')
+      old_tail_url=['reply=no','reply=yes']
+
+      $.removeCookie('no_reply_old_url')
+      $.removeCookie('yes_reply_old_url')
+    }else{
+      //console.log('刷新')
+      
+      if(!$.cookie('no_reply_old_url')){
+        no_reply='reply=no'
+      }else{
+
+        // 判断 待回复页数是否为0，且url为待回复
+        if(now_url_page > lastPage){  //      最后一页问题-如果取消预定一个商品刚好没有下一页，而用户点了下一页，则改页数据为空，需返回第1页
+          $.removeCookie('no_reply_old_url')
+          no_reply='reply=no'
+        }else if(now_url_page <= lastPage){
+          no_reply=$.cookie('no_reply_old_url')
+        }
+
+      }
+      if(!$.cookie('yes_reply_old_url')){
+        yes_reply='reply=yes'
+      }else{
+        yes_reply=$.cookie('yes_reply_old_url')
+      }
+    
+      old_tail_url=[no_reply,yes_reply]
+     // console.log(old_tail_url)
+    }
+
+     //console.log(old_tail_url)
+
+    // 待回复 -点击
+    $('.no_reply').click(function(){
+      now_url=window.location.href
+
+      index=now_url.indexOf("reply")
+      head=now_url.substring(0,index)
+
+      console.log(old_tail_url[0])
+      window.location.href=head+old_tail_url[0]
+      
+      
+      //console.log(now_url.substring(index))
+
+    })
+    $('.yes_reply').click(function(){
+
+      now_url=window.location.href
+
+      index=now_url.indexOf("reply")
+      head=now_url.substring(0,index)
+      window.location.href=head+old_tail_url[1]
+     
+    })
+
+    
+    
+    // 页数跳转-点击
+    $('a.page-link').click(function(){
+      next_url=$(this).attr('href')
+      index=next_url.indexOf("reply")
+      tail=next_url.substring(index)
+      //var reply_expire= new Date();
+      //reply_expire.setTime(expiresDate.getTime() + (60*1000));   // 2小时
+
+   
+
+      if(window.location.href.indexOf("reply=no") != -1){   // 当前为-待回复页
+           
+        $.cookie('no_reply_old_url', tail);
+
+      }else if((window.location.href.indexOf("reply=yes") != -1)){
+        $.cookie('yes_reply_old_url', tail)
+      }
+    })
+
+    
+    
+  })
+
+</script>
+
 @stop

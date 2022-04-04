@@ -20,6 +20,8 @@ class CommentsController extends Controller
   public function goods_detail_comment(Request $request,Comment $comment, Good $goods_id){   // 用户评论商品
     //dd($request->all());
     //dd($goods_id->id);
+    
+    
     $comment->content = $request->content;
     $comment->user_id = Auth::id();
     $comment->goods_id = $goods_id->id;
@@ -31,7 +33,8 @@ class CommentsController extends Controller
   }
 
   public function delete_comment($goods_id,$comments_id){     // 删除评论
-    //dd($request->goods_id);
+    
+    //dd($comments_id);
     
     Comment::destroy($comments_id);
     Good::where('id',$goods_id)->decrement('reply_count');  // -1

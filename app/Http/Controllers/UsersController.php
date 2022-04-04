@@ -157,6 +157,7 @@ class UsersController extends Controller
     
     $goods=Good::where('user_id',$user->id)->where('state',$state)->orderBy('created_at', 'desc');
     $count=$goods->count();
+   
     //$count=sizeof($goods->get());
     $goods=$goods->paginate(5);
     $image=array();
@@ -332,25 +333,42 @@ class UsersController extends Controller
   /* end */
 
   /* 出售商品处理 */
-  public function del_goods_ajax(Good $goods,Request $request){   // 删除出售商品
+  public function del_goods_ajax(Good $goods,Request $request){   // 删除 发布商品
     //dd($request->all()); //商品id
 
     Good::where('id', $goods->id)->delete();  // 
- 
+
+    
     return [];
 
   }
 
 
   /* 预订相关 */
-  public function booking_notice($user){   // 显示预订通知
 
+  public function booking_notice(User $user,Request $request){   // 显示预订通知
 
-    $bookings=Booking::where('user_id',$user)->where('user_state',null)->paginate(3);
-    $user=User::where('id',$user)->first();
-    //$buyer=User::where('id',$user)->first();
+    $bookings=Booking::where('user_id',$user->id);        // 2-未处理
+    
+    $no_reply_booking=[];
+    $yes_reply_booking=[];
+    $no_reply_count=0;
+    $yes_reply_count=0;
 
-    return view('users.detail._booking_notice',compact('user'),compact('bookings'));
+    if($request->reply == 'no'){
+      $no_reply_booking=$bookings->where('user_state',2);     // 2-待回复
+      $no_reply_count=$no_reply_booking->count();    // 总数
+      $no_reply_booking=$no_reply_booking->with('user','goods')->paginate(5);
+    }
+    if($request->reply == 'yes'){
+      $yes_reply_booking=$bookings->where('user_state','!=',2);    // 已回复
+      $yes_reply_count=$yes_reply_booking->count();    // 总数
+
+      $yes_reply_booking=$yes_reply_booking->with('user','goods')->paginate(5);
+    }
+    // dd($no_reply_booking);
+
+    return view('users.detail._booking_notice',compact('user'),compact('no_reply_booking','yes_reply_booking','no_reply_count','yes_reply_count'));
 
   }
   public function agree_booking($user,$booking_id){    // 处理接受预订
@@ -368,17 +386,32 @@ class UsersController extends Controller
     return back()->with('success','成功拒绝预订！');
   }
 
-  public function user_booking($user){   // 显示我的预订
+  public function user_booking(User $user,Request $request){   // 我的预订
 
-    $bookings=Booking::where('buyer_id',$user);
-    $no_reply_booking=$bookings->where('user_state',null)->paginate(3);
+    //dd($request->all());
+    $bookings=Booking::where('booker_id',$user->id);
+    
+    $no_reply_booking=[];
+    $yes_reply_booking=[];
+    $no_reply_count=0;
+    $yes_reply_count=0;
 
-    $yes_reply_booking=Booking::where('buyer_id',$user)->whereNotNull('user_state')->paginate(3);
 
-    $user=User::where('id',$user)->first();
-    //$buyer=User::where('id',$user)->first();
+    if($request->reply == 'no'){
+      $no_reply_booking=$bookings->where('user_state',2);     // 2-待回复
+      $no_reply_count=$no_reply_booking->count();    // 总数
+      $no_reply_booking=$no_reply_booking->with('user','goods')->paginate(5);
+    }
+    if($request->reply == 'yes'){
+      $yes_reply_booking=$bookings->where('user_state','!=',2);    // 已回复
+      $yes_reply_count=$yes_reply_booking->count();    // 总数
 
-    return view('users.detail._user_notice',compact('user'),compact('no_reply_booking','yes_reply_booking'));
+      $yes_reply_booking=$yes_reply_booking->with('user','goods')->paginate(5);
+    }
+    
+    
+
+    return view('users.detail._user_notice',compact('user'),compact('no_reply_booking','yes_reply_booking','no_reply_count','yes_reply_count'));
   }
 
 }

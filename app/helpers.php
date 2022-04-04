@@ -121,7 +121,22 @@ function comment_tab(){
   }else{
     return false;
   }
-  
- 
 }
 
+// 个人中心-我的预定
+function reply_acyive($type){
+  if($type == 'no'){
+    if(if_query('reply','no')){
+      return true;
+    }
+    return false;
+  }
+  
+  if($type == 'yes'){
+    if(if_query('reply','yes')){
+      return true;
+    }
+    return false;
+  }
+  
+}
