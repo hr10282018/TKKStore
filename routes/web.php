@@ -52,16 +52,21 @@ Route::get('/users/{user}/user_booking', 'UsersController@user_booking')->name('
 
 Route::get('/users/{user}/user_comment', 'UsersController@user_comment')->name('user_comment');  // 我的评论
 
-Route::get('/users/{user}/buy_goods/{state?}', 'UsersController@buy_goods')->name('buy_goods');  // 订购商品
+Route::get('/users/{user}/buy_goods', 'UsersController@buy_goods')->name('buy_goods');  // 订购商品(买家)
+
+Route::get('/users/{user}/buyer_order', 'UsersController@buyer_order')->name('buyer_order');  // 我的订单(买家)
+
 
 Route::get('/users/{user}/sale_goods/{state?}', 'UsersController@sale_goods')->name('sale_goods');  // 发布商品
-//Route::delete('/users/{user}/delete_goods', 'UsersController@delete_goods')->name('delete_goods');  // 删除商品
 Route::delete('ajax_del_gods/{goods}', 'UsersController@del_goods_ajax')->name('del_goods_ajax'); // ajax删除商品
 
 
 Route::get('/users/{user}/booking_notice', 'UsersController@booking_notice')->name('booking_notice');  // 预订通知
-Route::put('/users/{user}/agree_booking/{booking_id}', 'UsersController@agree_booking')->name('agree_booking');  // 接受预订
-Route::post('/users/{user}/refuse_booking/{booking_id}', 'UsersController@refuse_booking')->name('refuse_booking');  // 拒绝预订
+Route::post('/agree_booking/{booking_id}', 'UsersController@agree_booking')->name('agree_booking');  // 接受预订
+Route::post('/refuse_booking/{booking_id}', 'UsersController@refuse_booking')->name('refuse_booking');  // 拒绝预订
+
+Route::get('/users/{user}/seller_order', 'UsersController@seller_order')->name('seller_order');  // 出售订单(卖家)
+
 
 
 Route::get('/users/{user}/settings/edit', 'UsersController@edit')->name('user_edit');  // 修改个人信息

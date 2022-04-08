@@ -253,13 +253,11 @@
                     {{-- <p style="display: none;">{{$i++}}</p> --}}
                     <?php $i++ ?>
                   </a>
-
                 </div>
 
                 <div class="card-body" style="padding: 0.8rem;">
                   <h5 class="card-title">
-                    <a href="{{ route('goods_detail', $value->id) }}" style="">{{ Str::limit($value->title,30,'...')
-                      }}</a>
+                    <a href="{{ route('goods_detail', $value->id) }}" style="">{{ Str::limit($value->title,30,'...')}}</a>
                   </h5>
 
                   <div class="mt-3">
@@ -274,13 +272,14 @@
 
                   <div class="mt-1">
                     <!-- 浏览量 + 评论量 -->
-                    <span class="card-text  mt-1 mr-1 eye" style="position:relative; font-size:12px; left:0px">
+                    <span class="card-text  mt-1 mr-1 eye" style="position:relative; font-size:12px; left:0px" title="浏览量">
                       <i class="far fa-eye"></i> <span class="ml-1">{{$value->view_count}}</span>
                     </span>
-                    <span class="card-text ml-2 mt-1 mr-1 reply" style="position:relative; font-size:12px; left:0px;">
+                    <span class="card-text ml-2 mt-1 mr-1 reply" style="position:relative; font-size:12px; left:0px;" title="评论量">
                       <i class="far fa-comment-dots"></i> <span class="ml-1">{{$value->reply_count}}</span>
                     </span>
 
+                    
                   </div>
                 </div>
                 @if(Auth::user()->can('update_user_info', $user))

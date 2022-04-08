@@ -75,8 +75,8 @@
         @endif
         
       </a>
-      <a href="{{ route('user_comment' , $user->id )  }}"  style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(2) }}">
-        <i class="fab fa-twitch" style="font-size:16px"></i>
+      <a href="{{ route('user_comment' , $user->id)  }}"  style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(2) }}">
+        <i class="fab fa-twitch mr-1" style="font-size:16px"></i>
         @if (Auth::user()->can('update_user_info', $user))
           我的评论
         @else
@@ -85,11 +85,16 @@
         
       </a>
 
-      <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;">
-        <img src="/images/order3.png" alt="" style="width: 18px; height:18px; margin-right:1px">
-        
-        订购商品
+      <a href="{{ route('buy_goods',$user->id) }}?type=booking" style=" z-index:1;"  class="list-group-item list-group-item-action  {{ user_center_active(3) }}">
+        <i class="fas fa-shopping-cart " style="font-size: 15px;position:relative;left:-3px"></i>
+        <span>订购商品</span>
       </a>
+
+      <a href="{{ route('buyer_order',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(4) }}">
+        <i class="fas fa-clipboard-list mr-1" style="font-size: 16px;"></i>
+        <span>我的订单</span>
+      </a>
+
     </div>
 
     <div class="card mt-3">
@@ -104,18 +109,18 @@
         
       </li>
 
-      <a href="{{ route('sale_goods',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(4) }}">
+      <a href="{{ route('sale_goods',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(5) }}">
         <i class="fas fa-store"></i>
         <span>发布商品</span>
       </a>
 
-      <a href="{{ route('booking_notice',$user->id) }}?reply=no" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(5) }}">
+      <a href="{{ route('booking_notice',$user->id) }}?reply=no" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(6) }}">
         <i class="far fa-envelope" style="font-size:17px"></i>
         <span class="ml-1">预订通知</span>
       </a>
 
-      <a href="#" class="list-group-item list-group-item-action" style=" z-index:1;">
-        <img src="/images/order3.png" alt="" style="width: 18px; height:18px; margin-right:1px">
+      <a href="{{ route('seller_order',$user->id) }}"  style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(7) }}">
+        <img src="@if(user_center_active(7)=='active') /images/iconfont/order.png @else /images/iconfont/order_black.png @endif" alt="" style="width: 18px; height:18px; position:relative; top:-3px;left:0px">
         <span>出售订单</span>
       </a>
 

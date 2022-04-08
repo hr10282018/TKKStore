@@ -13,6 +13,7 @@
 
   <!-- Styles -->
   <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+  <link href="/js/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet">
 
 </head>
 
@@ -40,12 +41,10 @@
   <!-- Scripts -->
   <script src="{{ mix('js/app.js') }}"></script>
   <!-- <script src="/js/register.js"></script> -->
-  <script src="/js/test.js"></script>
   <!-- <script src="/js/create_goods.js"></script> -->
-  <!-- <script src="/js/root.js"></script> -->
   @yield('scriptsAfterJs')
   <!-- <script src="/js/confirm.js"></script> -->
-  <!-- <script src="/js/_header.js"></script> -->
+
   @if (app()->isLocal())
     @include('sudosu::user-selector')
   @endif

@@ -132,11 +132,12 @@ body {
 .warning_text {
     background-color: #fff3cd;
     padding: 17px;
-    border: 1px solid #ffeeba;
+    //border: 1px solid #ffeeba;
+    border: 1px solid #F0E1A1;
     display: block;
     margin: 22px;
     text-align: center;
-    color: #856404;
+    color: #61534e;
 }
 
 // danger 危险
@@ -274,23 +275,27 @@ input:checked+.slider:before {
 }
 
 .eye {
-    color: #a5a5a5;
-    &:hover {
-        color: #38b;
-    }
+  color: #a5a5a5;
+  &:hover {
+    color: #38b;
+  }
     // i:hover{
     //   color: rgb(70, 70, 70);
     // }
 }
 
 .reply {
-    color: #a5a5a5;
-    &:hover {
-        color: #b57c5b;
-    }
-    // i:hover{
-    //   color: rgb(70, 70, 70);
-    // }
+  color: #a5a5a5;
+  &:hover {
+    color: #b57c5b;
+  }
+
+}
+.booking_count{   // 预定次数
+  color: #a5a5a5;
+  &:hover {
+      color: #ff5d23;
+  }
 }
 
 // 创建商品

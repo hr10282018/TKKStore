@@ -63,15 +63,29 @@ function user_info_active($type){
 function user_center_active($type){
   if ($type == 'arrow') {
     if ((if_route('user_show'))) {
-      return '65';
-    } elseif ((if_route('user_booking'))) {
+      return '65';            // 偏移px值
+    } 
+    elseif ((if_route('user_booking'))) {
       return '114';
-    } elseif ((if_route('sale_goods'))) {
-      return '326';
-    } elseif ((if_route('booking_notice'))) {
-      return '375';
-    }elseif((if_route('user_comment'))){
+    }
+    elseif((if_route('user_comment'))){
       return '162';
+    }
+  
+    elseif ((if_route('buy_goods'))) {
+      return '207';
+    } 
+    elseif ((if_route('buyer_order'))) {
+      return '257';
+    } 
+    elseif ((if_route('sale_goods'))) {
+      return '374';
+    } 
+    elseif ((if_route('booking_notice'))) {
+      return '422';
+    }
+    elseif ((if_route('seller_order'))) {
+      return '468';
     }
 
   }else{
@@ -86,10 +100,21 @@ function user_center_active($type){
       return 'active';
     }
 
-    if ((if_route('sale_goods')) && $type == 4) {
+    if ((if_route('buy_goods')) && $type == 3) {
       return 'active';
     }
-    if ((if_route('booking_notice')) && $type == 5) {
+
+    if ((if_route('buyer_order')) && $type == 4) {
+      return 'active';
+    }
+
+    if ((if_route('sale_goods')) && $type == 5) {
+      return 'active';
+    }
+    if ((if_route('booking_notice')) && $type == 6) {
+      return 'active';
+    }
+    if ((if_route('seller_order')) && $type == 7) {
       return 'active';
     }
     
@@ -138,5 +163,22 @@ function reply_acyive($type){
     }
     return false;
   }
-  
+}
+
+
+// 个人中心-订购商品
+function booking_buy_active($type){
+  if($type == 'booking'){
+    if(if_query('type','booking')){
+      return true;
+    }
+    return false;
+  }
+
+  if($type == 'buy'){
+    if(if_query('type','buy')){
+      return true;
+    }
+    return false;
+  }
 }

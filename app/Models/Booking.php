@@ -16,7 +16,7 @@ class Booking extends Model
     return $this->belongsTo(User::class);   // 卖家id(user_id)
   }
   public function buyer()
-  {  
+  { 
     return $this->belongsTo(User::class, 'booker_id');  // 指定预定用户id的字段
   }
 
@@ -24,8 +24,13 @@ class Booking extends Model
   // 一个预订属于一个商品
   public function goods()
   { 
-    return $this->belongsTo(Good::class);
+    return $this->belongsTo(Good::class,'goods_id');
   }
-    
+  public function goods_sort()
+  { 
+    return $this->belongsTo(Good::class,'goods_id')->orderBy('created_at','desc');
+  }
+
+  
 
 }

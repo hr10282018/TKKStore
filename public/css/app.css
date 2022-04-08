@@ -17213,11 +17213,11 @@ body {
 .warning_text {
   background-color: #fff3cd;
   padding: 17px;
-  border: 1px solid #ffeeba;
+  border: 1px solid #F0E1A1;
   display: block;
   margin: 22px;
   text-align: center;
-  color: #856404;
+  color: #61534e;
 }
 
 .danger_text {
@@ -17350,6 +17350,14 @@ input:checked + .slider:before {
 
 .reply:hover {
   color: #b57c5b;
+}
+
+.booking_count {
+  color: #a5a5a5;
+}
+
+.booking_count:hover {
+  color: #ff5d23;
 }
 
 .custom-file-label::after {

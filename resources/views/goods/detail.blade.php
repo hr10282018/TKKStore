@@ -151,17 +151,17 @@
         
 
         <div class="row mt-3">
-          {{-- 当前登录用户 是否 商品作者 --}}
+          {{-- 当前登录用户 是 商品作者 --}}
           @if( Auth::user()->id == $goods_info->user_id)
-           
+          
             <div class="reply ml-3" style="color: rgb(99 ,107, 111);font-size:20px">
               @if($goods_info->state=='3')
                 预定用户：
-                <a href="{{ route('user_show', $booker->id ) }}" target="_blank">
-                  <img src="{{ $booker->avatar }}" class="img-responsive img-circle" width="35px" height="35px" style="border-radius: 50%;">
+                <a href="{{ route('user_show', $booking_data->buyer->id ) }}" target="_blank">
+                  <img src="{{ $booking_data->buyer->avatar }}" class="img-responsive img-circle" width="35px" height="35px" style="border-radius: 50%;">
                 </a>
-                <a href="{{ route('user_show', $booker->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;;" target="_blank">
-                  <label for="" style="font-size:18px; ">{{ $booker->name  }}</label>
+                <a href="{{ route('user_show', $booking_data->buyer->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;;" target="_blank">
+                  <label for="" style="font-size:18px; ">{{ $booking_data->buyer->name  }}</label>
                 </a>
               @elseif($goods_info->state=='4')
                 购买用户：
@@ -181,19 +181,28 @@
             </button>
 
             @elseif($goods_info->state=='3')
-            <a href="" target="_blank">
-              <button class="btn btn-primary ml-3 "><i class="fas fa-reply-all"></i>
-                回复预定
-              </button>
-            </a>
-
+              {{-- 用户状态为1，已经回复。2则还未回复 --}}
+              @if($booking_data->user_state == 1)
+                <a href="{{ route('booking_notice',$goods_info->user_id) }}?reply=yes" target="_blank" title="点击查看">
+                  <button class="btn btn-primary ml-3"><i class="fas fa-reply-all"></i>
+                    已回复预定
+                  </button>
+                </a>
+              @elseif($booking_data->user_state == 2)
+                <a href="{{ route('booking_notice',$goods_info->user_id) }}?reply=no" target="_blank" title="点击查看">
+                  <button class="btn btn-primary ml-3 btn_reply" disabled><i class="fas fa-reply-all"></i>
+                    回复预定
+                  </button>
+                </a>
+              @endif
+            
             @elseif($goods_info->state=='4')
             <button class="btn btn-danger ml-3 del_goods"><i class="fas fa-backspace"></i>
               删除
             </button>
             @endif
 
-          @else
+          @else     {{-- 当前登录用户 不是 商品作者 --}}
             @if($goods_info->state=='2')
             <button class="btn btn-success btn-favor btn_booking" type="button" title="【每个商品用户仅限预定3次】">
               <i class="fas fa-heart"></i>
@@ -203,23 +212,32 @@
             
             {{-- 预定中 --}}
             @elseif($goods_info->state=='3')    
-              @if(isset($booker_login))      {{-- 当前登录为预定者 --}}
-                @if($booker_login->user_state == 2)   {{-- 状态为预定中 --}}
+              @if($booking_data->booker_id == Auth::user()->id)      {{-- 当前登录用户 是否  预定者 --}}
+                @if($booking_data->user_state == 2)   {{-- 状态为预定中 --}}
                 <button class="btn btn-danger btn-favor ml-3 btn_cancel_booking" type="button">
                   <i class="fas fa-heart"></i>
                     取消预定
                 </button>
-                @else
-                <button class="btn btn-danger btn-favor ml-3" type="button" disabled>
-                  <i class="fas fa-heart"></i>
-                    预订中
-                </button>
+                @elseif($booking_data->user_state == 1) {{-- 回复已同意 --}}
+                  <a href="{{ route('user_booking',Auth::user()->id) }}?reply=yes" target="_blank" title="点击查看">
+                    <button class="btn btn-danger btn-favor ml-3" type="button">
+                      <i class="fas fa-heart"></i>
+                        已同意
+                    </button>
+                  </a>
+                  
+                  <a href="#" target="_blank" title="点击查看">
+                    <button class="btn btn-primary ml-3 btn_reply" ><i class="fas fa-reply-all"></i>
+                      查看订单
+                    </button>
+                  </a>
                 @endif
+
               @else
-              <button class="btn btn-danger btn-favor ml-3" type="button" disabled>
-                  <i class="fas fa-heart"></i>
-                    预订中
-              </button>
+                <button class="btn btn-danger btn-favor ml-3" type="button" disabled>
+                    <i class="fas fa-heart"></i>
+                      预订中
+                </button>
               @endif
               @elseif($goods_info->state=='4')
                 <button class="btn btn-dark btn-favor ml-3" type="button" disabled>
