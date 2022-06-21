@@ -90,9 +90,16 @@
         <span>订购商品</span>
       </a>
 
-      <a href="{{ route('buyer_order',$user->id) }}" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(4) }}">
+      <a href="{{ route('buyer_order',$user->id) }}?type=pending" style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(4) }}">
         <i class="fas fa-clipboard-list mr-1" style="font-size: 16px;"></i>
-        <span>我的订单</span>
+        <span>
+        @if (Auth::user()->can('update_user_info', $user))
+          我的订单
+        @else
+          Ta 的订单
+        @endif
+          
+        </span>
       </a>
 
     </div>
@@ -119,7 +126,7 @@
         <span class="ml-1">预订通知</span>
       </a>
 
-      <a href="{{ route('seller_order',$user->id) }}"  style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(7) }}">
+      <a href="{{ route('seller_order',$user->id) }}?type=pending"  style=" z-index:1;" class="list-group-item list-group-item-action {{ user_center_active(7) }}">
         <img src="@if(user_center_active(7)=='active') /images/iconfont/order.png @else /images/iconfont/order_black.png @endif" alt="" style="width: 18px; height:18px; position:relative; top:-3px;left:0px">
         <span>出售订单</span>
       </a>

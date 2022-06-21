@@ -5,7 +5,7 @@
 
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <div class="card">
 
         <div class="card-header">登录</div>
@@ -62,11 +62,11 @@
                 <button type="submit" class="btn btn-primary">
                   登录
                 </button>
-                @if (Route::has('password.request'))
-                <a class="btn btn-link" href="{{ route('password.request') }}">
+                {{-- @if (Route::has('password.request')) @endif --}}
+                <a class="btn btn-link" href="{{ route('password_send_email') }}">
                   忘记密码？
                 </a>
-                @endif
+                
               </div>
             </div>
           </form>

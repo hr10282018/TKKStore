@@ -36,7 +36,8 @@
               </button>
             </h2>
           </div>
-          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="">
+
+          <div id="collapseOne" class="collapse content" aria-labelledby="headingOne" data-parent="">
             <div class="card-body">
               @if (Auth::user()->can('update_user_info', $user))
                 <span style="color:#6e7379;">{{ isset($user->email) ? $user->email : '没有数据 ^_^'  }}</span>
@@ -62,7 +63,7 @@
               </button>
             </h2>
           </div>
-          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="">
+          <div id="collapseTwo" class="collapse content" aria-labelledby="headingTwo" data-parent="">
             <div class="card-body">
               @if (Auth::user()->can('update_user_info', $user))
                 <span style="color:#6e7379;">{{ isset($user->phone ) ? $user->phone  : '没有数据 ^_^'  }}</span>
@@ -88,7 +89,7 @@
               </button>
             </h2>
           </div>
-          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="">
+          <div id="collapseThree" class="collapse content" aria-labelledby="headingThree" data-parent="">
             <div class="card-body">
               
               @if (Auth::user()->can('update_user_info', $user))
@@ -114,7 +115,7 @@
               </button>
             </h2>
           </div>
-          <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="">
+          <div id="collapseFour" class="collapse content" aria-labelledby="headingFour" data-parent="">
             <div class="card-body">
               
               @if (Auth::user()->can('update_user_info', $user))
@@ -140,7 +141,7 @@
               </button>
             </h2>
           </div>
-          <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="">
+          <div id="collapseFive" class="collapse content" aria-labelledby="headingFive" data-parent="">
             <div class="card-body">
               
               @if (Auth::user()->can('update_user_info', $user))
@@ -166,7 +167,7 @@
               </button>
             </h2>
           </div>
-          <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="">
+          <div id="collapseSix" class="collapse content" aria-labelledby="headingSix" data-parent="">
             <div class="card-body">
               
               @if (Auth::user()->can('update_user_info', $user))
@@ -222,7 +223,13 @@
 
     // 点击-箭头样式
     $('.accordion button').click(function(){
+
+      if($('.content').hasClass('collapsing')){
+        return false;
+      }
+
       if(!$(this).hasClass('collapsed')){       // 隐藏
+
         $(this).children('.arrow_box').css({
           "transform":"rotate(0deg)",
           "-webkit-transform": "rotate(0deg)",

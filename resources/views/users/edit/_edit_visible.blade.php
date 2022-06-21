@@ -409,7 +409,7 @@
       }, function(error) {
         if (error.response.status === 429) { // 429 频率限制
           swal({
-            title: '您提交频率过高，休息1分钟再试试吧！',
+            title: '提交频率过高，休息1分钟再试试吧！',
             icon: 'error'
           }).then(function() {
 

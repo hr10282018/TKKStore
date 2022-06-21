@@ -52,6 +52,7 @@
 
       <input type="text"  value="{{ $no_reply_count/5 }}" name="" id="no_reply_count" hidden>   <!-- 待回复页数 -->
       <input type="text" value="{{ $yes_reply_count/5 }}" name="" id="yes_reply_count" hidden>   <!-- 已回复页数-->
+      <input type="text" value="{{ $user->id }}" id="user_id" hidden>
 
       <div class="tab-content" id="myTabContent">
 
@@ -71,7 +72,7 @@
                 <div class="row no-gutters">
                   <div class="">
                     <a href="{{ route('goods_detail',$value->goods->id ) }}" target="_blank">
-                      <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
+                      <img src="{{ $value->goods->image[0] }}" style="width: 100px; height:100px;" alt="...">
                     </a>
                   </div>
                   <div class="ml-2" >
@@ -127,19 +128,26 @@
               <div class="row no-gutters">
                 <div class="">
                   <a href="{{ route('goods_detail',$value->goods->id ) }}" target="_blank">
-                    <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
+                    <img src="{{ $value->goods->image[0] }}" style="width: 100px; height:100px;" alt="...">
                   </a>
                 </div>
                 <div class="ml-2" >
                   <div class="mt-1">
                     
                     @if($value->user_state=='0' || $value->user_state=='1')
-                      <a class="mr-1" href="{{ route('user_show' , $value->user->id) }}" target="_blank">
+                      <!-- <a class="mr-1" href="{{ route('user_show' , $value->user->id) }}" target="_blank">
                         <img src="{{ $value->user->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
-                      </a>
+                      </a> -->
                       <!-- <a href="{{ route('user_show' , $value->user->id) }}" target="_blank">{{ $value->user->name }}</a> -->
-                      你
-                      <span style="color:{{ ($value->user_state=='1') ? 'green':'red'  }};">{{ ($value->user_state=='1') ? '【同意】':'【拒绝】' }}</span> 预订
+                      
+                      <span style="color:{{ ($value->user_state=='1') ? 'green':'red'  }};">{{ ($value->user_state=='1') ? '【同意】':'【拒绝】' }}</span> 
+
+                      <a class="mr-1" href="{{ route('user_show' , $value->buyer->id) }}" target="_blank">
+                        <img src="{{ $value->buyer->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                      </a>
+                      <a href="{{ route('user_show' , $value->buyer->id) }}" target="_blank">{{ $value->buyer->name }}</a>
+
+                      预订
                       @if($value->user_state == '1')
                         ，前往 <a href="#">订单</a> ！
                       @else
@@ -211,6 +219,8 @@
 
 @section('scriptsAfterJs')
 <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<link rel="stylesheet" href="/vendor/laravel-admin/sweetalert2/dist/sweetalert2.css">
+<script src="/vendor/laravel-admin/sweetalert2/dist/sweetalert2.min.js" charset="UTF-8"></script>
 <script>
   $(document).ready(function() {
     var old_tail_url=[]   // 记录之前状态 -页数
@@ -223,14 +233,17 @@
     var now_url_page=window.location.href.split('page=')[1]    // 获取当前页
     if(now_url_page == undefined) now_url_page=1
 
+    //console.log(document.referrer)
+
     if(document.referrer.indexOf('booking_notice') == -1 && document.referrer.length != 0){   // 当跳转不存在页数，referrer为空,此时也为刷新
-      // console.log('跳转')
+      console.log('跳转')
       old_tail_url=['reply=no','reply=yes']
-    
+      
       $.removeCookie('notice_no_reply_old_url')
       $.removeCookie('notice_yes_reply_old_url')
     }else{
-      //console.log('刷新')
+      console.log('刷新')
+      // 
       
       if(!$.cookie('notice_no_reply_old_url')){
         no_reply='reply=no'
@@ -306,49 +319,70 @@
 
 
     // 同意预定
+    var user_id=$('#user_id').val()
+    console.log(user_id)
     $('.btn_agree').click(function(){
       var id = $(this).data('id');      // 预定id
       
-      swal({
-        title: '你确定同意吗?',
-        text: " ",
-        icon: 'info',
-        buttons: ['取消', '确定'],
-        
+      Swal.fire({
+        title: '你确认同意吗?',
+        type:'info',
+        html:'确认<span style="color:#38c172;">【同意】</span>后将生成一个订单！<br>可在【个人中心】&#10132【出售订单】&#10132【待确认】中查看',
+        showCancelButton: true,
+        cancelButtonText: '取消',
+        confirmButtonText: '确认',
+        showLoaderOnConfirm: true,
+        allowEnterKey:false,
+        allowOutsideClick:false
+
       }).then((res) => {
-        if (!res) {
-          return;
-        }
+        if(res.dismiss == 'cancel') return
+
         axios.post('/agree_booking/'+ id).then(function(res){
-          // console.log(res.data)
-          swal({
+          console.log(res.data)
+          Swal.fire({
             title: '同意成功！',
-            text: "你有新的订单需要确认发送！",
-            icon: 'success',
-            buttons: ['暂不发送', '立即发送'],
+            type:'success',
+            text:'你有新的订单需要确认发送！',
+            html:'<span style="color:#e3342f;">&lowast;操作事项</span>：你需要向买家发送订单进行核对，双方一致同意订单信息后，完成交易！'+
+            '<br><br> <span style="font-size:13px;"><span style="color:#e3342f;">&lowast;注：</span>请及时完成订单确认，否则将会影响你的其他操作！</span>',
+            showCancelButton: true,
+            cancelButtonText: '暂不发送',
+            confirmButtonText: '前去发送',
+            showLoaderOnConfirm: true,
+            allowEnterKey:false,
+            allowOutsideClick:false
           }).then((res)=>{
-            if(res){
-              // 跳转订单
-        
-            }else{
+            if(res.dismiss == 'cancel') {
               location.reload()
+            }else{
+              // 跳转订单
+              //console.log(window.location.href)
+              window.location.href='http://onestore.tkk/users/'+user_id+'/seller_order?type=pending'
+
             }
           })
 
-          $('.swal-text').addClass('warning_text')
-          $('.swal-text').css('text-align','left')
-           // 或者 一定时间内
-          $('.swal-text').html(
-          '<span style="color:#e3342f;">&lowast;操作事项</span>：你需要向买家发送订单进行核对，双方一致同意订单信息后，则完成交易！'+
-          '<br><br> <span style="font-size:12px;"><span style="color:#e3342f;">&lowast;注：</span>请及时完成订单确认，将会影响你的其他操作！</span>')   
-
+          $('.swal2-content').addClass('warning_text')
+          $('.swal2-content').css('text-align','left')
         },function(error){
-          console.log(1)
+
+          if( error.response && error.response.status == 401 ){
+            Swal.fire({
+              title: '同意预定失败！',
+              text: error.response.data.message,
+              type: 'error',
+            }).then((res)=>{
+              window.location.reload()
+            })
+          }
         })
+
       })
-      $('.swal-text').addClass('warning_text')
-      $('.swal-text').html('确认<span style="color:#38c172;">【同意】</span>后将生成一个订单！<br>可在【个人中心】&#10132【出售订单】&#10132【待确认】 中查看!')
-      
+      $('.swal2-content').addClass('warning_text').css({
+        'padding':'10px',
+      })
+
     })
 
     // 拒绝预定
@@ -356,32 +390,28 @@
 
       var id = $(this).data('id');      // 预定id
       //console.log(id)
+      Swal.fire({
+        title: '你确认拒绝吗?',
+        input: 'text',
       
-
-      swal({
-        title: '你确定拒绝吗?',
-        text: " ",
-       
-        // 填写拒绝理由
-        content: {
-          element: "input",
-          attributes: {
-            placeholder: "拒绝原因（0-32字）",
-            type: "text",
-          },
+        type:'warning',
+        inputAttributes: {
+          autocapitalize: 'off',
+          maxlength: 32,
         },
-        icon: 'info',
-        buttons: ['取消', '确定'],
-        
+        showCancelButton: true,
+        cancelButtonText: '取消',
+        confirmButtonText: '确认',
+        showLoaderOnConfirm: true,
+        allowEnterKey:false,
+        allowOutsideClick:false
       }).then((res) => {
         
-        if(!res) return
-        
-        
-        refuse_reason=$('.swal-content__input').val()
-        if(refuse_reason.length >32){     // 超过长度，啥也不做
-
-        }else{
+        if(res.dismiss == 'cancel') return
+        refuse_reason=$.trim($('.refuse_input').val())
+        if(refuse_reason.length >32){     // 超过长度
+        }
+        else{
            //console.log(refuse_reason)
           axios.post('/refuse_booking/'+ id,{refuse_reason}).then(function(res){
             console.log(res.data)
@@ -393,28 +423,43 @@
             }).then((res)=>{
               location.reload()
             })
+          },function(error){
+            if( error.response && error.response.status === 401 ){
+              Swal.fire({
+                title: '拒绝预定失败！',
+                text: error.response.data.message,
+                type: 'error',
+              }).then((res)=>{
+                window.location.reload()
+              })
+            }
           })
-        
-      }
+        }
       
       })
-      $('.swal-content__input').attr('maxlength',32)
-      $('.swal-content__input').after('<div class=""></div>')
-      $('.swal-content__input').blur(function(){      // 判断长度
-        refuse_reason=$('.swal-content__input').val()
+      $('.swal2-input').addClass('refuse_input').addClass('form-control').removeClass('swal2-input')
+      $('.refuse_input').focus();
+      $('.refuse_input').attr('maxlength',32).attr('placeholder','填写拒绝原因（0-32字）').css({
+        'height':'50px',
+      })
+      
+      // 验证 字段长度
+      $('.refuse_input').after('<div class=""></div>')
+      $('.refuse_input').blur(function(){      // 判断长度
+        refuse_reason=$.trim($('.refuse_input').val())
         if(refuse_reason.length >32 ){
-          if(!$('.swal-content__input').hasClass('is-invalid')){
-            $('.swal-content__input').addClass('is-invalid').addClass('form-control')
-            $('.swal-content__input').next().addClass('invalid-feedback')
-            $('.swal-content__input').next().html('长度介于0-32个字符')
-            $('.swal-button--confirm').attr('disabled',true);
+          if(!$('.refuse_input').hasClass('is-invalid')){
+            $('.refuse_input').addClass('is-invalid').addClass('form-control')
+            $('.refuse_input').next().addClass('invalid-feedback')
+            $('.refuse_input').next().html('长度介于0-32个字符')
+            $('.swal2-confirm').attr('disabled',true);
           }
-        }else if(refuse_reason.length <=32 && refuse_reason.length>=0){
-          console.log('ys')
-          $('.swal-content__input').removeClass('is-invalid')
-          $('.swal-content__input').next().removeClass('invalid-feedback')
-          $('.swal-content__input').next().html('')
-          $('.swal-button--confirm').attr('disabled',false);
+        }else if(refuse_reason.length <=32){
+          // console.log('ys')
+          $('.refuse_input').removeClass('is-invalid')
+          $('.refuse_input').next().removeClass('invalid-feedback')
+          $('.refuse_input').next().html('')
+          $('.swal2-confirm').attr('disabled',false);
         }
       })
       

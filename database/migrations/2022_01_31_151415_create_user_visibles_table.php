@@ -10,9 +10,10 @@ class CreateUserVisiblesTable extends Migration
   public function up()
   {
     Schema::create('user_visibles', function (Blueprint $table) {
-      $table->id();
+
+      $table->increments('id');
       // 个人信息
-      $table->unsignedBigInteger('user_id');    // 用户id
+      $table->unsignedInteger('user_id')->index();    // 用户id
       $table->boolean('v_email')->default(true);     // 邮箱-默认可见
       $table->boolean('v_phone')->default(true);
       $table->boolean('v_university')->default(true);

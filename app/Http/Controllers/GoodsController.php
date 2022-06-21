@@ -3,32 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Handlers\ImageUploadHandler;
-use App\Http\Requests\GoodInfoRequest;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Models\Good;
+use App\Models\Order;
 use App\Models\User;
-use App\Policies\GoodPolicy;
 use Auth;
 use Carbon\Carbon;
-use DB;
 use App\Models\GoodTag;
-use League\Flysystem\File;
-use Cache;
-use Doctrine\Common\Cache\Cache as CacheCache;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Redis;
-use Arr;
+
 
 class GoodsController extends Controller
 {
 
   public function __construct()
   {
-    $this->middleware('auth', [   // 身份验证过滤动作
-      //
+    $this->middleware('auth', [   // 身份验证过滤
+      
       'except' => ['goods_search']
     ]);
   }
@@ -39,39 +32,61 @@ class GoodsController extends Controller
     $good_tag = GoodTag::get();
     //dd($good_tag);
 
-    return view('goods.create_edit_goods', compact('good_tag'));
+    // 预定未处理
+    $booking=Booking::where('user_id',Auth::user()->id)->where('user_state',Booking::seller_processing_booking)->exists();
+
+    // 订单未处理
+    $order=Order::where('user_id',Auth::user()->id)->where('seller_state',Order::seller_pending_order)->orWhere(function($query){
+      $query->where('buyer_id',Auth::user()->id)->where('buyer_state',Order::buyer_pending_order)->where('seller_state',Order::seller_confirm_order);
+    })->exists();
+    
+
+    if($booking || $order){
+      session()->flash('danger', '你还有未处理的预定通知或出售订单，无法发布商品！');
+      return redirect()->back();
+    }
+
+    return view('goods.create_edit_goods', compact('good_tag','booking','order'));
   }
+
   // 处理发布商品数据
   public function create_goods_check(Request $request, Good $good, ImageUploadHandler $uploader)
   {
-    //dd($request->session());
-    //dd($request->cookie());
-    // dd($request->goods_old_img);
-    // dd($request->goods_img);
-    // 最小宽和高316和418-最大宽和高480和500
-
-    //dd($request->all());
+  
+    $credentials = $this->validate($request, [    
+      'title' => ['required',  'max:255'],
+      'description' => ['required',  'max:512'],
+      ], [
+     
+    ]);
 
     $goods = $request->all();
+
     //dd($goods);
+
     if ($goods['goods_old_img'] == null  && !isset($goods['goods_img'])) {
-      //dd('你的图片未上传');
+      // dd('你的图片未上传');
       session()->flash('null_data', '你还有未填的选项，无法提交！');
       return redirect()->back();
     }
 
     if (in_array(null, $goods) && $goods['goods_old_img'] != null) {
-      dd('你还有未填的选项');
+      //dd('你还有未填的选项');
       session()->flash('null_data', '你还有未填的选项，无法提交！');
       return redirect()->back();
     }
 
 
     $goods['image'] = '';
+
     if ($goods['goods_old_img']) {    // 编辑
-      //dd('编辑');;
-      
+      //dd('编辑');
+      //dd($goods['goods_old_img']);
+
       $goods['goods_old_img'] = explode(',', $goods['goods_old_img']);
+
+      //dd($goods['goods_old_img']);
+
       for ($i = 0; $i < sizeof($goods['goods_old_img']); $i++) {
         if ($goods['goods_old_img'][$i] == 'update') {
           $true = $uploader->save($goods['goods_img'][$i], 'goods', Auth::user()->id);      // 
@@ -98,14 +113,19 @@ class GoodsController extends Controller
       }
     }
 
+    
+    $image_toArray=explode(',',$goods['image']);
+    array_pop($image_toArray);
+    $goods['image']=$image_toArray;
+
     //dd($goods['image']);
+
     $goods['user_id'] = Auth::user()->id;   // 用户id
     $goods['state'] = $request->goods_state;      // 商品状态：0-未发布 1-发布且正在售卖
     $goods['category_id'] = Category::where('name', $goods['category_id'])->first()->id;  // 分类id
 
     $goods['tags'] = $request->tag_data;     // 先测试标签1
 
-    
     //dd($goods);
     if ($goods['goods_old_img']) {
       $good=Good::where('id',$goods['id']);
@@ -127,11 +147,13 @@ class GoodsController extends Controller
 
     // 判断商品发布状态
 
-    if ($goods['goods_state'] == 1) {
-      return redirect()->route('home')->with('success', '商品发布成功！');
-    } elseif ($goods['goods_state'] == 0) {
+    if ($goods['goods_state'] == Good::goods_state_in_check) {     // 审核
+      
+      return redirect()->route('sale_goods',[Auth::user()->id,Good::goods_state_in_check])->with('success', '商品发布成功，等待审核！');
+    } elseif ($goods['goods_state'] == Good::goods_state_in_release) {
       //dd('未发布');
-      return redirect()->route('sale_goods', Auth::user()->id);
+      
+      return redirect()->route('sale_goods', Auth::user()->id)->with('success', '商品保存成功！');
     }
   }
 
@@ -139,8 +161,29 @@ class GoodsController extends Controller
   public function edit_goods($goods_id, GoodTag $good_tag)
   {
 
+    //dd($goods_id);
     $good_tag = GoodTag::get();       // 所有 tag
     $goods_info = Good::where('id', $goods_id)->first();
+
+    $this->authorize('eidt_goods', $goods_info);  // 授权 -- 当商品-未发布、审核 时，非作者其不展示
+
+    
+    // 预定未处理
+    $booking=Booking::where('user_id',Auth::user()->id)->where('user_state',Booking::seller_processing_booking)->exists();
+
+    // 订单未处理
+    $order=Order::where('user_id',Auth::user()->id)->where('seller_state',Order::seller_pending_order)->orWhere(function($query){
+      $query->where('buyer_id',Auth::user()->id)->where('buyer_state',Order::buyer_pending_order)->where('seller_state',Order::seller_confirm_order);
+    })->exists();
+
+    if($booking || $order){
+      session()->flash('danger', '你还有未处理的预定通知或出售订单，无法编辑商品！');
+      return redirect()->back();
+    }
+
+   
+
+
     // 取标签数据
     $tags = [];
     for ($i = 0; $i < strlen($goods_info->tags); $i++) {
@@ -152,18 +195,15 @@ class GoodsController extends Controller
     }
     //dd($tags);
     $tags_data = GoodTag::whereIn('id', $tags)->get();      // 该商品的tag
-    //dd($tags_data);
+
+
+    //dd($goods_info);
+    $goods_info->image=implode(',',$goods_info->image);
+    
+    //dd($goods_info->image);
 
     return view('goods.create_edit_goods', compact('goods_info', 'tags_data', 'good_tag'));
   }
-
-  // 测试-ajax验证商品数据
-  // public function create_goods_check(GoodInfoRequest $request){
-
-
-  //   return [];
-  // }
-
 
 
 
@@ -189,7 +229,7 @@ class GoodsController extends Controller
       });
     }
 
-    if ($state = $request->input('state', '2')) {   // 若没有state，默人 2-正出售
+    if ($state = $request->input('state', Good::goods_state_in_selling)) {   // 若没有state，默认商品状态-正出售
       //dd($state);
       $builder->where('state', $state);
     }
@@ -197,7 +237,10 @@ class GoodsController extends Controller
     if ($key = $request->input('key', '') ) {    // 最新发布
       if($key == 'new'){
         //dd('new');
-        $builder->where('created_at', '>=', Carbon::now()->subWeeks('2')); // 最近2周，后期可以改成随用户选择
+        //dd($request->time);
+        if($time = $request->input('time', '3')){
+          $builder->where('created_at', '>=', Carbon::now()->subDays($time)); // 用户选择
+        }
       }
     }
     if ($order = $request->input('order', '1')) {
@@ -217,6 +260,7 @@ class GoodsController extends Controller
     }
 
     $goods = $builder->paginate(16);
+
     if (isset($categories)) {     // 有分类必须再返回分类数据
       return view('pages.root', compact('goods', 'categories', 'search', 'order', 'state'));
     }
@@ -229,6 +273,7 @@ class GoodsController extends Controller
     //dd('hot');
     $hot_goods = $goods->getHotGoods();
     //dd($hot_goods);
+
     return view('pages.root', compact('hot_goods'));
   }
 
@@ -237,26 +282,26 @@ class GoodsController extends Controller
   {
 
     // 非验证用户 跳转
-    if (!Auth::user()->activated) {
-      return redirect()->route('show_verify');
-    }
+    // if (!Auth::user()->activated) {
+    //   return redirect()->route('show_verify');
+    // }
 
-    $goods_info = Good::where('id', $goods_id)->with('bookings')->first();    // 关联
+    $goods_info = Good::where('id', $goods_id)->with('bookings','orders')->first();    // 关联
 
-    $booking_data=$goods_info->bookings->whereIn('user_state',[1,2])->first();  // 获取 预定数据
+    $this->authorize('seller_goods_detail', $goods_info);  // 授权 -- 当商品-未发布、审核 时，非作者其不展示
 
+    //dd($goods_info->image);
 
-    if (!$goods_info) {      // 定义出错页面
+    // 获取 预定数据（预定中）
+    $booking_data=$goods_info->bookings->whereIn('user_state',[Booking::seller_agree_booking,Booking::seller_processing_booking])->first(); 
 
-      //throw new \Exception('没有此商品');
-    }
+    $orders_data=$goods_info->orders->first();
+    
 
-    // 当商品状态-未发布、审核 时，除了作者，其他人不展示
-    //dd($goods_info['user_id']);
-    if ($goods_info['user_id'] != Auth::user()->id && $goods_info['state'] == '0' && $goods_info['state'] == '1') {
-      return redirect()->back();
-    }
+    // if (!$goods_info) {      // 定义出错页面
 
+    //   //throw new \Exception('没有此商品');
+    // }
 
     // 缓存用户浏览过的商品id--浏览量计算
     //Cache::put('name', 'sakura', 180);
@@ -272,7 +317,7 @@ class GoodsController extends Controller
     if ($res) {
       //dd('第一次浏览');
       if ($view_count == 1) {   // 数量为1
-        $redis->expire('user_' . Auth::user()->id, 86400);      // 设置过期时间- 1天
+        $redis->expire('user_' . Auth::user()->id, Good::user_view_goods);      // 设置过期时间
       }
 
       // 浏览量+1
@@ -285,8 +330,17 @@ class GoodsController extends Controller
     }
 
 
-    $length = substr_count($goods_info->image, ',');
-    $images = explode(',', $goods_info->image);
+    //dd($goods_info->image);
+    //$length = substr_count($goods_info->image, ',');
+
+    $length = count($goods_info->image);
+    // dd($length);
+    //dd($goods_info->ImageToArray()[0]);
+
+
+    //$images = explode(',', $goods_info->image);
+    $images=$goods_info->image;
+
     $user = User::where('id', $goods_info->user_id)->first();
 
     // 取标签数据
@@ -304,10 +358,12 @@ class GoodsController extends Controller
 
     $comments = Comment::where('goods_id', $goods_id)->orderBy('created_at', 'desc')->paginate(5);
     //$c_count=$comments->count();  // 商品评论
+
     //dd($comments);
 
     //$booking=Booking::where('user_state','2')->where('goods_id',$goods_id)->where('buyer_id',$goods_id)->first();
 
-    return view('goods.detail', compact('comments', 'tags_data','booking_data'), compact('images', 'length', 'goods_info', 'user'));
+    return view('goods.detail', compact('comments', 'tags_data','booking_data','orders_data'), compact('images', 'length', 'goods_info', 'user'));
   }
+
 }

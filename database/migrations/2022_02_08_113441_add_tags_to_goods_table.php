@@ -10,7 +10,9 @@ class AddTagsToGoodsTable extends Migration
   public function up()
   {
     Schema::table('goods', function (Blueprint $table) {
-      $table->string('tags')->nullable();   // 所属标签字段
+
+      $table->string('tags',8)->nullable();   // 所属标签字段
+      
     });
   }
 

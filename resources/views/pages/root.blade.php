@@ -16,7 +16,29 @@
 
     <li class="list-group-item ">
       <div class="row ml-2 new_hot">
-        <a style="border-radius: 0.25rem;" class="nav-link  mr-2 new {{ active_class( if_query('key','new')) }}" href="{{ route('goods_search') }}?key=new&category_id={{ isset($categories) ? $categories->id : '' }}">最新发布</a>
+
+        <a id="new_goods" style="border-radius: 0.25rem;"  class="nav-link new {{ active_class( if_query('key','new')) }}" href="{{ route('goods_search') }}?key=new&time=3&category_id={{ isset($categories) ? $categories->id : '' }}">
+          最新发布
+        </a>
+
+        <div class="dropdown-menu" id="new_goods_time" style="top:80%">
+          <div class="form-check form-check-inline ">
+            <input id="three_day" autocomplete="off" class="form-check-input" time="3" type="radio" name="inlineRadioOptions" value="{{ route('goods_search') }}?key=new&time=3&category_id={{ isset($categories) ? $categories->id : '' }}" {{ new_goods_times(3) }}>
+            <label id="three_label" class="form-check-label" for="three_day">3天</label>
+            
+          </div>
+          <div class="form-check form-check-inline">
+            <input autocomplete="off" class="form-check-input" type="radio" time="7" name="inlineRadioOptions" id="seven_day" value="{{ route('goods_search') }}?key=new&time=7&category_id={{ isset($categories) ? $categories->id : '' }}" {{ new_goods_times(7) }}>
+            <label class="form-check-label" for="seven_day">7天</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input autocomplete="off" class="form-check-input" type="radio" time="15" name="inlineRadioOptions" id="fifteen_day" value="{{ route('goods_search') }}?key=new&time=15&category_id={{ isset($categories) ? $categories->id : '' }}" {{ new_goods_times(15) }}>
+            <label class="form-check-label" for="fifteen_day">15天</label>
+          </div>
+        </div>
+      
+        
+
         <a style="border-radius: 0.25rem;" class="nav-link hot {{ active_class(if_route('goods_hot')) }}" href="{{ route('goods_hot') }}">
           热门发布 
         </a>
@@ -27,6 +49,8 @@
 
           <input type="" name="category_id" value="{{ isset($categories) ? $categories->id : '' }}" hidden>
           <input type="" class="btn_new_hot" name="key" value="" hidden>
+          <input type="" class="btn_new_time" name="time" value="" hidden>
+
           <div class="input-group ">
             <div class="input-group-prepend">
               <button class="btn btn-outline-success btn_search" type="button" id="button-addon1">Search</button>
@@ -60,7 +84,7 @@
         <div class="card mr-4  mb-3 goods_list" id="goods_list" style="width: 270px; overflow: hidden;">
 
           <a href="{{ route('goods_detail',$value->id) }}?from={{ isset($categories) ? $categories->id : 'all' }} ">
-            <img style="width: 268px; " src="{{ Str::before($value->image,',') }}" class="card-img-top  goods_img" alt="...">
+            <img style="width: 268px; " src="{{ $value->image[0] }}" class="card-img-top  goods_img" alt="...">
           </a>
 
           <div class="card-body " id="" style="position:relative;padding-bottom:0px; margin-bottom:30px">
@@ -112,7 +136,7 @@
 
       <div class="card mr-4  mb-3 goods_list" id="goods_list" style="width: 270px; overflow: hidden;">
         <a href="{{ route('goods_detail',$value->id) }}?from={{ isset($categories) ? $categories->id : 'all' }} ">
-          <img style="width: 268px; " src="{{ Str::before($value->image,',') }}" class="card-img-top  goods_img" alt="...">
+          <img style="width: 268px; " src="{{ $value->image[0] }}" class="card-img-top  goods_img" alt="...">
         </a>
 
         <div class="card-body " id="" style="position:relative;padding-bottom:0px; margin-bottom:30px">
@@ -198,7 +222,7 @@
     var max_height = [0] // 记录每行最大高度，4个
     var max_last = 0 // 记录最后一行最大卡片高度
     var cards = [] // 记录所有卡片高度，12个
-    var tops = [] // 记录后8个卡片top的值
+    //var tops = [] // 记录后8个卡片top的值
     var card_length = $('.goods_list').length
     //console.log(card_length)
     $.each($('.goods_list'), function(index, value) {
@@ -227,7 +251,9 @@
         }
         if (card_length <= 8 && card_length > 4) { // 一页只有两行商品
           for (var i = 4; i < card_length; i++) {
+            
             $('.goods_list').eq(i).css({
+            
               "top": ($('.goods_list').eq(i - 4).position().top + cards[i - 4] + 30) - $('.goods_list').eq(i).position().top
             })
           }
@@ -255,6 +281,7 @@
         if (card_length <= 16 && card_length > 12) { // 一页有四行商品
           //console.log('四行')
           //console.log(cards)
+          console.log($('.goods_list').eq(4).position().top)
           for (var i = 4; i < card_length; i++) {
             $('.goods_list').eq(i).css({
               "top": ($('.goods_list').eq(i - 4).position().top + cards[i - 4] + 30) - $('.goods_list').eq(i).position().top
@@ -270,6 +297,61 @@
       }
 
     })
+
+
+    // 最新发布 - 时间样式
+    var this_btn
+    $('#new_goods').click(function(e){
+      if($(this).hasClass('active')){
+        if($('#new_goods_time').is(':hidden')){
+          $('#new_goods_time').show()
+          this_btn = $(this)
+        }else{
+          $('#new_goods_time').hide()
+          this_btn=null
+        }
+        return false;
+      }
+    })
+    $('#new_goods_time').click(function(e){
+      e.stopPropagation();
+    })
+    $(document).click(function() { //document-关闭时间菜单
+      if (this_btn) {
+        this_btn.trigger('click')
+      }
+      this_btn = null
+    })
+    // 选择时间
+    $three=$('#three_day').val()
+    $seven=$('#seven_day').val()
+    $fifteen=$('#fifteen_day').val()
+    
+    //btn_new_time
+    $('#new_goods_time input:radio:checked').each(function(){
+      $('.btn_new_time').val($(this).attr('time'))
+     
+    })
+
+    $('#three_day').click(function(){
+      window.location.href= $three
+    })
+    $('#three_label').click(function(){
+      window.location.href=$three
+    })
+    $('#seven_day').click(function(){
+      window.location.href=$seven
+    })
+    $('#seven_label').click(function(){
+      window.location.href=$seven
+    })
+    $('#fifteen_day').click(function(){
+      window.location.href=$fifteen
+    })
+    $('#fifteen_label').click(function(){
+      window.location.href=$fifteen
+    })
+
 
   })
 </script>

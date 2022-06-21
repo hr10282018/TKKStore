@@ -20,8 +20,8 @@ class GoodInfoRequest extends Request
 
       'price' =>  ['required'],
 
-      'old_price' =>  ['required'],
-
+      'old_price' =>  ['required'], 
+      // digits_between:min
       //'goods_img' =>  ['required'],
 
     ];

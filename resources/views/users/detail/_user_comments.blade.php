@@ -10,9 +10,22 @@
         <h1 class="ml-2 mt-2" style="line-height: 24px;color:#636b6f; font-size:20px;font-weight:bold; ">
           {{$user->name}}
           <span style="letter-spacing:2px"> 评论</span>
-          （{{ $count }}）
+          @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_comment)
+            （*）
+          
+            @else
+            （{{ $count }}）
+          @endif
         </h1>
+
+        
       </div>
+
+      <form class="form-inline mt-2 ml-2" method="get" action="{{ route('search_comment',$user->id)}}">
+        <input class="form-control mr-sm-2" name="content" type="search" placeholder="输入评论内容..." aria-label="Search" style="width: 300px;">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+      </form>
+
     </div>
     <hr style="width: 650px;margin:0 auto;">
 
@@ -64,3 +77,5 @@
   </div>
 </div>
 @stop
+
+

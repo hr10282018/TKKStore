@@ -28,6 +28,8 @@ class Kernel extends ConsoleKernel
 
     // 每小时执行一次 热门商品 数据生成命令
     $schedule->command('onestore:calculate-hot-goods')->hourly();
+    
+    
   }
 
   /**

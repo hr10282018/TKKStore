@@ -66,40 +66,40 @@
               </div>
             @else
 
-            @if( count($no_reply_booking) > 0 )
-            @foreach ($no_reply_booking as $booking => $value)
-            <li class="list-group-item">
-              <div class="row no-gutters">
+              @if( count($no_reply_booking) > 0 )
+              @foreach ($no_reply_booking as $booking => $value)
+              <li class="list-group-item">
+                <div class="row no-gutters">
 
-                <div class="">
-                  <a href="{{ route('goods_detail',$value->goods->id ) }}" target="_blank">
-                    <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
-                  </a>
-                </div>
-                <div class="ml-2" >
-                  <div class="mt-4">
-                    <a href="{{ route('user_show' , $value->user->id) }}">
-                      <img src="{{ $value->user->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                  <div class="">
+                    <a href="{{ route('goods_detail',$value->goods->id ) }}" target="_blank">
+                      <img src="{{ $value->goods->image[0] }}" style="width: 100px; height:100px;" alt="...">
                     </a>
-                     <a href="{{ route('user_show' , $value->user->id) }}">{{ $value->user->name }}</a>  <span style="color:#636b6f">【未回复】</span> 你的预订！
                   </div>
-                  <div class="card-text mt-1 ml-3"><small title="{{ $value->created_at }}" class="text-muted">预订于 {{ $value->created_at->diffForHumans() }}</small></div>
+                  <div class="ml-2" >
+                    <div class="mt-4">
+                      <a href="{{ route('user_show' , $value->user->id) }}">
+                        <img src="{{ $value->user->avatar }}" alt="" class="img-thumbnail img-responsive img-circle" width="45px" height="45px" style="border-radius: 50%;">
+                      </a>
+                      <a href="{{ route('user_show' , $value->user->id) }}">{{ $value->user->name }}</a>  <span style="color:#636b6f">【未回复】</span> 你的预订！
+                    </div>
+                    <div class="card-text mt-1 ml-3"><small title="{{ $value->created_at }}" class="text-muted">预订于 {{ $value->created_at->diffForHumans() }}</small></div>
+                  </div>
+                </div>
+              </li>
+              @endforeach
+              <div class="card-body">
+              
+                {!! $no_reply_booking->appends(Request::except('page'))->render() !!}
+              </div>
+
+              @else
+              <div class="card-body">
+                <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
+                  暂无数据 ~_~
                 </div>
               </div>
-            </li>
-            @endforeach
-            <div class="card-body">
-             
-              {!! $no_reply_booking->appends(Request::except('page'))->render() !!}
-            </div>
-
-            @else
-            <div class="card-body">
-              <div class="" style="color:#ccc; text-align: center;line-height: 60px; margin: 10px;">
-                暂无数据 ~_~
-              </div>
-            </div>
-            @endif
+              @endif
             @endif
           </ul>
         </div>
@@ -120,7 +120,7 @@
               <div class="row no-gutters">
                 <div class="">
                   <a href="{{ route('goods_detail',$value->goods->id ) }}">
-                    <img src="{{ Str::before($value->goods->image,',') }}" style="width: 100px; height:100px;" alt="...">
+                    <img src="{{ $value->goods->image[0] }}" style="width: 100px; height:100px;" alt="...">
                   </a>
                 </div>
                 <div class="ml-2" >
@@ -211,15 +211,15 @@
     //console.log('已回复页数：'+lastPage_yesReply)
     //console.log('当前页数：'+now_url_page)
 
-    //console.log(document.referrer.length);
+    console.log(document.referrer);
     if(document.referrer.indexOf('user_booking') == -1 && document.referrer.length != 0){       // 当跳转不存在页数，referrer为空,此时也为刷新
       old_tail_url=['reply=no','reply=yes']
-      //console.log('跳转')
+      console.log('跳转')
       $.removeCookie('no_reply_old_url')
       $.removeCookie('yes_reply_old_url')
 
     }else if(document.referrer.indexOf('user_booking') ){       
-      //console.log('刷新')
+      console.log('刷新')
       if(!$.cookie('no_reply_old_url')){
         no_reply='reply=no'
        

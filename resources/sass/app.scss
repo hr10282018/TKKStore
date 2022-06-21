@@ -304,3 +304,25 @@ input:checked+.slider:before {
   content: "浏览...";
  
 }
+
+
+// 消息通知
+
+.notification-badge {
+  .badge {
+    font-size: 12px;
+    //margin-top: 14px;
+  }
+  .badge-secondary {
+    background-color: #EBE8E8;
+  }
+
+  .badge-hint {
+    background-color: #d15b47 !important;
+  }
+  // &:hover {
+  //   background-color:rgba(0, 0, 0, 0.1);
+  // }
+  border-radius: 8px;
+  cursor: pointer;
+}

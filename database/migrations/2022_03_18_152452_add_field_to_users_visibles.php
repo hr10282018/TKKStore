@@ -18,6 +18,7 @@ class AddFieldToUsersVisibles extends Migration
       // 我购买的商品
       $table->boolean('v_buy_booking_goods')->default(true);   // 预定他人的商品
       $table->boolean('v_buy_sale_goods')->default(true);       // 购买过他人的商品(已下单)
+      
       // 我发布的商品
       $table->boolean('v_booking_goods')->default(true);   // 商品不同的状态
       $table->boolean('v_sale_goods')->default(true);

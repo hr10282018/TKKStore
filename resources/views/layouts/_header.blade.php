@@ -17,7 +17,7 @@
       <span class="navbar-toggler-icon">11111</span>
     </button> -->
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent" >
 
       <ul class="navbar-nav mr-auto">
 
@@ -31,9 +31,16 @@
         <li class="nav-item"><a class="nav-link" href="{{ route('signup') }}">注册</a></li>
 
         @else
-        <li class="nav-item mr-3">
+        <li class="nav-item " >
           <a class="nav-link btn btn-light mt-2 mr-3 font-weight-bold" href="{{ route('create_goods') }}" style="width: 55px; height:40px;line-height:20px">
             <i class="fas fa-paper-plane" style="font-size:18px; line-height:20px"></i>
+          </a>
+        </li>
+
+        <!-- 消息 -->
+        <li class="nav-item notification-badge mt-2 " style="display: flex;align-items:center; width:55px;height:40px">
+          <a id="notification" class="nav-link mr-3 badge badge-pill badge-{{ Auth::user()->notification_count > 0 ? 'hint' : 'secondary' }} text-white" href="{{ route('notifications') }}" style="height:22px;margin:0 auto" >
+            <span class="" style="line-height:15px">{{ Auth::user()->notification_count }}</span>
           </a>
         </li>
 
@@ -73,3 +80,7 @@
 
   </div>
 </nav>
+
+
+
+

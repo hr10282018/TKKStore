@@ -35,32 +35,34 @@ class UsersController extends AdminController
     $grid->id('ID');
 
     // 用户的 name 字段。
-    $grid->name('用户名');
+    $grid->name('用户名')->filter('like');
 
-    //$grid->column('r_name', __('R name')); 真实姓名
+    // 性别
+    $grid->sex('性别')->filter([
+      '男' => '男',
+      '女' => '女'
+    ]);
 
     // 用户的头像
     $grid->avatar('头像')->image(45,45);
 
     // 用户的 邮箱 字段。
-    $grid->email('QQ邮箱');
+    $grid->email('QQ邮箱')->filter('like');
 
     // 用户验证邮箱的时间判断-是否验证邮箱
-    $grid->email_verified_at('邮箱验证')->display(function ($value) {
-      return $value ? '是' : '否';
-    });
+    $grid->activated('邮箱验证')->display(function ($value) {
 
-    // 用户的注册时间
-    $grid->created_at('注册时间');
+      if( $value) return '是';
+      else return '否';
+    })->filter([
+      0 => '否',
+      1 => '是'
+    ]);
+
+    $grid->created_at('创建时间');
+    
     //$grid->column('updated_at', __('Updated at'));
-
-
-
     //$grid->column('signature', __('Signature'));  个性签名
-
-    // 用户的性别
-    $grid->sex('性别');
-
     //$grid->column('phone', __('Phone'));
     //$grid->column('university', __('University'));
     //$grid->column('faculty', __('Faculty'));
@@ -75,6 +77,14 @@ class UsersController extends AdminController
       });
     });
 
+    $grid->disableCreateButton();   // 禁用 新增
+
+     // 操作
+     $grid->actions(function ($actions) {
+      // 禁用 编辑
+      $actions->disableEdit();
+    });
+
     return $grid;
   }
 
@@ -87,41 +97,60 @@ class UsersController extends AdminController
     //$show->field('id', __('Id'));
     $show->id('ID');
 
-    //$show->field('name', __('姓名'));
-    $show->name('姓名');
+    $show->name('用户名');
 
-    //$show->field('r_name', __('R name'));
-    $show->r_name('真实姓名');
+    $show->field('sex', __('Sex'));
 
-    //$show->field('email', __('Email'));
     $show->email('QQ邮箱');
 
-    $show->field('email_verified_at', __('Email verified at'));
+    $show->avatar('头像')->image();
 
+    $show->signature('个性签名');
 
     //$show->field('password', __('Password'));
     //$show->field('remember_token', __('Remember token'));
-    $show->field('created_at', __('Created at'));
-    //$show->field('updated_at', __('Updated at'));
-    $show->field('avatar', __('Avatar'));
-    $show->field('signature', __('Signature'));
-    $show->field('sex', __('Sex'));
-    $show->field('phone', __('Phone'));
-    $show->field('university', __('University'));
-    $show->field('faculty', __('Faculty'));
-    $show->field('number', __('Number'));
-    //$show->field('activation_token', __('Activation token'));
-    //$show->field('activated', __('Activated'));
+
+    $show->university('大学',);
+
+    $show->faculty('院系');
+
+    $show->number('学号');
+
+    $show->r_name('真实姓名');
+
+    $show->phone('手机号码');
+
+    $show->activated('邮箱验证')->as(function($value){
+      
+      if($value) return '是';
+      else return '否';
+       
+    });
+
+    if($show->getModel()->toArray()['email_verified_at']){
+      $show->email_verified_at('邮箱验证时间');
+    }
+    
+
+    $show->created_at('创建时间');
+
+    $show->updated_at('修改时间');
+
+    /// tools
+    $show->panel()->tools(function ($tools) {
+      $tools->disableEdit();    
+      //$tools->disableList();
+      //$tools->disableDelete();
+    });
 
     return $show;
   }
 
 
-  // form()-用于编辑和创建用户
+  // 编辑、创建
   protected function form()
   {
     $form = new Form(new User());
-
     $form->text('name', __('Name'));
     $form->text('r_name', __('R name'));
     $form->email('email', __('Email'));
@@ -139,5 +168,11 @@ class UsersController extends AdminController
     $form->switch('activated', __('Activated'));
 
     return $form;
+  }
+
+  public function delete(User $id){
+    $id->delete();
+
+    return [];
   }
 }

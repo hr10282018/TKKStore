@@ -17364,3 +17364,20 @@ input:checked + .slider:before {
   content: "\6D4F\89C8...";
 }
 
+.notification-badge {
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.notification-badge .badge {
+  font-size: 12px;
+}
+
+.notification-badge .badge-secondary {
+  background-color: #EBE8E8;
+}
+
+.notification-badge .badge-hint {
+  background-color: #d15b47 !important;
+}
+

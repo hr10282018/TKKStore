@@ -24,7 +24,7 @@
 
           <div class="form-group ml-5">
             <label for="email" class="form-inline" />邮箱：
-            <input type="text" style="width: 223px;" maxlength="255"  name="email" id="user_email" class="{{ $errors->has('email') ? ' is-invalid' : '' }} form-control uemail" value="{{ old('email') }}" placeholder="请输入您真实的QQ邮箱" required>
+            <input type="text" style="width: 223px;" maxlength="32"  name="email" id="user_email" class="{{ $errors->has('email') ? ' is-invalid' : '' }} form-control uemail" value="{{ old('email') }}" placeholder="请输入您真实的QQ邮箱" required>
             <div class="offset-md-2 {{ $errors->has('email') ? ' invalid-feedback' : '' }}" id="uemail_tip">
               <strong>{{ $errors->first('email') }}</strong>
             </div>
@@ -32,7 +32,7 @@
 
           <div class="form-group ml-5">
             <label for="password" class="form-inline" />密码：
-            <input type="password" style="width: 223px;" maxlength="255" name="password" id="user_pwd" class="form-control upwd" value="{{ old('password') }}" placeholder="密码不能少于6位" required>
+            <input type="password" style="width: 223px;" maxlength="32" name="password" id="user_pwd" class="form-control upwd" value="{{ old('password') }}" placeholder="密码不能少于6位" required>
             <div class="offset-md-2 {{ $errors->has('password') ? ' invalid-feedback' : '' }}" id="upwd_tip">
             <strong>{{ $errors->first('password') }}</strong>
             </div>
@@ -40,7 +40,7 @@
 
           <div class="form-group ">
             <label for="password_confirmation" class="form-inline comfirm_pwd " />确认密码：
-            <input type="password" style="width: 223px;" maxlength="255" name="password_confirmation" id="user_pwd2" class="form-control upwd2" value="{{ old('password_confirmation') }}" required>
+            <input type="password" style="width: 223px;" maxlength="32" name="password_confirmation" id="user_pwd2" class="form-control upwd2" value="{{ old('password_confirmation') }}" required>
             <div class="offset-md-3" id="upwd2_tip">
             </div>
 
@@ -72,6 +72,8 @@
 
     // 验证用户名
     $('#user_name').blur(function(){
+
+
       // 长度3-25
       // ajax-用户名唯一
       if($('#user_name').val().length>=3 && $('#user_name').val().length<=25 ){
@@ -88,7 +90,7 @@
           }
           is_reg()
         },function(error){    // 请求错误
-          if(error.response.status === 422){      // 表示验证不通过
+          if(error.response.status === 422){      // 验证不通过
             console.log(error.response.data.errors)
           }
           console.log(error.response.data.errors)

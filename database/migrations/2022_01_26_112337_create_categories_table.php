@@ -11,9 +11,12 @@ class CreateCategoriesTable extends Migration
   {
     Schema::create('categories', function (Blueprint $table) {
       $table->increments('id');
-      $table->string('name')->index()->comment('名称');   //
-      $table->text('description')->nullable()->comment('描述'); // comment-表注释
-      $table->unsignedInteger('count')->default(0)->comment('商品数');
+      
+      $table->string('name',8)->comment('名称');   //
+
+      $table->string('description',32)->nullable()->comment('描述'); // comment-表注释
+      
+      $table->timestamps();
     });
   }
 

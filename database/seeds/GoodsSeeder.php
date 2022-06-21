@@ -11,7 +11,10 @@ class GoodsSeeder extends Seeder
     $goods=factory(Good::class)->times(500)->create();
 
     foreach($goods as $good){
-      factory(\App\Models\Comment::class,10)->create(['goods_id' => $good->id]);
+      
+      factory(\App\Models\Comment::class,3)->create(['goods_id' => $good->id]);
+      
+      
     }
 
   }

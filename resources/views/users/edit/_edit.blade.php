@@ -11,7 +11,7 @@
     <a href="{{ route('user_edit', Auth::user()) }}" style="{{ user_info_active(0) }} z-index:1" class="list-group-item list-group-item-action">
       <div style="margin-left:93px;">
         <i class="fas fa-user mr-2"></i>
-        个人信息
+        基本信息
       </div>
     </a>
 

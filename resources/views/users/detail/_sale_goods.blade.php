@@ -18,9 +18,19 @@
         <h1 class="ml-2 mt-2" style="line-height: 24px;color:#636b6f; font-size:20px;font-weight:bold; ">
           {{$user->name}}
           <span style="letter-spacing:2px">发布的商品</span>
+          @if(!Auth::user()->can('update_user_info', $user))
+
+          （*）
+          @else
           （{{ count($user->goods) }}）
+          @endif
         </h1>
       </div>
+
+      <form class="form-inline mt-2 ml-2" method="get" action="{{ route('search_sale_goods',[$user->id,$state])}}">
+        <input class="form-control mr-sm-2" name="content" type="search" placeholder="输入商品信息..." aria-label="Search" style="width: 300px;">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+      </form>
     </div>
 
     <hr style="width: 650px;margin:0 auto;">
@@ -30,31 +40,70 @@
       <ul class="nav nav-tabs " id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(0)) active @endif" id="unput-tab" data-toggle="tab" href="#unput" role="tab" aria-controls="unput" aria-selected="@if(my_goods_active(0)) true @else false @endif">
-            预发布 @if(my_goods_active(0)) 【{{ $count }}】 @endif
+            预发布 
+            @if(my_goods_active(0)) 
+              @if(!Auth::user()->can('update_user_info', $user))
+              【*】
+              @else
+              【{{ $count }}】 
+              @endif
+            @endif
+
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(1)) active @endif" id="check-tab" data-toggle="tab" href="#check" role="tab" aria-controls="check" aria-selected=" @if(my_goods_active(1)) true @else false @endif ">
-            审核中 @if(my_goods_active(1)) 【{{ $count }}】 @endif
+            审核中 
+            @if(my_goods_active(1)) 
+              @if(!Auth::user()->can('update_user_info', $user))
+              【*】
+              @else
+              【{{ $count }}】 
+              @endif
+            
+            @endif
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(2)) active @endif" id="onsale-tab" data-toggle="tab" href="#onsale" role="tab" aria-controls="onsale" aria-selected="@if(my_goods_active(2)) true @else false @endif">
-            出售中 @if(my_goods_active(2)) 【{{ $count }}】 @endif
+            出售中 
+            @if(my_goods_active(2)) 
+              @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_sale_goods)
+              【*】
+              @else
+              【{{ $count }}】 
+              @endif
+          
+            @endif
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(3)) active @endif" id="booking-tab" data-toggle="tab" href="#booking" role="tab" aria-controls="booking" aria-selected="@if(my_goods_active(3)) true @else false @endif">
-            预定中 @if(my_goods_active(3)) 【{{ $count }}】 @endif
+            预定中 
+            @if(my_goods_active(3)) 
+              @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_booking_goods)
+              【*】
+              @else
+              【{{ $count }}】 
+              @endif
+            
+            @endif
           </a>
         </li>
 
         <li class="nav-item" role="presentation">
           <a class="nav-link @if(my_goods_active(4)) active @endif" id="alput-tab" data-toggle="tab" href="#alput" role="tab" aria-controls="alput" aria-selected="@if(my_goods_active(4)) true @else false @endif">
-            已出售 @if(my_goods_active(4)) 【{{ $count }}】 @endif
+            已出售 
+            @if(my_goods_active(4)) 
+              @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_saled_goods)
+              【*】
+              @else
+              【{{ $count }}】 
+              @endif
+            @endif
           </a>
         </li>
       </ul>
@@ -157,7 +206,8 @@
                 </div>
               </div>
             @else
-            @if(count($user->goods) > 0)
+
+            @if(count($goods) > 0)
             {{-- <p style="display: none;">{{ $i=0 }}</p> --}}
             <?php $i = 0 ?>
             @foreach ($goods as $good => $value)
@@ -240,7 +290,7 @@
               </div>
             @else
 
-            @if(count($user->goods) > 0)
+            @if(count($goods) > 0)
             {{-- <p style="display: none;">{{ $i=0 }}</p> --}}
             <?php $i = 0 ?>
             @foreach ($goods as $good => $value)
@@ -278,8 +328,6 @@
                     <span class="card-text ml-2 mt-1 mr-1 reply" style="position:relative; font-size:12px; left:0px;" title="评论量">
                       <i class="far fa-comment-dots"></i> <span class="ml-1">{{$value->reply_count}}</span>
                     </span>
-
-                    
                   </div>
                 </div>
                 @if(Auth::user()->can('update_user_info', $user))
@@ -313,7 +361,7 @@
           </ul>
         </div>
 
-        <!-- 已预订 -->
+        <!-- 预定中 -->
         <div class="tab-pane @if(my_goods_active(3)) show active @else fade @endif" id="booking" role="tabpanel" aria-labelledby="booking-tab">
           <ul class="list-group list-group-flush">
             @if(!Auth::user()->can('update_user_info', $user) && !$user_visible->v_booking_goods)
@@ -324,8 +372,9 @@
               </div>
             @else
 
-            @if(count($user->goods) > 0)
+            @if(count($goods) > 0)
             {{-- <p style="display: none;">{{ $i=0 }}</p> --}}
+            
             <?php $i = 0 ?>
             @foreach ($goods as $good => $value)
 
@@ -367,7 +416,7 @@
 
                   </div>
                 </div>
-
+                {{--  
                 @if(Auth::user()->can('update_user_info', $user))
                 <div class="btn-group dropleft " style="height: 15px">
                   <!-- 编辑 -->
@@ -377,8 +426,8 @@
                   </div>
                   <i class="fas fa-ellipsis-v edit_del " style="float:right;cursor:pointer;color:#636b6f"></i>
                 </div>
-                @endif
-
+                @endif   --}}
+               
               </div>
             </li>
             @endforeach
@@ -454,6 +503,7 @@
 
                   </div>
                 </div>
+                
                 @if(!Auth::user()->can('update_user_info', $user))
                 <div class="btn-group dropleft " style="height: 15px">
                   <!-- 编辑 -->
@@ -463,11 +513,12 @@
                   </div>
                   <i class="fas fa-ellipsis-v edit_del " style="float:right;cursor:pointer;color:#636b6f"></i>
                 </div>
-                @endif
+                @endif  
+                
               </div>
             </li>
             @endforeach
-
+             
             <li class="list-group-item">
               <div class="card-body">
                 {!! $goods->render() !!}

@@ -16,10 +16,11 @@ trait HotGoodsHelper
   // 基本信息
   protected $view_weight = 40; // 浏览量权重
   protected $comment_weight = 60; // 评论权重
-  protected $capita_comment_max_number = 3;     // 最多人均评论数
+  protected $capita_comment_max_number = 3;     // 人均评论数最大值
   protected $at_least_from_today = 1;    // 1天。发布时间需要大于1天
   protected $hot_goods_top = 10; // 需要热度Top几的商品
 
+ protected $hot_goods_nearly_week=2;    // 近1周的商品
   // V-商品浏览量
   // T-商品发布时间距今的天数(近1周)，7 >= T >= 1
   // C-评论人数(不重复)，C <= V
@@ -37,7 +38,7 @@ trait HotGoodsHelper
 
   // 缓存配置
   protected $cache_key = 'onestore_hot_goods';
-  protected $cache_expire_in_seconds = 60 * 60 * 24;   // 秒
+  protected $cache_expire_in_seconds = 60 * 60 ;   // 秒
 
 
   public function getHotGoods()
@@ -65,7 +66,8 @@ trait HotGoodsHelper
   private function calculateScore()
   {
     
-    $goods = Good::where('created_at', '>=', Carbon::now()->subWeeks('1'))->with('comments')->get();    // 近1周
+    $goods = Good::where('created_at', '>=', Carbon::now()->subWeeks($this->hot_goods_nearly_week))->whereNotIn('state',[Good::goods_state_in_release,Good::goods_state_in_check])
+    ->with('comments')->get();    // 近1周
     //dd($goods[0]->comments);
     //dd(count($goods));
     $score_sort = [];   // 关联数组，记录得分

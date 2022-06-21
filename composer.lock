@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9be5dbce48ec581a470760e9544aac36",
+    "content-hash": "3a735adfc1bee2ab8f7ee84f6ea2e566",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -808,16 +808,16 @@
         },
         {
             "name": "encore/laravel-admin",
-            "version": "v1.7.15",
+            "version": "v1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/z-song/laravel-admin.git",
-                "reference": "f681aece0c2730e5d1082f9beb37243eb7d6e3c8"
+                "reference": "f634551afc5d062431f9e6581a70f0f3a041a556"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/f681aece0c2730e5d1082f9beb37243eb7d6e3c8",
-                "reference": "f681aece0c2730e5d1082f9beb37243eb7d6e3c8",
+                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/f634551afc5d062431f9e6581a70f0f3a041a556",
+                "reference": "f634551afc5d062431f9e6581a70f0f3a041a556",
                 "shasum": ""
             },
             "require": {
@@ -875,9 +875,9 @@
             ],
             "support": {
                 "issues": "https://github.com/z-song/laravel-admin/issues",
-                "source": "https://github.com/z-song/laravel-admin/tree/v1.7.15"
+                "source": "https://github.com/z-song/laravel-admin/tree/v1.8.0"
             },
-            "time": "2020-04-27T07:15:45+00:00"
+            "time": "2020-05-27T08:55:40+00:00"
         },
         {
             "name": "fideloper/proxy",

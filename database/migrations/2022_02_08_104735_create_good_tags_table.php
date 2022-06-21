@@ -10,8 +10,11 @@ class CreateGoodTagsTable extends Migration
   public function up()
   {
     Schema::create('good_tags', function (Blueprint $table) {
-      $table->id();
-      $table->string('name', 12);   // 6
+      
+      $table->increments('id');
+      
+      $table->string('name', 8);   // 6
+
       $table->timestamps();
     });
   }

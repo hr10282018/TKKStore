@@ -27,8 +27,9 @@
       <img class="thumbnail img-responsive" src="{{ $user->avatar }}" style="width: 325px;height:321px" />
       @endif
 
-      <div class="mt-3">
+      <div class="mt-3 row">
         <p style="color:#636b6f;font-size:17px">请选择图片：</p>
+        <p style="font-size:12px; color:#636b6f; margin-top:7px" class="">建议上传图片长宽为：325 x 320</p>
       </div>
 
 
@@ -95,15 +96,16 @@
       var gif = new RegExp('gif');
       img_size = Math.floor(file.size / 1024)
 
+      console.log(img_size)
       if (png.test(img_ext) || jpg.test(img_ext) || jpeg.test(img_ext) || gif.test(img_ext)) {
 
-        if (img_size > 200) {
-          //console.log('大于200k');
+        if (img_size > 1024) {      // 1M
+          //console.log('大于1M');
           avatar.next().css('border-color', '#dc3545')
           avatar.next().html('选择图片文件...')
           avatar.parents('.imgFile').addClass('is-invalid').removeClass('is-valid')
           avatar.parent().parent().next().addClass('invalid-feedback').removeClass('valid-feedback')
-          avatar.parent().parent().next().html('图片大小超过200K，请重新选择！!');
+          avatar.parent().parent().next().html('图片大小超过1M，请重新选择！!');
           avatar.parent().parent().next().next().addClass('valid-feedback').removeClass('invalid-feedback')
           avatar.parent().parent().next().next().html('');
 
@@ -128,7 +130,7 @@
         avatar.parent().parent().next().addClass('valid-feedback').removeClass('invalid-feedback')
         avatar.parent().parent().next().html('');
 
-        if (img_size > 200) { // 都不正确
+        if (img_size > 1024) { // 都不正确
           //console.log('都不正确');
           avatar.next().css('border-color', '#dc3545')
           avatar.next().html('选择图片文件...')
@@ -136,7 +138,7 @@
           avatar.parent().parent().next().addClass('invalid-feedback').removeClass('valid-feedback')
           avatar.parent().parent().next().next().addClass('invalid-feedback').removeClass('valid-feedback')
           avatar.parent().parent().next().html('不支持该图片格式，请重新选择 【GIF JPG JPEG PNG】 格式的图片！!');
-          avatar.parent().parent().next().next().html('图片大小超过200K，请重新选择！!');
+          avatar.parent().parent().next().next().html('图片大小超过1M，请重新选择！!');
         }
       }
     }

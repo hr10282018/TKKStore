@@ -14,22 +14,26 @@ class CreateUsersTable extends Migration
   public function up()
   {
     Schema::create('users', function (Blueprint $table) {
-      $table->id();
-      $table->string('name');
-      $table->string('r_name')->nullable();   // 真实姓名
-      $table->string('email')->unique();
-      $table->timestamp('email_verified_at')->nullable();
-      $table->string('password');
-      $table->rememberToken();
+
+      $table->increments('id');
+
+      $table->string('name',32);    // 名称
+
+      $table->string('r_name',16)->nullable();   // 真实姓名
+
+      $table->string('email',32)->unique();    // 邮箱
+
+      $table->timestamp('email_verified_at')->nullable();   // 邮箱认证时间
+
+      $table->string('password',255);   // 密码
+
+      $table->rememberToken();    // 记住我 令牌
+
       $table->timestamps();
     });
   }
 
-  /**
-   * Reverse the migrations.
-   *
-   * @return void
-   */
+  
   public function down()
   {
     Schema::dropIfExists('users');

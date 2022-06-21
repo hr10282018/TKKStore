@@ -16,9 +16,9 @@
 
           在继续之前，请检查您的电子邮件以获取验证链接，
           如果您没有收到,
-          <form class="d-inline" method="POST" action="{{ route('signup_verify',Auth::user()->activation_token) }}">
+          <form class="d-inline" method="POST" action="{{ route('second_send_email',$user->id) }}">
             @csrf
-            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">点击重新发送E-mail</button>.
+            <button type="submit" class="btn btn-link p-0 m-0 align-baseline">点击重新发送 邮箱</button>.
           </form>
         </div>
       </div>

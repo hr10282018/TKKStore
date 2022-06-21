@@ -26,23 +26,30 @@ class UserInfoRequest extends Request
                   },
                   ],
       'email' =>  ['required','regex:/^[a-zA-Z\d]{8,}@qq.com$/',
-                  function ($attribute, $value, $fail) {
-                    $user=User::where('email',$value)->first();
-                    //return $fail(Auth::user()->name);
-                    if($user && $user->email != Auth::user()->email){
-                      return $fail('该邮箱已被注册！');
-                    }
-                  },
+                    function ($attribute, $value, $fail) {
+                      $user=User::where('email',$value)->exists();
+                      //return $fail(Auth::user()->name);
+                      if($user && $value != Auth::user()->email){
+                        return $fail('该邮箱已被注册！');
+                      }
+                    },
                   ],
-      'signature' =>  ['max:50'],
-      'phone' =>  ['nullable','integer']
+      'signature' =>  ['max:80'],
+      'phone' =>  ['nullable','integer'],
+      
+      'faculty' =>['nullable','max:32'],
+      'number' =>['nullable','max:8','alpha_num'],    //字母或数字组成
+      'r_name' =>['nullable','max:32'],
     ];
   }
 
   public function messages()
   {
     return [
-      'phone.integer' => '手机号码 必须是整数。'
+      'phone.integer' => '手机号码 必须是整数。',
+      'number.max' =>'学号不能大于 8个字符',
+      'r_name.max' => '真实姓名不能大于 32个字符',
+      'faculty.max' => '院系不能大于 32个字符',
     ];
   }
 

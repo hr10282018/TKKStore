@@ -36,11 +36,11 @@
 
       <div class="form-group" style="width:750px;">
         <label for="description" style="font-size:16px">描述</label>
-        <textarea class="form-control" id="description" rows="2" placeholder="显示在商品详情页..." name="description" style="height:52px;max-height: 126px;min-height: 52px;" required>@if(isset($goods_info)){{ $goods_info->description }}@endif</textarea>
+        <textarea maxlength="512" class="form-control" id="description" rows="2" placeholder="显示在商品详情页..." name="description" style="height:52px;max-height: 126px;min-height: 52px;" required>@if(isset($goods_info)){{ $goods_info->description }}@endif</textarea>
       </div>
 
       <div class="form-group" style="width:750px;">
-        <label for="description" style="font-size:15px">卖家标签</label>
+        <label for="tag" style="font-size:15px">卖家标签</label>
         <div>
           <?php  $index=0 ?>
           
@@ -82,18 +82,24 @@
       </div>
 
       <div class="form-group mt-4">
-        <p style="font-size:17px;">商品图片：<small style="color: #969696;">第一张默认为封面图片</small>
+        <p style="font-size:17px;">商品图片：<small style="color: #969696;">【第一张默认为封面图片, 建议上传图片长宽为：450x460】</small>
           <button type="button" id="add" class="btn btn-success ml-2" style="line-height:20px;width:90px;height:32px;">
             添加图片
           </button>
         </p>
       </div>
-
-      @if(isset($goods_info))
-      <?php $arrImg = explode(',', $goods_info->image); ?>
+      
+      {{-- @if( $booking )
+        <input type="" id="booking_operate_premise" hidden>
+      @elseif( $order )
+        <input type="" id="order_operate_premise"  hidden>
       @endif
-
+      <input type="" id="user_id" value="{{ Auth::user()->id }}" hidden> --}}
+      
       <!-- 图片文件 -->
+      @if(isset($goods_info))
+       <?php  $arrImg = explode(',',$goods_info->image) ?>
+      @endif
       <div class="img_file form-group">
         <div class=" input-group imgFile" style="width:91%;">
           <div class="input-group-append"></div>
@@ -106,53 +112,62 @@
         <div class=" file_tip_type"> </div>
 
         @if(isset($goods_info))
-        @for($i=1;$i<count($arrImg)-1;$i++) <div class="mt-4 input-group imgFile" style="width:91%;">
-          <div class="input-group-append">
-            <button class="btn  btn-danger del_btn" type="button" style="top:-1px;border-top-left-radius: 3px;border-bottom-left-radius: 3px;">
-              <i class="fas fa-times-circle " style="color:#fff;"></i>
-            </button>
-          </div>
-          <div class="custom-file">
-            <input type="file" class="custom-file-input file" title="点击上传商品图片 ^_^ " name="goods_img[]" id="validatedInputGroupCustomFile" required>
-            <label class="custom-file-label imgName" for="validatedInputGroupCustomFile">{{ "P$i.".Str::afterLast($arrImg[0], '.') }}</label>
-          </div>
+          @for($i=1;$i<sizeof($arrImg);$i++) 
+          <div class="mt-4 input-group imgFile" style="width:91%;">
+            <div class="input-group-append">
+              <button class="btn  btn-danger del_btn" type="button" style="top:-1px;border-top-left-radius: 3px;border-bottom-left-radius: 3px;">
+                <i class="fas fa-times-circle " style="color:#fff;"></i>
+              </button>
+            </div>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input file" title="点击上传商品图片 ^_^ " name="goods_img[]" id="validatedInputGroupCustomFile" required>
+              <label class="custom-file-label imgName" for="validatedInputGroupCustomFile">{{ "P$i.".Str::afterLast($arrImg[0], '.') }}</label>
+            </div>
+        </div>
+          <div class="file_tip_size"></div>
+          <div class="file_tip_type"></div>
+          @endfor
+        @endif
       </div>
-      <div class="file_tip_size"></div>
-      <div class="file_tip_type"></div>
-      @endfor
-      @endif
-
-  </div>
 
 
-  <div class="form-group form-check mb-2 row" style="right:20px">
-    <button type="submit" hidden class="btn btn-primary mt-4 ml-3 btn_submit" style="line-height:20px;margin-right:10px;width:90px;height:32px">
-    </button>
-    <button type="button" class="btn btn-primary mt-5 ml-3 btn_now" style="line-height:20px;margin-right:10px;width:90px;height:32px">
-      立即发布
-    </button>
+      <div class="form-group form-check mb-2 row" style="right:20px">
+        <button type="submit" hidden class="btn btn-primary mt-4 ml-3 btn_submit" style="line-height:20px;margin-right:10px;width:90px;height:32px">
+        </button>
+        <button type="button" class="btn btn-primary mt-5 ml-3 btn_now" style="line-height:20px;margin-right:10px;width:90px;height:32px">
+          立即发布
+        </button>
 
-    <button type="button" title="保存" class="btn btn-secondary mt-5 ml-3 btn_wait" style="line-height:20px;margin-right:10px;width:90px;height:32px">
-      暂不发布
-    </button>
-    <input class="state" name="goods_state" type="text" hidden>
-    <!--记录状态-->
-    <input class="goods_old_img" type="text" name="goods_old_img" hidden> <!-- 记录old_img -->
+        <button type="button" title="保存" class="btn btn-secondary mt-5 ml-3 btn_wait" style="line-height:20px;margin-right:10px;width:90px;height:32px">
+          暂不发布
+        </button>
+        <input class="state" name="goods_state" type="text" hidden>
+        <!--记录状态-->
+        <input class="goods_old_img" type="text" name="goods_old_img" hidden> <!-- 记录old_img -->
 
-    @if(isset($goods_info->id))
-      <input class="id" type="text" value="{{ $goods_info->id }}" name="id" hidden>
-    @endif
+        @if(isset($goods_info->id))
+          <input class="id" type="text" value="{{ $goods_info->id }}" name="id" hidden>
+        @endif
 
-    @foreach (['wrong_type', 'null_data'] as $msg)
-      @if(session()->has($msg))
-      <span id='tip' msg-data="{{session()->get($msg) }}" hidden></span>
-      @endif
-    @endforeach
+        @foreach (['wrong_type', 'null_data'] as $msg)
+          @if(session()->has($msg))
+          <span id='tip' msg-data="{{session()->get($msg) }}" hidden></span>
+          @endif
+        @endforeach
+        
+      </div>
+    </form>
+
     
-  </div>
+    @error('title')
+      <input type="text" id="wrong_title" value="{{ $message }}" hidden>
+    @enderror
+    
+    @error('description')
+      <input type="text" id="wrong_description" value="{{ $message }}" hidden>
+    @enderror
 
-  </form>
-</div>
+  </div>
 
 </div>
 @stop
@@ -161,14 +176,28 @@
 <script>
   $(document).ready(function() {
 
+    if($('#wrong_title').length > 0){
+      swal({
+        text: $('#wrong_title').val(),
+        icon: 'error'
+      })
+    }else{
+      if($('#wrong_description').length > 0){
+        swal({
+          text: $('#wrong_description').val(),
+          icon: 'error'
+        })
+      } 
+    }
+
     // 判断是否有 错误提示
     msg_data = $('#tip').attr('msg-data')
     if(msg_data){
       console.log(msg_data)
       swal({
-          text: msg_data,
-          icon: 'warning'
-        })
+        text: msg_data,
+        icon: 'warning'
+      })
     }
 
 
@@ -183,7 +212,6 @@
         })
       }
     })
-
 
     // 标签按钮-点击事件
     var max_tag = true // 记录标签能否选择
@@ -227,8 +255,9 @@
 
     function reg_price() {
       var price = $("#price").val();
-      var d_reg = /^\d{1,4}\.{1}[1-9]{1}$/; // 小数-首位可以0，小数位不为0
-      var d_reg2 = /^[1-9]{1,4}\.{1}\d{1}$/; //  小数-首位不能0，小数位可为0
+
+      var d_reg = /^0{1}\.{1}[1-9]{1}$/; // 小数-首位可以0，小数位不为0
+      var d_reg2 = /^[1-9]{1}\d{0,3}\.{1}\d{1}$/; //  小数-首位不能0，小数位可为0
       var int_reg = /^[1-9]{1}\d{0,5}$/; // 整数-首位不能0
       if ($('#price').val().length != 0) {
         if (d_reg.test(price) || d_reg2.test(price) || int_reg.test(price)) { // 原价格式正确
@@ -254,8 +283,8 @@
 
     function reg_old_price() {
       var price = $("#old_price").val();
-      var d_reg = /^\d{1,4}\.{1}[1-9]{1}$/; // 小数-首位可以0，小数位不为0
-      var d_reg2 = /^[1-9]{1,4}\.{1}\d{1}$/; //  小数-首位不能0，小数位可为0
+      var d_reg = /^0{1}\.{1}[1-9]{1}$/; // 小数-首位可以0，小数位不为0
+      var d_reg2 = /^[1-9]{1}\d{0,3}\.{1}\d{1}$/; //  小数-首位不能0，小数位可为0
       var int_reg = /^[1-9]{1}\d{0,5}$/; // 整数-首位不能0
       if ($('#old_price').val().length != 0) {
         if (d_reg.test(price) || d_reg2.test(price) || int_reg.test(price)) { // 原价格式正确
@@ -279,8 +308,8 @@
       reg_old_price()
     })
 
-    // 用于记录 编辑商品 时的图片
 
+    // 用于记录 编辑商品 时的图片
     var img_type
     var arrImg = false
     //arrImg = $('.file').eq(0).attr('img_data')
@@ -289,8 +318,14 @@
     //$('.file').eq(0).attr('img_data', '')
     if ($('.file').eq(0).attr('img_data') != '') {
       arrImg = $('.file').eq(0).attr('img_data')
-      //console.log(arrImg)
-      arrImg = arrImg.split(',').slice(0, -1) // 转数组， 记录三种情况： url-原图片链接  0-删除  'update'-新图片
+
+      console.log(arrImg)
+      //arrImg = arrImg.split(',').slice(0, -1) // 转数组， 记录三种情况： url-原图片链接  0-删除  'update'-新图片
+
+      arrImg =arrImg.split(',')
+
+      console.log(arrImg)
+
       $('.file').eq(0).attr('img_data', '')
       img_type = 'edit'
     } else {
@@ -333,7 +368,6 @@
       if (arrImg) {
         arrImg.push('0') // 添加0，表示空
       }
-
 
     })
 
@@ -433,23 +467,20 @@
       //console.log(img_size)
       if (png.test(img_ext) || jpg.test(img_ext) || jpeg.test(img_ext) || gif.test(img_ext)) {
 
-        if (img_size > 200) {
+        if (img_size > 1024) {
           //console.log('大于200k');
 
           img.next().css('border-color', '#dc3545')
           img.next().html('选择图片文件...')
           img.parents('.imgFile').addClass('is-invalid').removeClass('is-valid')
           img.parent().parent().next().addClass('invalid-feedback').removeClass('valid-feedback')
-          img.parent().parent().next().html('图片大小超过200K，请重新选择！!');
+          img.parent().parent().next().html('图片大小超过1M，请重新选择！!');
           img.parent().parent().next().next().addClass('valid-feedback').removeClass('invalid-feedback')
           img.parent().parent().next().next().html('');
 
         } else { // 图片格式、大小都符合
           img.next().css('border-color', '#28a745')
-          //console.log(123)
-          //console.log(img.next().html())
-          // if (is_submit) img.eq(i).next().html(file['name'])
-          // else img.next().html(file['name'])
+      
 
           img.next().html(file['name'])
           //img.next().html('xxx')
@@ -470,7 +501,7 @@
         img.parent().parent().next().addClass('valid-feedback').removeClass('invalid-feedback')
         img.parent().parent().next().html('');
 
-        if (img_size > 200) { // 都不正确
+        if (img_size > 1024) { // 都不正确
           //console.log('都不正确');
           img.next().css('border-color', '#dc3545')
           img.next().html('选择图片文件...')
@@ -478,7 +509,7 @@
           img.parent().parent().next().addClass('invalid-feedback').removeClass('valid-feedback')
           img.parent().parent().next().next().addClass('invalid-feedback').removeClass('valid-feedback')
           img.parent().parent().next().html('不支持该图片格式，请重新选择 【GIF JPG JPEG PNG】 格式的图片！!');
-          img.parent().parent().next().next().html('图片大小超过200K，请重新选择！!');
+          img.parent().parent().next().next().html('图片大小超过1M，请重新选择！!');
         }
       }
 
@@ -490,7 +521,6 @@
     $('.btn_now').click(function() {
 
       //console.log(arrImg)
-
       // 验证
       reg_old_price()
       reg_price()
@@ -532,7 +562,10 @@
           //console.log(123)
           reg_img($('input[type=file]'), true, i, arrImg) // 验证
         }
+
       }
+      console.log(arrImg)
+      //console.log($('#description').val())
       if (file == 0 || $('#description').val().length == 0 || $('#title').val().length == 0 || $('#price').val().length == 0 || $('#old_price').val().length == 0) {
         //$('.btn_submit').trigger('click')
 
@@ -560,10 +593,13 @@
                 title: '你确定吗?',
                 text: "该商品的标价高于原价 ！",
                 icon: 'warning',
-                buttons: ['取消', '确认无误'],
+                buttons: ['取消', '确认'],
                 dangerMode: true,
               }).then((res) => {
                 if (!res) return;
+
+                if(arrImg)  $('.goods_old_img').val(arrImg)     // 也要 arrImg
+                else $('.goods_old_img').val(null)
                 $('.form_create_goods').submit()
               })
               $('.swal-text').addClass('warning_text'); // 控制swal-text的样式
@@ -583,8 +619,11 @@
                 $(this).attr('disabled', 'true')
                 $(this).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Loading...')
 
+                //console.log(arrImg);
+
                 if(arrImg)  $('.goods_old_img').val(arrImg)
                 else $('.goods_old_img').val(null)
+
                 $('.form_create_goods').submit()
 
               })
@@ -599,7 +638,6 @@
 
     // 暂不发布按钮-点击事件
     $('.btn_wait').click(function() {
-
 
       // 再次验证
       //console.log($('input[type=file]').length)
@@ -684,7 +722,7 @@
             "text-align": "center",
             "color": "#61534e"
           })
-          $('.swal-text').html('未发布商品可在 【个人中心】&#10132【我的商品】&#10132【预发布】 中查看')
+          $('.swal-text').html('暂不发布商品可在 【个人中心】&#10132【我的商品】&#10132【预发布】 中查看')
         }
       }
 

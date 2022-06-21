@@ -3,9 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Encore\Admin\Traits\DefaultDatetimeFormat;    // 后台日期格式
 
 class Booking extends Model
 {
+  use DefaultDatetimeFormat;
+
+  // 用户状态
+
+  const seller_refuse_booking = 0;  // 卖家拒绝
+  const seller_agree_booking = 1;   // 卖家同意
+  const seller_processing_booking = 2; // 卖家未同意未拒绝(买家预定中)
+  const buyer_cancel_booking = 3;  // 买家取消
+
   protected $fillable = [
     'goods_id', 'user_id', 'booker_id', 'user_state', 'reason'
   ];
@@ -26,11 +36,17 @@ class Booking extends Model
   { 
     return $this->belongsTo(Good::class,'goods_id');
   }
+
+  public function goodsSearch($content)
+  { 
+    return $this->belongsTo(Good::class,'goods_id')->where('title','like',$content)->orWhere('description','like',$content);
+  }
+
   public function goods_sort()
   { 
     return $this->belongsTo(Good::class,'goods_id')->orderBy('created_at','desc');
   }
 
-  
+
 
 }

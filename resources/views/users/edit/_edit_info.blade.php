@@ -38,7 +38,7 @@
       <div class="form-group">
         <label for="u_signature" style="color: #969696;font-weight:bold;">个性签名</label>
         <div class="row ml-0">
-          <input class="form-control" id="u_signature" style="width:405px;" maxlength="50" value="{{ $user->signature }}" required>
+          <input class="form-control" id="u_signature" style="width:405px;" maxlength="80" value="{{ $user->signature }}" required>
           <div style="line-height:35px;color:#636b6f" class="ml-2">建议长度不超过50</div>
         </div>
       </div>
@@ -46,7 +46,7 @@
       <div class="form-group">
         <label for="u_email" style="color: #969696;font-weight:bold;">QQ邮箱 <span class="ml-2" style="color:red;font-size: 18px;float:right">*</span></label>
         <div class="row ml-0">
-          <input type="email" class="form-control user_email" id="u_email" style="width:405px;" value="{{ $user->email }}" required>
+          <input type="email" maxlength="32" class="form-control user_email" id="u_email" style="width:405px;" value="{{ $user->email }}" required>
           <div style="line-height:35px;color:#636b6f" class="ml-2">请填写您有效的QQ邮箱，如1902422119@qq.com</div>
           <div class="wrong_tip_email"></div>
 
@@ -64,7 +64,7 @@
 
       <div class="form-group">
         <label for="u_university" style="color: #969696;font-weight:bold">学校</label>
-        <input type="" class="form-control" id="u_university" style="width:405px;" value="{{ $user->university }}">
+        <input type="" class="form-control" id="u_university" style="width:405px;" value="{{ $user->university }}" disabled>
       </div>
       <div class="form-group" style="color: #969696;font-weight:bold">
         <label for="u_faculty">院系</label>
@@ -190,8 +190,10 @@
 
     })
 
-    // 确认修改-点击事件
+    // 确认修改-
     $('.btn_edit_info').click(function() {
+
+      
       // 获取用户信息
       var user_data={
         name: $('.user_name').val(),
@@ -203,7 +205,7 @@
         faculty:$('#u_faculty').val(),
         number:$('#u_stuID').val(),
         r_name:$('#u_rname').val(),
-        email_cg:'',    // 传递一个变量到控制器-表示邮箱是否修改
+        email_cg:'',    // -表示邮箱是否修改
       }
       if($('.is-invalid').length!=0){   // 表示还有错误选项，无法提交修改
         swal({
@@ -230,7 +232,8 @@
               swal({
                 title:'修改成功',
                 icon:'success',
-                closeOnClickOutside: false}).then(function(url){
+                closeOnClickOutside: false
+              }).then(function(url){
                   if(url){
                     location.href = '{{ route('login') }}';
                   }
@@ -238,13 +241,13 @@
               });
               $('.swal-button').text('重新登录');   // swal按钮样式-文字
 
-            },function(error){   // 请求失败执行此函数
+            },function(error){   // 请求失败
               $(".is-valid").removeClass('is-valid');   // 所有成功样式清除
               console.log(error.response.status);
 
               var html = '<div>';
               if(error.response.status === 429){    // 429 频率限制
-                html += '您提交频率过高，休息1分钟再试试吧！'+'<br>';
+                html += '提交频率过高，休息1分钟再试试吧！'+'<br>';
               }
               if(error.response.status === 422){
                 _.each(error.response.data.errors, function (errors) {
@@ -254,7 +257,16 @@
                 });
               }
               html += '</div>';
-              swal({content: $(html)[0], icon: 'error',closeOnClickOutside: false,})
+              swal({
+                content: $(html)[0], 
+                icon: 'error',
+                closeOnClickOutside: false
+              }).then((res)=>{
+                //console.log(xxx)
+                window.location.reload()
+                
+              })
+
               //console.log(error.response.data.errors)
             })
           });
@@ -283,7 +295,15 @@
                 });
               }
               html += '</div>';
-              swal({content: $(html)[0], icon: 'error',closeOnClickOutside: false,})
+              swal({
+                content: $(html)[0], 
+                icon: 'error',
+                closeOnClickOutside: false
+              }).then((res)=>{
+                //console.log(xxx)
+                window.location.reload()
+                
+              })
           })
         }
       }

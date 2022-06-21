@@ -7,22 +7,23 @@ use App\Models\Comment;
 
 // 商品图片
 $images = [
-  'http://onestore.tkk/images/goods/1_x.jpg,http://onestore.tkk/images/goods/1_y.jpg,http://onestore.tkk/images/goods/1_z.jpg,',
-  'http://onestore.tkk/images/goods/2_x.jpg,http://onestore.tkk/images/goods/2_y.jpg,',
-  'http://onestore.tkk/images/goods/3_x.jpg,http://onestore.tkk/images/goods/3_y.jpg,',
-  'http://onestore.tkk/images/goods/4_x.jpg,',
-  'http://onestore.tkk/images/goods/5_x.jpg,http://onestore.tkk/images/goods/6_y.jpg,',
-  'http://onestore.tkk/images/goods/7_x.jpg,http://onestore.tkk/images/goods/7_y.jpg,http://onestore.tkk/images/goods/7_z.jpg,',
-  'http://onestore.tkk/images/goods/8_x.jpg,http://onestore.tkk/images/goods/8_y.jpg,http://onestore.tkk/images/goods/8_z.jpg,',
-  'http://onestore.tkk/images/goods/9_x.jpg,',
-  'http://onestore.tkk/images/goods/10_x.jpg,',
-  'http://onestore.tkk/images/goods/11_x.jpg,http://onestore.tkk/images/goods/11_y.jpg,',
-  'http://onestore.tkk/images/goods/12_x.jpg,',
-  'http://onestore.tkk/images/goods/13_x.jpg,http://onestore.tkk/images/goods/13_y.jpg,',
-  'http://onestore.tkk/images/goods/14_x.jpg,',
-  'http://onestore.tkk/images/goods/15_x.jpg,http://onestore.tkk/images/goods/15_y.jpg,',
-  'http://onestore.tkk/images/goods/16_x.jpg,',
-  'http://onestore.tkk/images/goods/17_x.jpg,http://onestore.tkk/images/goods/17_y.jpg,',
+  ["http://onestore.tkk/images/goods/1_x.jpg","http://onestore.tkk/images/goods/1_y.jpg","http://onestore.tkk/images/goods/1_z.jpg"],
+  ["http://onestore.tkk/images/goods/2_x.jpg","http://onestore.tkk/images/goods/2_y.jpg"],
+  ["http://onestore.tkk/images/goods/3_x.jpg","http://onestore.tkk/images/goods/3_y.jpg"],
+  ["http://onestore.tkk/images/goods/4_x.jpg"],
+
+  ["http://onestore.tkk/images/goods/5_x.jpg","http://onestore.tkk/images/goods/6_y.jpg"],
+  ["http://onestore.tkk/images/goods/7_x.jpg","http://onestore.tkk/images/goods/7_y.jpg","http://onestore.tkk/images/goods/7_z.jpg"],
+  ["http://onestore.tkk/images/goods/8_x.jpg","http://onestore.tkk/images/goods/8_y.jpg","http://onestore.tkk/images/goods/8_z.jpg"],
+  ["http://onestore.tkk/images/goods/9_x.jpg"],
+  ["http://onestore.tkk/images/goods/10_x.jpg"],
+  ["http://onestore.tkk/images/goods/11_x.jpg","http://onestore.tkk/images/goods/11_y.jpg"],
+  ["http://onestore.tkk/images/goods/12_x.jpg"],
+  ["http://onestore.tkk/images/goods/13_x.jpg","http://onestore.tkk/images/goods/13_y.jpg"],
+  ["http://onestore.tkk/images/goods/14_x.jpg"],
+  ["http://onestore.tkk/images/goods/15_x.jpg","http://onestore.tkk/images/goods/15_y.jpg"],
+  ["http://onestore.tkk/images/goods/16_x.jpg"],
+  ["http://onestore.tkk/images/goods/17_x.jpg","http://onestore.tkk/images/goods/17_y.jpg"],
 ];
 
 // 商品标题
@@ -49,7 +50,13 @@ $factory->define(Good::class, function (Faker $faker) use ($images, $title) {
 
 
   $updated_at = $faker->dateTimeThisMonth(); //返回前一个月内的DateTime对象.
-  $created_at = $faker->dateTimeThisMonth($updated_at); // 创建时间小于修改时间
+
+  // $updated_at=$faker->dateTimeBetween('2022-04-20', 'now', 'PRC');
+
+  // $created_at=$faker->dateTimeBetween('2022-04-20', $updated_at, 'PRC');
+
+  $created_at = $faker->dateTimeThisMonth($updated_at); // 创建时间小于等于修改时间
+  
   $index = $faker->numberBetween(0, 15); //生成随机整数，范围是0-100之间
 
 
@@ -58,11 +65,11 @@ $factory->define(Good::class, function (Faker $faker) use ($images, $title) {
     "title" => $title[$index],
     "description" => $faker->text(255), //返回一段文本，最多200字符
     "image" => $images[$index],
-    "state" => $faker->randomElement([0, 1, 2, 3, 4]),
+    "state" => $faker->randomElement([0, 1, 2]),
     'user_id' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
     'category_id' => $faker->randomElement([1, 2, 3, 4]),
     "view_count" => $faker->numberBetween(3, 6),
-    "reply_count"  =>  10,
+    "reply_count"  =>  3,
     "tags"  =>  '1-2-3',
     "price" => $faker->randomFloat(1, 1, 200),  //生成浮点数，两位小数点，范围1-200
     "old_price" => $faker->randomFloat(1, 10, 300),

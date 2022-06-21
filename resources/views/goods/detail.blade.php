@@ -57,10 +57,10 @@
             <ol class="carousel-indicators">
               <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
               @if($length>1)
-              @for ($i = 1; $i < $length; $i++) <li data-target="#carouselExampleIndicators" data-slide-to="{{ $i }}">
-                </li>
+                @for ($i = 1; $i < $length; $i++) 
+                <li data-target="#carouselExampleIndicators" data-slide-to="{{ $i }}"></li>
                 @endfor
-                @endif
+              @endif
             </ol>
 
             <div class="carousel-inner">
@@ -165,7 +165,12 @@
                 </a>
               @elseif($goods_info->state=='4')
                 购买用户：
-                xxxxxxx
+                <a href="{{ route('user_show', $orders_data->buyer->id ) }}" target="_blank">
+                  <img src="{{ $orders_data->buyer->avatar }}" class="img-responsive img-circle" width="35px" height="35px" style="border-radius: 50%;">
+                </a>
+                <a href="{{ route('user_show', $orders_data->buyer->id ) }}" title="点击查看用户" class="mt-2 ml-2" style="text-decoration:underline;;" target="_blank">
+                  <label for="" style="font-size:18px; ">{{ $orders_data->buyer->name  }}</label>
+                </a>
               @endif
             </div>
 
@@ -190,7 +195,7 @@
                 </a>
               @elseif($booking_data->user_state == 2)
                 <a href="{{ route('booking_notice',$goods_info->user_id) }}?reply=no" target="_blank" title="点击查看">
-                  <button class="btn btn-primary ml-3 btn_reply" disabled><i class="fas fa-reply-all"></i>
+                  <button class="btn btn-primary ml-3 btn_reply" ><i class="fas fa-reply-all"></i>
                     回复预定
                   </button>
                 </a>
@@ -222,11 +227,11 @@
                   <a href="{{ route('user_booking',Auth::user()->id) }}?reply=yes" target="_blank" title="点击查看">
                     <button class="btn btn-danger btn-favor ml-3" type="button">
                       <i class="fas fa-heart"></i>
-                        已同意
+                        同意预定
                     </button>
                   </a>
                   
-                  <a href="#" target="_blank" title="点击查看">
+                  <a href="{{ route('buyer_order',Auth::user()->id) }}?type=pending" target="_blank" title="点击查看">
                     <button class="btn btn-primary ml-3 btn_reply" ><i class="fas fa-reply-all"></i>
                       查看订单
                     </button>
@@ -239,24 +244,38 @@
                       预订中
                 </button>
               @endif
-              @elseif($goods_info->state=='4')
+
+            @elseif($goods_info->state=='4')
+              @if($orders_data->buyer_id == Auth::user()->id)    {{-- 当前登录用户 是否 购买者 --}}
+                <button class="btn btn-dark btn-favor ml-3" type="button" disabled>
+                  <i class="fas fa-heart"></i>
+                  已购买
+                </button>
+
+                <a href="{{ route('buyer_order',Auth::user()->id) }}?type=processed" target="_blank" title="点击查看">
+                  <button class="btn btn-primary ml-3 btn_reply" ><i class="fas fa-reply-all"></i>
+                    查看订单
+                  </button>
+                </a>
+              
+              @else
                 <button class="btn btn-dark btn-favor ml-3" type="button" disabled>
                   <i class="fas fa-heart"></i>
                     已出售
                 </button>
-             
+              @endif
             @endif
           @endif
         </div>
-
-
       </div>
     </div>
+
+    <input type="text" id="user_id" value="{{ Auth::user()->id }}" hidden>
 
     <div class="product_detail mt-4">
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
-          <a class="nav-link @if(!comment_tab()) active @endif" href="#product-detail-tab" aria-controls="product-detail-tab" role="tab" data-toggle="tab" aria-selected="@if(!comment_tab()) true @else false @endif">商品详情</a>
+          <a class="nav-link @if(!comment_tab()) active @endif" href="#product-detail-tab" aria-controls="product-detail-tab" role="tab" data-toggle="tab" aria-selected="@if(!comment_tab()) true @else false @endif">商品描述</a>
         </li>
         <li class="nav-item">
           <a class="nav-link @if(comment_tab()) active @endif" id="comment_url" href="#product-comment-tab" aria-controls="product-reviews-tab" role="tab" data-toggle="tab" aria-selected="@if(comment_tab()) true @else false @endif">商品评论</a>
@@ -290,10 +309,16 @@
                   </button> -->
 
                 </form>
+
+                @error('content')
+                  <input type="text" id="max_content" value="{{ $message }}" hidden>
+                @enderror
+
               </div>
             </li>
             @if(count($comments) > 0)
             @foreach($comments as $comment=>$value)
+            
             <li class="list-group-item mt-2">
               <div class=" row ">
                 <a href="{{ route('user_show', $value->user_id) }}">
@@ -355,6 +380,19 @@
 <script>
   $(document).ready(function() {
 
+
+    console.log( $('#max_content').length)
+    if($('#max_content').length > 0){
+      swal({
+        text: $('#max_content').val(),
+        icon: 'error'
+      })
+    }
+    //  swal({
+    //       text: '有错误选项，无法提交！',
+    //       icon: 'error'
+    //  })
+
     // 跳转
     $('#comment_url').click(function() {
       console.log(window.location.href + '&tab=comments')
@@ -372,8 +410,8 @@
 
     $('.btn_comment').click(function() {
       // 加载样式
-
-      if ($('.content').val().length <= 0) {
+      content=$.trim($('.content').val())
+      if ( content.length <= 0) {
         swal({
           text: '请至少输入一个字符 ^_^',
           icon: 'warning'
@@ -390,7 +428,7 @@
       console.log('del');
       swal({
         title: '你确认要删除吗?',
-        text: "此操作不可逆！",
+        text: "将删除此商品的关联数据！",
         icon: 'warning',
         buttons: ['取消', '确定'],
         dangerMode: true,
@@ -420,9 +458,14 @@
 
     // 删除评论
     $('.del_comment').click(function() {
+      comments_id=$(this).prev().val();
+      goods_id=$(this).prev().prev().val();
+
+      console.log(comments_id)
+
       swal({
         title: '你确认要删除吗?',
-        text: "此操作不可逆！",
+        text: "删除评论",
         icon: 'warning',
         buttons: ['取消', '确定'],
         dangerMode: true,
@@ -432,17 +475,38 @@
         }
 
         // 删除请求
-        comments_id=$(this).prev().val();
-        goods_id=$(this).prev().prev().val();
-
         axios.delete('/goods/'+goods_id+'/'+comments_id+'/delete').then(function(res) {
-          //console.log(res.data)
+          console.log(res.data)
           swal('删除成功', '', 'success').then((res) => {
             location.reload();
           });
 
-        }).then(function(error) {
-          //swal('删除失败', '', 'error');
+        },function(error) {
+          console.log(error.response.status)
+          console.log(error.response.data.message)
+          
+          if(error.response && error.response.status===404 && error.response.data.message.indexOf('Good')>=0 ){
+            swal({
+              title: '删除失败！',
+              text:'抱歉,该商品已被删除！',
+              icon: 'error',
+            }).then((res)=>{
+              
+              window.location.href='http://onestore.tkk/goods'
+            })
+          }
+
+          if(error.response && error.response.status===404 && error.response.data.message.indexOf('Comment')>=0 ){
+            swal({
+              title: '删除失败！',
+              text:'抱歉,该评论已被商品作者删除！',
+              icon: 'error',
+            }).then((res)=>{
+              window.location.reload()
+              
+            })
+          }
+
         })
 
       })
@@ -450,20 +514,66 @@
 
     })
 
+    var operate_premise
+    function getOperatePremise(){
+      axios.get('{{ route('ajax_operate_premise') }}').then((res) => {
+      //booking_count=res.data
+      operate_premise=res.data
+      //console.log(res.data)
+
+      },function(error){
+          //console.log('error')
+      })
+    }
+    
+
     var booking_count
     function getBookingCount(){
         axios.get('{{ route('ajax_booking_count',['goods' => $goods_info->id] ) }}').then((res) => {
         booking_count=res.data
+        //console.log(res.data)
       },function(error){
-        console.log('error')
+        //console.log('error')
       })
     }
+
     getBookingCount();    // 预定次数
+    //console.log(booking_count)
+    getOperatePremise();
+
     // 预定商品
+    var user_id=$('#user_id').val()
+    //console.log(user_id)
      $('.btn_booking').click(function(){
-      //console.log(1)
+
+      //console.log(operate_premise[0]['booking'])
+      if(booking_count== undefined || operate_premise==undefined) return false;
       
+      // 判断能否预定
+      if( operate_premise[0]['booking']==true ||operate_premise[1]['order']==true ){
+        swal({
+          title: '预定失败！',
+          text: "你有待处理事项！",
+          icon: 'error',
+          buttons: ['暂不处理', '前去处理'],
+        }).then((res)=>{
+          if(!res) return;
+          if(operate_premise[0]['booking'] == true){
+            window.location.href='http://onestore.tkk/users/'+user_id+'/booking_notice?reply=no'
+          }else{
+            window.location.href='http://onestore.tkk/users/'+user_id+'/seller_order?type=pending'
+          }
+        })
+        
+        $('.swal-text').addClass('warning_text'); // 样式-info
+        return false;
+
+      }
+
+
       console.log(booking_count)
+      // getBookingCount(); 
+      
       if(booking_count >= 3){
         swal({
           title: '预定失败！',
@@ -488,6 +598,26 @@
             swal('预定成功', '', 'success').then((res) => {
               location.reload();
             });
+          },function(error){
+             // console.log(error.response.status)
+             // console.log(error.response.data.message)
+            if( error.response && error.response.status == 404 ){
+              swal({
+                title: '预定失败！',
+                text: "抱歉，此商品已被删除！",
+                icon: 'error',
+              }).then((res)=>{
+                window.location.href='http://onestore.tkk/goods'
+              })
+            }else if(error.response && error.response.status == 401){
+              swal({
+                title: '预定失败！',
+                text: error.response.data.message,
+                icon: 'error',
+              }).then((res)=>{
+                window.location.reload()
+              })
+            }
           })
         })
 
@@ -514,7 +644,25 @@
             location.reload();
           });
         },function(error){
+          if( error.response && error.response.status == 404 ){
+            swal({
+              title: '取消预定失败！',
+              text: '抱歉，此商品已被删除！',
+              icon: 'error',
+            }).then((res)=>{
+              window.location.href='http://onestore.tkk/goods'
+            })
+          }
 
+          if( error.response && error.response.status == 401 ){
+            swal({
+              title: '取消预定失败！',
+              text: error.response.data.message,
+              icon: 'error',
+            }).then((res)=>{
+              window.location.reload()
+            })
+          }
         })
       })
 
