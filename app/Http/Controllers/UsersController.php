@@ -32,7 +32,7 @@ class UsersController extends Controller
 
     // 限制访问频率1分钟3次
     // 修改个人资料 修改可见设置 注册 头像 密码
-    $this->middleware('throttle:3,1')->only('edit_check','register','avatar_check','password_check','ajax_visible_data');
+    $this->middleware('throttle:3,1')->only('edit_check', 'register', 'avatar_check', 'password_check', 'ajax_visible_data');
     //$this->middleware('throttle:3,1')->only('ajax_visible_data');
 
   }
@@ -77,7 +77,7 @@ class UsersController extends Controller
     UserVisible::create([
       'user_id' => $user->id
     ]);
-    
+
 
     session()->flash('success', '注册成功~');
 
@@ -120,7 +120,7 @@ class UsersController extends Controller
   }
 
   public function user_comment(User $user)    // 我的评论
-  {     
+  {
 
     $comments = Comment::where('user_id', $user->id)->orderBy('created_at', 'desc');
     $count = $comments->count();
@@ -133,7 +133,7 @@ class UsersController extends Controller
   }
 
   public function buy_goods(User $user, Request $request)   // 订购商品-预定|已购
-  {       
+  {
 
     //$goods=Good::where('user_id',$user->id)->where('state',$state);
     $booking_goods_count = 0;
@@ -142,41 +142,33 @@ class UsersController extends Controller
     $buy_goods_count = 0;
     $buy_goods = [];
 
-    // if ($request->type == 'booking') {
+    $booking_goods = Booking::query()->select(DB::raw('goods_id ,count(*) as booking_count,max(created_at) as created_at')) // 预定商品 id和次数, 按最晚时间取出
+      ->where('booker_id', $user->id)->with('goods')
+      ->groupBy('goods_id');
 
-      $booking_goods = Booking::query()->select(DB::raw('goods_id ,count(*) as booking_count,max(created_at) as created_at')) // 预定商品 id和次数, 按最晚时间取出
-        ->where('booker_id', $user->id)->with('goods')
-        ->groupBy('goods_id');
 
-      $booking_goods_count = $booking_goods->get()->count();
+    $booking_goods_count = $booking_goods->get()->count();
+    $booking_goods = $booking_goods->paginate(5);
 
-      $booking_goods = $booking_goods->paginate(5);
-    // } else if ($request->type == 'buy') {
-      // $buy_goods=Order::where('buyer_id',$user->id)->where('seller_state',Order::seller_confirm_order)->where(function($query){
-      //   $query->where('buyer_state',Order::buyer_confirm_order)->orWhere('buyer_state',Order::buyer_outdate_order);
-      // });  
-      
-      $buy_goods=$user->buyerOrders[0];
-      
-      $buy_goods_count = $buy_goods->goods->where('state',Good::goods_state_in_sold)->get()->count();
+    $buy_goods = $user->buyerOrders[0] ?? $user->buyerOrders;
+    if(count($buy_goods)==0){
+      $buy_goods_count=0;
 
-      //dd($buy_goods_count);
+    }else{
+      $buy_goods_count = $buy_goods->goods->where('state', Good::goods_state_in_sold)->get()->count();
       $buy_goods = $buy_goods->paginate(5);
-      //dd($buy_goods_count);
-    //}
-
-    //dd( $booking_goods[0] );
+    }
 
     // 取可见数据
     $user_visible = UserVisible::where('user_id', $user->id)->first();
 
-    return view('users.detail._booking_buy_goods', compact('user', 'user_visible', 'booking_goods', 'booking_goods_count','buy_goods','buy_goods_count'));
+    return view('users.detail._booking_buy_goods', compact('user', 'user_visible', 'booking_goods', 'booking_goods_count', 'buy_goods', 'buy_goods_count'));
   }
 
 
   // 发布商品
   public function sale_goods(User $user, $state = Good::goods_state_in_release)    // 默认商品状态-预发布
-  {    
+  {
 
     //dd($state);
 
@@ -193,22 +185,21 @@ class UsersController extends Controller
     for ($i = 0; $i < sizeof($goods); $i++) {
       $image[] = $goods[$i]->image[0];
     }
-    
+
 
     //dd($image);
 
     // 取可见数据
     $user_visible = $user->userVisibles;
-    return view('users.detail._sale_goods', compact('user', 'goods', 'image', 'count', 'user_visible','state'));
-
+    return view('users.detail._sale_goods', compact('user', 'goods', 'image', 'count', 'user_visible', 'state'));
   }
-  public function search_sale_goods(User $user, $state = 0,Request $request){
+  public function search_sale_goods(User $user, $state = Good::goods_state_in_release, Request $request)
+  {
 
-    $search='%' . $request->content . '%';
+    $search = '%' . $request->content . '%';
 
-    $goods = Good::where('user_id', $user->id)->where('state', $state)->where(function($query) use($search){
-      $query->where('title','like',$search)->orWhere('description','like',$search);
-
+    $goods = Good::where('user_id', $user->id)->where('state', $state)->where(function ($query) use ($search) {
+      $query->where('title', 'like', $search)->orWhere('description', 'like', $search);
     })->orderBy('created_at', 'desc');
 
     $count = $goods->count();
@@ -223,14 +214,14 @@ class UsersController extends Controller
     for ($i = 0; $i < sizeof($goods); $i++) {
       $image[] = $goods[$i]->image[0];
     }
-    
+
 
     //dd($image);
 
     // 取可见数据
     $user_visible = $user->userVisibles;
     //dd($state);
-    return view('users.detail._sale_goods', compact('user', 'goods', 'image', 'count', 'user_visible','state'));
+    return view('users.detail._sale_goods', compact('user', 'goods', 'image', 'count', 'user_visible', 'state'));
   }
 
 
@@ -406,7 +397,7 @@ class UsersController extends Controller
   /* 预订相关 */
 
   public function booking_notice(User $user, Request $request)      // 预订通知
-  {   
+  {
 
     //dd($user->BookingNotifyRoute($user));
 
@@ -438,7 +429,7 @@ class UsersController extends Controller
 
 
   public function user_booking(User $user, Request $request)    // 我的预订
-  {   
+  {
 
     //dd($request->all());
     $bookings = Booking::where('booker_id', $user->id);
@@ -491,7 +482,7 @@ class UsersController extends Controller
 
 
   public function buyer_order(User $user, Request $request)  // 我的订单
-  {        
+  {
 
     $orders = Order::where('buyer_id', $user->id)->where('is_delete', Order::not_deleted);
 
@@ -501,13 +492,12 @@ class UsersController extends Controller
     $pending_orders = [];
     $processed_orders = [];
 
-    $type=$request->type;
+    $type = $request->type;
 
     if ($type == 'pending') {
       $pending_orders = $orders->where('buyer_state', Order::buyer_pending_order)->orderBy('updated_at', 'desc');   // 买家未处理 (只有1-3 ，不包括 2-3)
       $pending_orders_count = $pending_orders->count();
       $pending_orders = $pending_orders->with('user', 'buyer', 'goods')->paginate(5);
-      
     } elseif ($type == 'processed') {
       $processed_orders = $orders->where('buyer_state', '!=', Order::buyer_pending_order)->orderBy('updated_at', 'desc');  // 买家状态-已处理(0-1-2-4),则考虑未生效和已生效订单
       $processed_orders_count = $processed_orders->count();
@@ -516,43 +506,42 @@ class UsersController extends Controller
 
     //dd($pending_orders);
 
-    return view('users.detail._buy_order', compact('user'), compact('pending_orders', 'pending_orders_count', 'processed_orders', 'processed_orders_count','type'));
+    return view('users.detail._buy_order', compact('user'), compact('pending_orders', 'pending_orders_count', 'processed_orders', 'processed_orders_count', 'type'));
   }
 
-  public function search_buyer_order(User $user, Request $request){     // 搜索-我的订单
+  public function search_buyer_order(User $user, Request $request)
+  {     // 搜索-我的订单
 
     $orders = Order::where('buyer_id', $user->id)->where('is_delete', Order::not_deleted);
-    
-    $search='%' . $request->content . '%';
+
+    $search = '%' . $request->content . '%';
 
     $pending_orders_count = 0;
     $processed_orders_count = 0;
 
     $pending_orders = [];
     $processed_orders = [];
-    $type=$request->type;
+    $type = $request->type;
 
     if ($type == 'pending') {
-      $pending_orders = $orders->where('buyer_state', Order::buyer_pending_order)->where('no','like',$search)->orderBy('updated_at', 'desc');   // 买家未处理 (只有1-3 ，不包括 2-3)
+      $pending_orders = $orders->where('buyer_state', Order::buyer_pending_order)->where('no', 'like', $search)->orderBy('updated_at', 'desc');   // 买家未处理 (只有1-3 ，不包括 2-3)
       $pending_orders_count = $pending_orders->count();
       $pending_orders = $pending_orders->with('user', 'buyer', 'goods')->paginate(5);
-      
     } elseif ($type == 'processed') {
-      $processed_orders = $orders->where('buyer_state', '!=', Order::buyer_pending_order)->where('no','like',$search)->orderBy('updated_at', 'desc');  // 买家状态-已处理(0-1-2-4),则考虑未生效和已生效订单
+      $processed_orders = $orders->where('buyer_state', '!=', Order::buyer_pending_order)->where('no', 'like', $search)->orderBy('updated_at', 'desc');  // 买家状态-已处理(0-1-2-4),则考虑未生效和已生效订单
       $processed_orders_count = $processed_orders->count();
       $processed_orders = $processed_orders->with('user', 'buyer', 'goods')->paginate(5);
     }
 
     //dd($pending_orders);
 
-    return view('users.detail._buy_order', compact('user'), compact('pending_orders', 'pending_orders_count', 'processed_orders', 'processed_orders_count','type'));
-
+    return view('users.detail._buy_order', compact('user'), compact('pending_orders', 'pending_orders_count', 'processed_orders', 'processed_orders_count', 'type'));
   }
-  
+
 
 
   public function seller_order(User $user, Request $request)   // 出售订单
-  {    
+  {
     // $redis = app("redis.connection");
     $orders = Order::where('user_id', $user->id)->where('is_delete', Order::not_deleted);
 
@@ -562,7 +551,7 @@ class UsersController extends Controller
     $pending_orders = [];
     $processed_orders = [];
 
-    $type=$request->type;
+    $type = $request->type;
     if ($type == 'pending') {
       $pending_orders = $orders->where('seller_state', Order::seller_pending_order)->orderBy('updated_at', 'desc');   // 卖家状态-待处理(2)，则订单都是未生效
       $pending_orders_count = $pending_orders->count();
@@ -574,10 +563,11 @@ class UsersController extends Controller
     }
 
 
-    return view('users.detail._seller_order', compact('user'), compact('pending_orders_count', 'pending_orders', 'processed_orders', 'processed_orders_count','type'));
+    return view('users.detail._seller_order', compact('user'), compact('pending_orders_count', 'pending_orders', 'processed_orders', 'processed_orders_count', 'type'));
   }
 
-  public function search_seller_order(User $user, Request $request){
+  public function search_seller_order(User $user, Request $request)
+  {
 
     $orders = Order::where('user_id', $user->id)->where('is_delete', Order::not_deleted);
 
@@ -586,22 +576,20 @@ class UsersController extends Controller
 
     $pending_orders = [];
     $processed_orders = [];
-    $type=$request->type;
-    $search='%' . $request->content . '%';
-    
+    $type = $request->type;
+    $search = '%' . $request->content . '%';
+
     if ($type == 'pending') {
-      $pending_orders = $orders->where('seller_state', Order::seller_pending_order)->where('no','like',$search)->orderBy('updated_at', 'desc');   // 卖家状态-待处理(2)，则订单都是未生效
+      $pending_orders = $orders->where('seller_state', Order::seller_pending_order)->where('no', 'like', $search)->orderBy('updated_at', 'desc');   // 卖家状态-待处理(2)，则订单都是未生效
       $pending_orders_count = $pending_orders->count();
       $pending_orders = $pending_orders->with('user', 'buyer', 'goods')->paginate(5);
     } elseif ($type == 'processed') {
-      $processed_orders = $orders->where('seller_state', '!=', Order::seller_pending_order)->where('no','like',$search)->orderBy('updated_at', 'desc');  // 卖家状态-已处理(0-1),则考虑未生效和已生效订单
+      $processed_orders = $orders->where('seller_state', '!=', Order::seller_pending_order)->where('no', 'like', $search)->orderBy('updated_at', 'desc');  // 卖家状态-已处理(0-1),则考虑未生效和已生效订单
       $processed_orders_count = $processed_orders->count();
       $processed_orders = $processed_orders->with('user', 'buyer', 'goods')->paginate(5);
     }
 
 
-    return view('users.detail._seller_order', compact('user'), compact('pending_orders_count', 'pending_orders', 'processed_orders', 'processed_orders_count','type'));
-
+    return view('users.detail._seller_order', compact('user'), compact('pending_orders_count', 'pending_orders', 'processed_orders', 'processed_orders_count', 'type'));
   }
-
 }

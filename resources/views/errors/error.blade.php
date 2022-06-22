@@ -29,10 +29,10 @@
 <script>
   $(document).ready(function() {
 
-    console.log(document.referrer)
+    
     $('#back').click(function() {
       
-      window.location.href='http://onestore.tkk/goods'
+      window.location.href='{{ env("APP_URL") }}'+'/goods'
       
     })
 

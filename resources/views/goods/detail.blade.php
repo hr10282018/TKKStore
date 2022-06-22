@@ -381,7 +381,7 @@
   $(document).ready(function() {
 
 
-    console.log( $('#max_content').length)
+    //console.log( $('#max_content').length)
     if($('#max_content').length > 0){
       swal({
         text: $('#max_content').val(),
@@ -395,7 +395,7 @@
 
     // 跳转
     $('#comment_url').click(function() {
-      console.log(window.location.href + '&tab=comments')
+      //console.log(window.location.href + '&tab=comments')
       if (window.location.href.indexOf('tab=comments') < 0) {
         if (window.location.href.indexOf('?') < 0) {
           window.location.href = window.location.href + '?tab=comments'
@@ -425,7 +425,7 @@
 
     // 作者删除商品
     $('.del_goods').click(function(){
-      console.log('del');
+      //console.log('del');
       swal({
         title: '你确认要删除吗?',
         text: "将删除此商品的关联数据！",
@@ -461,7 +461,7 @@
       comments_id=$(this).prev().val();
       goods_id=$(this).prev().prev().val();
 
-      console.log(comments_id)
+      //console.log(comments_id)
 
       swal({
         title: '你确认要删除吗?',
@@ -476,14 +476,14 @@
 
         // 删除请求
         axios.delete('/goods/'+goods_id+'/'+comments_id+'/delete').then(function(res) {
-          console.log(res.data)
+          //console.log(res.data)
           swal('删除成功', '', 'success').then((res) => {
             location.reload();
           });
 
         },function(error) {
-          console.log(error.response.status)
-          console.log(error.response.data.message)
+          //console.log(error.response.status)
+          //console.log(error.response.data.message)
           
           if(error.response && error.response.status===404 && error.response.data.message.indexOf('Good')>=0 ){
             swal({
@@ -492,7 +492,7 @@
               icon: 'error',
             }).then((res)=>{
               
-              window.location.href='http://onestore.tkk/goods'
+              window.location.href='{{ env("APP_URL") }}'+'/goods'
             })
           }
 
@@ -559,9 +559,9 @@
         }).then((res)=>{
           if(!res) return;
           if(operate_premise[0]['booking'] == true){
-            window.location.href='http://onestore.tkk/users/'+user_id+'/booking_notice?reply=no'
+            window.location.href='{{ env("APP_URL") }}'+'/users/'+user_id+'/booking_notice?reply=no'
           }else{
-            window.location.href='http://onestore.tkk/users/'+user_id+'/seller_order?type=pending'
+            window.location.href='{{ env("APP_URL") }}'+'/users/'+user_id+'/seller_order?type=pending'
           }
         })
         
@@ -571,7 +571,7 @@
       }
 
 
-      console.log(booking_count)
+      //console.log(booking_count)
       // getBookingCount(); 
       
       if(booking_count >= 3){
@@ -594,7 +594,7 @@
             return;
           }
           axios.post('{{ route('ajax_booking_goods',['goods' => $goods_info->id, 'user_id' =>$goods_info->user_id ]) }}').then(function(res){
-            console.log(res.data)
+            //console.log(res.data)
             swal('预定成功', '', 'success').then((res) => {
               location.reload();
             });
@@ -607,7 +607,7 @@
                 text: "抱歉，此商品已被删除！",
                 icon: 'error',
               }).then((res)=>{
-                window.location.href='http://onestore.tkk/goods'
+                window.location.href='{{ env("APP_URL") }}'+'/goods'
               })
             }else if(error.response && error.response.status == 401){
               swal({
@@ -639,7 +639,7 @@
           return;
         }
         axios.delete('{{ route('ajax_cancel_booking',['goods' => $goods_info->id]) }}').then(function(res){
-          console.log(res.data)
+          //console.log(res.data)
           swal('取消预定成功！', '', 'success').then((res) => {
             location.reload();
           });
@@ -650,7 +650,7 @@
               text: '抱歉，此商品已被删除！',
               icon: 'error',
             }).then((res)=>{
-              window.location.href='http://onestore.tkk/goods'
+              window.location.href='{{ env("APP_URL") }}'+'/goods'
             })
           }
 

@@ -281,7 +281,7 @@
         if (card_length <= 16 && card_length > 12) { // 一页有四行商品
           //console.log('四行')
           //console.log(cards)
-          console.log($('.goods_list').eq(4).position().top)
+          //console.log($('.goods_list').eq(4).position().top)
           for (var i = 4; i < card_length; i++) {
             $('.goods_list').eq(i).css({
               "top": ($('.goods_list').eq(i - 4).position().top + cards[i - 4] + 30) - $('.goods_list').eq(i).position().top

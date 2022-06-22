@@ -175,7 +175,6 @@
 @section('scriptsAfterJs')
 <script>
   $(document).ready(function() {
-
     if($('#wrong_title').length > 0){
       swal({
         text: $('#wrong_title').val(),

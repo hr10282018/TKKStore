@@ -28,13 +28,13 @@
 @section('scriptsAfterJs')
 <script>
   $(document).ready(function() {
-
-    console.log(document.referrer)
+    
+    
     $('#back').click(function() {
       window.location.href = document.referrer
     })
 
-    //setTimeout("javascript:location.href='http://onestore.tkk'",5000);
+    
   })
 </script>
 

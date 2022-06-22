@@ -358,7 +358,7 @@
             }else{
               // 跳转订单
               //console.log(window.location.href)
-              window.location.href='http://onestore.tkk/users/'+user_id+'/seller_order?type=pending'
+              window.location.href='{{ env("APP_URL") }}'+'/users/'+user_id+'/seller_order?type=pending'
 
             }
           })
