@@ -14,7 +14,7 @@ return [
      |
      */
 
-    'enabled' => env('DEBUGBAR_ENABLED', true), # 默认开启debug
+    'enabled' => env('DEBUGBAR_ENABLED', false), # 默认开启debug
     'except' => [
         'telescope*',
         'horizon*',

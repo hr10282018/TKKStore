@@ -40,7 +40,7 @@ function search_no_category_active()    // 无分类的查询+最新发布-返�
 
 // 编辑资料-左边链接样式
 function user_info_active($type){
-  if($type=='arrow'){
+  if($type === 'arrow'){
     if ((if_route('user_edit'))) {
       return '17';
     } elseif ((if_route('user_edit_avatar'))) {
@@ -68,7 +68,7 @@ function user_info_active($type){
 
 // 个人中心-右边链接样式
 function user_center_active($type){
-  if ($type == 'arrow') {
+  if ($type === 'arrow') {
     if ((if_route('user_show'))) {
       return '65';            // 偏移px值
     } 

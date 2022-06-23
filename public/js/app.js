@@ -37622,8 +37622,8 @@ __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/vagrant/Code/project/onestore/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/vagrant/Code/project/onestore/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/Tkkstore/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/Tkkstore/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -22,7 +22,7 @@ class GoodsController extends Controller
   {
     $this->middleware('auth', [   // 身份验证过滤
       
-      'except' => ['goods_search']
+      'except' => ['goods_search','goods_hot']
     ]);
   }
 
