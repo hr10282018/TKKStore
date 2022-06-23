@@ -22,7 +22,7 @@ class GoodsController extends Controller
   {
     $this->middleware('auth', [   // 身份验证过滤
       
-      'except' => ['goods_search']
+      'except' => ['goods_search','goods_hot']
     ]);
   }
 
@@ -282,9 +282,7 @@ class GoodsController extends Controller
   {
 
     // 非验证用户 跳转
-    // if (!Auth::user()->activated) {
-    //   return redirect()->route('show_verify');
-    // }
+ 
 
     $goods_info = Good::where('id', $goods_id)->with('bookings','orders')->first();    // 关联
 

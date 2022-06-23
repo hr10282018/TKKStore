@@ -22,7 +22,7 @@ class UsersTableSeeder extends Seeder
     $user = User::find(1);
     $user->name = 'Sakura';
     $user->email = '1902422119@qq.com';
-    $user->avatar = 'http://onestore.tkk/images/avatar.png';
+    $user->avatar = env('APP_URL').'/images/avatar.png';
     $user->signature = 'Something for nothing';
     $user->save();
   }

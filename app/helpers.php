@@ -68,7 +68,7 @@ function user_info_active($type){
 
 // 个人中心-右边链接样式
 function user_center_active($type){
-  if ($type == 'arrow') {
+  if ($type === 'arrow') {
     if ((if_route('user_show'))) {
       return '65';            // 偏移px值
     } 

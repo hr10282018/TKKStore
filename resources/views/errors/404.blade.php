@@ -29,9 +29,9 @@
 <script>
   $(document).ready(function() {
     
-    
+    console.log(document.referrer)
     $('#back').click(function() {
-      window.location.href = document.referrer
+      window.location.href ='{{ env("APP_URL") }}'+'/goods'
     })
 
     

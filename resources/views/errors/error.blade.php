@@ -29,13 +29,9 @@
 <script>
   $(document).ready(function() {
 
-    
     $('#back').click(function() {
-      
       window.location.href='{{ env("APP_URL") }}'+'/goods'
-      
     })
-
 
   })
 </script>

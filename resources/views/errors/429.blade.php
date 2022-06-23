@@ -28,15 +28,10 @@
 <script>
   $(document).ready(function() {
 
-   
+    console.log(document.referrer)
     $('#back').click(function() {
-      if(window.location.href === document.referrer){
-        window.location.href='{{ env("APP_URL") }}'+'/goods'
-      }else{
-        window.location.href = document.referrer
-      }
+      window.location.href = document.referrer
     })
-
 
   })
 </script>
