@@ -21,7 +21,7 @@ class AddOtherInfoToUsersTable extends Migration
 
       $table->string('sex', 2)->nullable();    //性别
       $table->string('phone', 11)->nullable();        //手机号
-      $table->string('university')->default('厦大嘉庚');   // 大学
+      $table->string('university')->default('xxx大学');   // 大学
 
       $table->string('faculty')->nullable();  // 院系
       $table->string('number', 8)->nullable(); // 学号

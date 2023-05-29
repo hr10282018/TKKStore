@@ -38,7 +38,9 @@ class OverTimeOrder implements ShouldQueue    // 类放入队列执行，不是�
     if($this->order->seller_state == Order::seller_confirm_order && $this->order->buyer_state == Order::buyer_pending_order){    
       
       //var_dump('相差s：'.$$diff_in_days);
-      $diff_in_minutes=Carbon::parse($this->order->updated_at)->diffInMinutes(Carbon::now(), false);    // 再判断时间，到时间才执行
+      // 用订单的修改时间（表示距离上一次操作已经过了多久）和当前时间比较
+      $diff_in_minutes=Carbon::parse($this->order->updated_at)->diffInMinutes(Carbon::now(), false);    
+      // 再判断时间，到时间才执行
       if($diff_in_minutes >= Order::buyer_outdate_order_in_seconds ){
         $this->order->update(['buyer_state' => Order::buyer_outdate_order]);  // 买家状态改为超时
         

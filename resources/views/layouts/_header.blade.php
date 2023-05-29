@@ -2,7 +2,7 @@
   <div class="container" >
 
     <!-- 校徽 -->
-    <img class="mr-2" src="/images/xujc.jpg" alt="" style="width: 45px; height:45px; border-radius: 50%;">
+    <img class="mr-2" src="/images/header.png" alt="" style="width: 45px; height:45px; border-radius: 50%;">
     <a class="navbar-brand " href="{{ route('home') }}">
       TKK~Store
     </a>

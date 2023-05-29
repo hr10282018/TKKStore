@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 $prefix=env('APP_URL').'/images/avatars/';
 $avatars = [
   '1.jpg',
-  '2.gif',
+  '2.jpg',
   '3.jpg',
   '4.png',
   '5.jpg',

@@ -25,6 +25,14 @@ class UsersTableSeeder extends Seeder
     $user->avatar = env('APP_URL').'/images/avatar.png';
     $user->signature = 'Something for nothing';
     $user->save();
+
+    // 单独处理第一个用户的数据
+    $user = User::find(2);
+    $user->name = 'Test';
+    $user->email = '123456789@qq.com';
+    $user->avatar = env('APP_URL').'/images/avatar.png';
+    $user->signature = '欢迎来到 TkkStore！';
+    $user->save();
   }
 
 }

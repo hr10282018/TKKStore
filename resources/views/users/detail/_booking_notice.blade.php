@@ -218,7 +218,7 @@
 @stop
 
 @section('scriptsAfterJs')
-<script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="/js/jquery.cookie.min.js"></script>
 <link rel="stylesheet" href="/vendor/laravel-admin/sweetalert2/dist/sweetalert2.css">
 <script src="/vendor/laravel-admin/sweetalert2/dist/sweetalert2.min.js" charset="UTF-8"></script>
 <script>
