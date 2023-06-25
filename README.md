@@ -4,16 +4,7 @@
 
 ##### [项目预览](http://tkkstore.nnnzh.com)
 
-因 xxx 有限，每周二、四、六、七 的晚上八点到十点之间，可以预览网站。(建议谷歌)
 
-```
-http://tkkstore.nnnzh.com
-
-用户名
-123456789@qq.com
-密码
-password
-```
 
 
 
